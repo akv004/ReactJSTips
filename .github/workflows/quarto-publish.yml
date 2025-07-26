@@ -1,0 +1,35 @@
+# .github/workflows/quarto-pages-only.yml
+
+name: Quarto Pages Only # Your chosen workflow name
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render Quarto website
+        run: quarto render # This will now output the website to 'docs/' because of _quarto.yml
+
+      - name: Upload site (docs/)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/ # <--- CRITICAL FIX: Ensure this path is 'docs/'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
