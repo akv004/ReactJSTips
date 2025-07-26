@@ -1,0 +1,106 @@
+# Robust ErrorBoundary
+
+	•	Capture stack traces
+	•	Identify failing components
+	•	Log meaningful info with optional external logging
+	•	Show fallback UI safely
+	•	Help debug internal TypeScript component libs
+
+✅ Copy-Paste: Production-Ready ErrorBoundary.tsx (with full logging)
+
+```ts
+
+	import React from 'react'
+
+    type ErrorBoundaryProps = {
+      name?: string  // optional label for where the boundary is used
+      fallback?: React.ReactNode
+      children: React.ReactNode
+    }
+
+    type ErrorBoundaryState = {
+      hasError: boolean
+      error?: Error
+      errorInfo?: React.ErrorInfo
+    }
+
+    export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+      constructor(props: ErrorBoundaryProps) {
+        super(props)
+        this.state = {
+          hasError: false,
+        }
+      }
+
+      static getDerivedStateFromError(error: Error) {
+        return { hasError: true, error }
+      }
+
+      componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+        const boundaryName = this.props.name || 'Unknown Boundary'
+
+        console.group(`[ErrorBoundary] ${boundaryName}`)
+        console.error('Error:', error)
+        console.error('Component Stack:', errorInfo.componentStack)
+        console.groupEnd()
+
+        // Optional: Send to remote logger
+        // sendErrorToLoggingService({ name: boundaryName, error, stack: errorInfo.componentStack })
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return this.props.fallback || (
+            <div style={{ color: 'red', padding: '1rem' }}>
+              <strong>{this.props.name || 'Something went wrong'}</strong><br />
+              <code>{this.state.error?.message}</code>
+            </div>
+          )
+        }
+        return this.props.children
+      }
+    }
+
+  ```
+
+
+ ---
+
+ ### 🧩 Example Usage to Isolate Internal Component Failures
+
+```ts
+import { ErrorBoundary } from './ErrorBoundary'
+import MyComponent from '@internal-lib/MyComponent'
+
+export default function App() {
+  return (
+    <ErrorBoundary name="App">
+      <Header />
+      <ErrorBoundary name="InternalLib:MyComponent">
+        <MyComponent />
+      </ErrorBoundary>
+      <Footer />
+    </ErrorBoundary>
+  )
+}
+  ```
+
+
+
+
+⚙️ Bonus: Enable Source Maps in Your Builds
+
+Make sure your tsconfig.json and vite/webpack config includes:
+
+```json
+{
+  "compilerOptions": {
+    "sourceMap": true
+  }
+}
+```
+
+In webpack:
+```js
+devtool: 'source-map'
+```

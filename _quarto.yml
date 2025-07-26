@@ -12,6 +12,7 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
+    - ErrorBoundary.qmd
 
 
 website:
@@ -25,6 +26,9 @@ website:
         href: index.qmd
       - text: "Intro"
         href: intro.qmd
+      - text: "ErrorBoundary"
+        href: ErrorBoundary.qmd
+
 
 
 format:
