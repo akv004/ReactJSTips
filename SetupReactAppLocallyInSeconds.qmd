@@ -1,3 +1,4 @@
+## Setup React App Locally in Seconds
 
 Ready-to-use shell script that will set up and run a React app locally in seconds — assuming Node.js is already installed.
 
@@ -8,45 +9,48 @@ This script will:
 
 ✅ Script: run-react-app.sh
 
-```shell
+```bash
 #!/bin/bash
 
-# 📦 Project name
-APP_NAME="my-react-app"
+# 🚀 Prompt for project name
+read -p "Enter your React project name (default: my-react-app): " APP_NAME
 
-# ✅ Ask if user wants TypeScript
+# 📦 Use default if empty
+APP_NAME=${APP_NAME:-my-react-app}
+
+# ❓ Prompt for TypeScript
 read -p "Do you want TypeScript? (y/n): " use_ts
 
+# 🛠 Create the app
 if [ "$use_ts" == "y" ]; then
-  npx create-react-app $APP_NAME --template typescript
+  npx create-react-app "$APP_NAME" --template typescript
 else
-  npx create-react-app $APP_NAME
+  npx create-react-app "$APP_NAME"
 fi
 
-cd $APP_NAME
-
-echo "📁 Created $APP_NAME and installing dependencies..."
-
-# 🏃 Run the app
+cd "$APP_NAME"
 npm start
 ```
 
 
-📌 How to Use:
+📌 **How to Use**:
+
 	1.	Save the script as run-react-app.sh
 	2.	Make it executable:
 
-    ```bash
-    chmod +x run-react-app.sh
-    ```
+```bash
+chmod +x run-react-app.sh
+```
     3.	Run it:
 
-    ```bash
-    ./run-react-app.sh
-    ```
+```bash
+./run-react-app.sh
+```
 
 
- 🧠 What You Need Pre-installed
-- Node.js (v18 or higher recommended)
-- npm (comes with Node.js)
-- npx (comes with Node.js)
+ 🧠 **What You Need Pre-installed**
+
+- **Node.js** (v18 or higher recommended)
+- **npm** (comes with Node.js)
+- **npx** (comes with Node.js)
+
