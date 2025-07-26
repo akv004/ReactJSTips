@@ -1,25 +1,36 @@
+# _quarto-alt.yml
+
 project:
   type: book
+  output-dir: docs
 
 book:
-  title: "ReactJS"
-  author: "Norah Jones"
-  date: "7/26/2025"
+  title: "React JS"
+  subtitle: "React JS Tips"
+  author: "Amit Verma"
+  date: "2025-07-18"
   chapters:
     - index.qmd
     - intro.qmd
-    - summary.qmd
-    - references.qmd
 
-bibliography: references.bib
+
+website:
+  title: "React JS"
+  repo-url: https://akv004.github.io/ReactJSTips/
+  repo-actions: [edit, issue]
+  site-url: https://akv004.github.io/ReactJSTips/
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Intro"
+        href: intro.qmd
+
 
 format:
   html:
-    theme:
-      - cosmo
-      - brand
-  pdf:
-    documentclass: scrreprt
-
-
-
+    theme: cosmo
+    toc: true
+    css: styles.css
+    number-sections: true
+    self-contained: true
