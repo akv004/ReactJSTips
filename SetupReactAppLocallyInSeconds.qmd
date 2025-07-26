@@ -1,0 +1,52 @@
+
+Ready-to-use shell script that will set up and run a React app locally in seconds — assuming Node.js is already installed.
+
+This script will:
+	1.	Create a new React app (with TypeScript if you want)
+	2.	Install dependencies
+	3.	Start the development server
+
+✅ Script: run-react-app.sh
+
+```shell
+#!/bin/bash
+
+# 📦 Project name
+APP_NAME="my-react-app"
+
+# ✅ Ask if user wants TypeScript
+read -p "Do you want TypeScript? (y/n): " use_ts
+
+if [ "$use_ts" == "y" ]; then
+  npx create-react-app $APP_NAME --template typescript
+else
+  npx create-react-app $APP_NAME
+fi
+
+cd $APP_NAME
+
+echo "📁 Created $APP_NAME and installing dependencies..."
+
+# 🏃 Run the app
+npm start
+```
+
+
+📌 How to Use:
+	1.	Save the script as run-react-app.sh
+	2.	Make it executable:
+
+    ```bash
+    chmod +x run-react-app.sh
+    ```
+    3.	Run it:
+
+    ```bash
+    ./run-react-app.sh
+    ```
+
+
+ 🧠 What You Need Pre-installed
+- Node.js (v18 or higher recommended)
+- npm (comes with Node.js)
+- npx (comes with Node.js)

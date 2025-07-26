@@ -13,6 +13,8 @@ book:
     - index.qmd
     - intro.qmd
     - ErrorBoundary.qmd
+    - MockOrInterceptAPI.qmd
+    - SetupReactAppLocallyInSeconds.qmd
 
 
 website:
@@ -28,6 +30,10 @@ website:
         href: intro.qmd
       - text: "ErrorBoundary"
         href: ErrorBoundary.qmd
+      - text: "MockOrInterceptAPI"
+        href: MockOrInterceptAPI.qmd
+      - text: "SetupReactAppLocallyInSeconds"
+        href: SetupReactAppLocallyInSeconds.qmd
 
 
 

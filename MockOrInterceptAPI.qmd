@@ -1,0 +1,91 @@
+##
+
+### use Mock Service Worker
+
+[quick start guide] (https://mswjs.io/docs/quick-start/)
+
+✅ a. Using msw (Mock Service Worker) – THE BEST way
+
+```ts
+npm install msw --save-dev
+```
+
+
+📁 Folder Structure (recommended)
+```ts
+src/
+  mocks/
+    handlers.ts
+    browser.ts
+  index.tsx
+
+```
+
+Defines a list of mock API endpoints and how to respond to them.
+
+```ts
+// src/mocks/handlers.ts
+import { rest } from 'msw'
+
+export const handlers = [
+  rest.get('/api/user', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ id: 1, name: 'Amit Verma' }))
+  }),
+
+  rest.post('/api/login', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ token: 'abc123' }))
+  }),
+]
+```
+
+
+📌 Sets up the MSW worker in the browser and uses the handlers from handlers.ts.
+
+```ts
+// src/mocks/browser.ts
+import { setupWorker } from 'msw'
+import { handlers } from './handlers'
+
+export const worker = setupWorker(...handlers)
+```
+
+🧠 This acts like your mock backend — it returns fake data instead of calling the real server.
+
+
+Then in index.tsx:
+
+```ts
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = await import('./mocks/browser')
+  worker.start()
+}
+```
+
+setupWorker() starts a Service Worker that listens to fetch and intercepts API calls in the browser.
+
+
+🔄 Flow Summary
+```js
+App → fetch('/api/user')
+     ↓
+[MSW Service Worker]
+     ↓
+handlers.ts → Matches rest.get('/api/user')
+     ↓
+Returns mocked response (e.g. { id: 1, name: "Amit" })
+```
+
+🧪 Test It
+
+In your React component, write:
+
+```ts
+useEffect(() => {
+  fetch('/api/user')
+    .then(res => res.json())
+    .then(data => console.log('Mocked User:', data))
+}, [])
+```
+
+When you run your app, it should log:
+Mocked User: { id: 1, name: 'Amit Verma', role: 'Lead Software Engineer' }
