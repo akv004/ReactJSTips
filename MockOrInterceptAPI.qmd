@@ -129,7 +129,55 @@ export default App;
 
 ```
 
+📄MyComp.tsx :
 
+```ts
+
+import React, { useEffect, useState } from 'react';
+
+
+type User = {
+    id: number;
+    name: string;
+};
+
+const MyComp = () => {
+    const [user, setUser] = useState<User | null>(null);
+
+useEffect(() => {
+  fetch('/api/user')
+    .then(async (response) => {
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        setUser(data);
+      } else {
+        throw new Error('Response is not JSON');
+      }
+    })
+    .catch(error => console.error('Error fetching user:', error));
+}, []);
+
+    return (
+        <div>
+        {user ? (
+            <div>
+                <h1>User Details</h1>
+                <p>ID: {user.id}</p>
+                <p>Name: {user.name}</p>
+                <p>Role: {user.role}</p>
+            </div>
+
+        ) : (
+            <p>Loading user...</p>
+        )}
+        </div>
+    );
+
+};
+
+export default MyComp;
+```
 
 
 we also need to run
