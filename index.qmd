@@ -1,5 +1,32 @@
-# Preface {.unnumbered}
+# The React Blueprint {.unnumbered .page-break-before}
 
-This is a Quarto book.
+**First Edition (Version 1.0)**
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+**Copyright © 2025 Amit Verma. All rights reserved.**
+
+No part of this publication may be reproduced, distributed, or transmitted in any form or by any means—including electronic or mechanical methods—without the prior written permission of the author, except in the case of brief quotations used in reviews or scholarly works.
+This eBook is published through Kindle Direct Publishing and is intended for personal, non-commercial use only.
+For permission requests or inquiries, please contact: [booksbyamit@gmail.com](mailto:booksbyamit@gmail.com)
+
+---
+
+## Welcome!
+
+Welcome to **The React Blueprint** — your hands-on, battle-tested guide to mastering React.js the modern way.
+
+Whether you're crafting sleek frontends, scaling robust enterprise UI systems, or simply aiming for seamless integration with REST APIs, this book is your essential blueprint. We've distilled years of real-world experience into clear patterns, intelligent tools, and production-ready practices, empowering you to architect, code, and launch with confidence.
+
+As a fellow software engineer, you already know that writing React code itself isn't the hardest part. The true challenge lies in **scaling, testing, and maintaining it efficiently** in a fast-paced environment. That's precisely where *The React Blueprint* steps in.
+
+Inside, you'll discover:
+
+* **Core Best Practices:** Go beyond basic syntax to understand *why* and *how* to build resilient React applications.
+* **Advanced Component Architecture:** Learn to design highly reusable and maintainable component systems.
+* **Effective API Mocking with MSW:** Accelerate your development and testing workflows by mastering API mocking techniques.
+* **Robust Error Handling & Resilience:** Implement strategies to create applications that gracefully handle edge cases and unexpected issues.
+* **Rapid Deployment Strategies:** Leverage scripts and techniques to get your applications live in seconds.
+* **Production-Ready Code Examples:** Dive into real-world scenarios, complete with TypeScript, comprehensive tests, and adaptable patterns.
+
+This book is designed to evolve with your journey—from setting up a pristine local development environment to building and maintaining sophisticated, production-grade React systems. We prioritize minimal boilerplate and maximum clarity, ensuring every concept is easy to grasp and apply.
+
+Let's build smarter UIs together.

@@ -1,5 +1,70 @@
-# Introduction
+## Dedication
 
-This is a book created from markdown and executable code.
+To my family, friends, and mentors — thank you for your encouragement, patience, and belief. Your support made this journey possible and meaningful.
 
-See @knuth84 for additional discussion of literate programming.
+---
+
+## About the Author
+
+Amit Kumar Verma is a Lead Software Engineer with over 15 years of professional experience in building large-scale, cloud-native applications. His expertise includes **front-end development** with frameworks like React and AngularJS, **backend services** with Java, Spring Boot, and Node.js, and **DevOps practices** leveraging Docker and Kubernetes.
+
+Amit is passionate about creating performant, maintainable user interfaces that scale. He has led successful frontend and full-stack teams in domains such as healthcare, fintech, retail, and insurance, and has worked extensively with tools like React, TypeScript, Redux, Recoil, Zustand, and Next.js.
+
+He believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When he's not writing code or leading architecture discussions, Amit enjoys exploring new frameworks, mentoring junior developers, and turning complex frontend problems into elegant patterns.
+
+---
+
+## Acknowledgments
+
+Writing this book has been a deeply rewarding experience. I’d like to thank the open-source community behind React and its ecosystem, whose continuous innovation and collaboration make building modern interfaces a joy.
+
+To my colleagues, mentors, and readers — thank you for your feedback, inspiration, and energy. And to my family: your quiet sacrifices, love, and strength are behind every word in this book.
+
+---
+
+## Preface
+
+React has fundamentally changed how we build user interfaces — not just in the browser, but across platforms. But as the frontend landscape grows more powerful, it also grows more complex.
+
+**The React Blueprint** is my attempt to bring clarity, order, and real-world wisdom to that complexity. This book isn’t about memorizing hooks or learning JSX syntax — it's about understanding how to design maintainable components, manage state at scale, mock APIs cleanly, and ship production-grade React applications with confidence.
+
+You’ll learn how to:
+- Scaffold React apps quickly with the right tools
+- Use modern state management patterns effectively
+- Handle errors with resilience using error boundaries
+- Mock APIs like a pro using MSW
+- Write clean, scalable code with TypeScript
+
+The ideas shared here come from years of leading frontend projects, debugging real production issues, and simplifying things that didn’t need to be hard. I hope this blueprint helps you navigate your React journey — and that you’ll share your blueprint with others, too.
+
+Amit Verma
+Chaska, Minnesota
+July 2025
+
+---
+
+## How to Use This Book
+
+### Read It End-to-End or Jump Around
+
+Each chapter is written to be self-contained and hands-on. If you’re new to React, you can start from the beginning. If you're already comfortable, feel free to jump to what interests you most — whether that’s API mocking, state management, or app structure.
+
+### Practical First
+
+You won’t find theory for the sake of theory here. Every pattern, snippet, and technique is something you can apply right away. The book includes working examples, CLI tips, and dev workflow boosters to help you build faster and cleaner.
+
+### Tooling That Works
+
+The examples use tools like `create-react-app`, Vite, TypeScript, MSW, and GitHub. You’ll see working `package.json` snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.
+
+### Code You Can Trust
+
+All code samples are tested and compatible with current React (v18+). If there are updates in the ecosystem, you’ll find them referenced online through the companion repo.
+
+---
+
+## Disclaimer
+
+This book is intended for educational and professional development purposes. While every effort has been made to ensure accuracy and completeness, the author and publisher assume no responsibility for errors, omissions, or misuse of information provided.
+
+All implementation decisions and production uses of code examples are at your own discretion. Always follow secure coding practices, respect project requirements, and consult your organization’s development standards before applying code from this book.

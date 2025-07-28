@@ -9,17 +9,17 @@ book:
   subtitle: "Architect, Code, and Launch Modern Interfaces"
   author: "Amit Verma"
   date: "2025-07-18"
-  cover-image: images/cover.png
+  cover-image: cover.png
   chapters:
     - index.qmd
     - intro.qmd
+    - SetupReactAppLocallyInSeconds.qmd
     - ErrorBoundary.qmd
     - MockOrInterceptAPI.qmd
-    - SetupReactAppLocallyInSeconds.qmd
 
 
 website:
-  title: "React JS"
+  title: "The React Blueprint"
   repo-url: https://akv004.github.io/ReactJSTips/
   repo-actions: [edit, issue]
   site-url: https://akv004.github.io/ReactJSTips/
@@ -29,12 +29,12 @@ website:
         href: index.qmd
       - text: "Intro"
         href: intro.qmd
+      - text: "SetupReactAppLocallyInSeconds"
+        href: SetupReactAppLocallyInSeconds.qmd
       - text: "ErrorBoundary"
         href: ErrorBoundary.qmd
       - text: "MockOrInterceptAPI"
         href: MockOrInterceptAPI.qmd
-      - text: "SetupReactAppLocallyInSeconds"
-        href: SetupReactAppLocallyInSeconds.qmd
 
 
 
@@ -45,9 +45,9 @@ format:
     css: styles.css
     number-sections: true
     self-contained: true
-    cover-image: images/cover1.png
   epub:
-    cover-image: images/cover1.png
+    cover-image: cover.png
     toc: true
     number-sections: true
     self-contained: true
+
