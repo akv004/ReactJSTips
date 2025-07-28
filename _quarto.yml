@@ -46,11 +46,11 @@ format:
     theme: cosmo
     toc: true
     css: styles.css
-    number-sections: true
+    number-sections: false
     self-contained: true
   epub:
     cover-image: cover.png
     toc: true
-    number-sections: true
+    number-sections: false
     self-contained: true
 
