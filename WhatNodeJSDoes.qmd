@@ -1,0 +1,33 @@
+# Chapter: What Node.js Does — From Development Server to Production Build
+
+## Understanding Node.js: Runtime, Server, and Build Tool
+
+Node.js is a cross-platform runtime (built on Chrome’s V8 engine) that enables you to run JavaScript outside the browser—on servers or your command line :contentReference[oaicite:1]{index=1}. It plays several roles in a modern React development workflow:
+
+- **Development server**: It serves your React application locally (via tools like CRA or Vite), providing live reload and fast feedback loops.
+- **Build tool**: It bundles, transpiles, and optimizes your code into production assets.
+- **Backend runtime**: It can serve APIs via frameworks like Express.js or Next.js, handle server-side rendering, or power CLI tools and npm packages :contentReference[oaicite:2]{index=2}.
+
+---
+
+## 🧭 Development vs Production: What Changes?
+
+| Environment     | Node.js Role                          | Output                         | Purpose                               |
+|----------------|---------------------------------------|--------------------------------|----------------------------------------|
+| Development     | Live dev server (webpack/Vite)        | Unminified, source-mapped JS   | Debug, hot-reload, detailed errors     |
+| Production      | Build and serve optimized assets      | Minified, tree-shaken bundles  | Fast load, best performance            |
+
+- In development you use `NODE_ENV=development` (verbose logs, live reload, source maps).
+- In production you set `NODE_ENV=production` to minimize, optimize, and prioritize performance.
+
+---
+
+## 🖥️ Rendering Flow: How React App Runs Locally
+
+```{mermaid}
+flowchart LR
+  A[Developer Type code] --> B(Node.js Development Server)
+  B --> C{Compile + transform JSX → JS}
+  B --> D{Serve bundle to browser}
+  D--> E[Browser renders React app]
+```

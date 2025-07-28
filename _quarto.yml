@@ -14,6 +14,7 @@ book:
     - index.qmd
     - intro.qmd
     - SetupReactAppLocallyInSeconds.qmd
+    - WhatNodeJSDoes.qmd
     - ErrorBoundary.qmd
     - MockOrInterceptAPI.qmd
 
@@ -31,6 +32,8 @@ website:
         href: intro.qmd
       - text: "SetupReactAppLocallyInSeconds"
         href: SetupReactAppLocallyInSeconds.qmd
+      - text: "WhatNodeJSDoes"
+        href: WhatNodeJSDoes.qmd
       - text: "ErrorBoundary"
         href: ErrorBoundary.qmd
       - text: "MockOrInterceptAPI"
