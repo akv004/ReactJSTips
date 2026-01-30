@@ -1,0 +1,96 @@
+# High-Performance Canvas: Breaking the DOM Limit
+
+React makes building UIs easy because it abstracts the DOM. But the DOM is heavy. Each `<div>` is an object with hundreds of properties, event listeners, and layout constraints.
+
+When you're building a tool like `ai-studio-template`—visualizing complex AI agents, knowledge graphs with thousands of nodes, or real-time data streams—React components will start to lag.
+
+The solution is to **drop down to the Canvas API**.
+
+---
+
+## The Hybrid Approach
+
+We don't abandon React. We use React for the "chroma" (buttons, sidebars, modals) and Canvas for the "stage" (the main visualization area).
+
+### 1. The Rendering Loop
+
+In React, updates happen when props change. In Canvas, updates happen in a `requestAnimationFrame` loop (60fps).
+
+We need a bridge.
+
+```tsx
+import { useRef, useEffect } from 'react';
+
+function CanvasStage({ nodes }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let animationId: number;
+
+    const render = () => {
+      // 1. Clear Screen
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 2. Draw Nodes (Pure Math, no DOM overhead!)
+      nodes.forEach(node => {
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw Label
+        ctx.fillStyle = 'white';
+        ctx.fillText(node.label, node.x, node.y);
+      });
+
+      // 3. Loop
+      animationId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => cancelAnimationFrame(animationId);
+  }, [nodes]); // Re-start loop if nodes reference changes (or use a ref for nodes to avoid restart)
+
+  return <canvas ref={canvasRef} width={800} height={600} />;
+}
+```
+
+---
+
+## 2. Hittesting: Interacting with Pixels
+
+Since we don't have DOM elements, we don't have `onClick`. We have coordinates.
+
+```tsx
+const handleClick = (e: React.MouseEvent) => {
+  const rect = canvasRef.current.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  // Find the node under the mouse
+  const clickedNode = nodes.find(node => {
+    const dist = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
+    return dist < 20; // 20 is the radius
+  });
+
+  if (clickedNode) {
+    console.log("Clicked:", clickedNode.label);
+    setSelectedNode(clickedNode);
+  }
+};
+```
+
+---
+
+## 3. WebGPU: The Next Frontier
+
+While `Canvas 2D` is fast, `WebGPU` gives you direct access to the graphics card. It's complex, but libraries like **PixiJS** or **Three.js** abstract it away nicely.
+
+For 99% of "Pro Tools" (like Figma, VS Code's minimap, Miro), Canvas 2D is sufficient. But for 3D or millions of particles, reach for WebGPU.
+
+By separating your **Data Model** (Zustand store) from your **View Layer** (Canvas), you can render the same data in a list (React) or a graph (Canvas) simultaneously.

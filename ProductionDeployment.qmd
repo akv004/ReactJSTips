@@ -1,0 +1,106 @@
+# Production Deployment: CI/CD & Binaries
+
+Building a cool app on localhost is fun. Delivering it to millions of users is engineering.
+
+In this final chapter, we discuss how to automate the build and release process for your Monorepo Desktop App.
+
+---
+
+## 1. GitHub Actions: The Automation Engine
+
+We use **GitHub Actions** to build our React site and Tauri binaries automatically whenever we push to `main`.
+
+**`.github/workflows/release.yml`**:
+
+```yaml
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
+    
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          
+      - name: Install Rust (Stable)
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
+          
+      - name: Install JS Deps
+        run: npm install
+        
+      - name: Build React & Tauri
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "App v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: true
+          prerelease: false
+```
+
+This single file will:
+1.  Spin up VMs for Mac, Windows, and Linux.
+2.  Install Rust and Node.
+3.  Build your React frontend (`npm run build`).
+4.  Compile the Rust backend (`tauri build`).
+5.  Bundle the Python sidecar.
+6.  Upload the artifacts (`.dmg`, `.exe`, `.deb`) to the GitHub Releases page.
+
+---
+
+## 2. Code Signing (The Painful Part)
+
+To avoid the "Unverified Developer" warning on macOS and Windows, you must sign your code.
+
+- **macOS**: You need an Apple Developer ID ($99/year). Export your certificate and add it to GitHub Secrets (`APPLE_CERTIFICATE`, `APPLE_PASSWORD`).
+- **Windows**: You need a code signing certificate (e.g., from Sectigo/DigiCert).
+
+Tauri's action handles the signing automatically if the environment variables are present.
+
+---
+
+## 3. Auto-Updater
+
+Tauri has a built-in auto-updater! You don't need to write custom logic.
+
+In `tauri.conf.json`:
+
+```json
+"updater": {
+  "active": true,
+  "endpoints": [
+    "https://github.com/my-user/my-app/releases/latest/download/latest.json"
+  ],
+  "dialog": true
+}
+```
+
+When you publish a new release to GitHub, users will get a popup: "A new version is available. Install now?".
+
+---
+
+## Conclusion
+
+You started this book learning `useEffect`. You are leaving it knowing how to architect a cross-platform, AI-powered desktop application with automated CI/CD.
+
+**Go build something amazing.**

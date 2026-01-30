@@ -1,0 +1,124 @@
+# Performance Optimization: Making React Fly
+
+React is fast by default, but complex applications can suffer from sluggish interactions if not optimized. This chapter explores techniques to keep your app responsive, focusing on **rendering performance** and **bundle size**.
+
+---
+
+## 1. Memoization with `React.memo`
+
+When a parent component re-renders, all its children re-render recursively. This is usually fine, but if a child is expensive, you can skip re-rendering if its props haven't changed.
+
+```tsx
+const ExpensiveChart = React.memo(({ data }) => {
+  console.log("Rendering chart...");
+  return <Chart data={data} />;
+});
+```
+
+### When NOT to Memoize
+Don't wrap everything in `memo`. The comparison check itself has a cost! Use it only for:
+- Components with heavy rendering logic.
+- Components that re-render often with the exact same props.
+
+---
+
+## 2. Code Splitting: `React.lazy` & `Suspense`
+
+Instead of shipping one giant JavaScript bundle to the user, split your code into smaller chunks that load on demand.
+
+### Route-Based Splitting
+This is the most common pattern.
+
+```tsx
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Load these components only when the route is visited!
+const Home = lazy(() => import('./routes/Home'));
+const Dashboard = lazy(() => import('./routes/Dashboard'));
+
+function App() {
+  return (
+    <Router>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </Suspense>
+    </Router>
+  );
+}
+```
+
+---
+
+## 3. Virtualization: Handling Large Lists
+
+Rendering thousands of DOM nodes will freeze the browser. **Virtualization** (or "windowing") renders only the items currently visible in the viewport.
+
+Libraries like `react-window` or `react-virtuoso` make this easy.
+
+```tsx
+import { FixedSizeList as List } from 'react-window';
+
+const Row = ({ index, style }) => (
+  <div style={style}>Row {index}</div>
+);
+
+const Example = () => (
+  <List
+    height={150}
+    itemCount={1000}
+    itemSize={35}
+    width={300}
+  >
+    {Row}
+  </List>
+);
+```
+
+---
+
+## 4. Concurrent React: `useTransition`
+
+New in React 18, concurrent features help keep the UI responsive during heavy updates.
+
+If a state update causes the UI to freeze (like filtering a large list), wrap it in `startTransition`. This tells React: "This update is low priority. If the user types, interrupt this update to handle the input first."
+
+```tsx
+import { useState, useTransition } from 'react';
+
+function FilterList({ names }) {
+  const [query, setQuery] = useState('');
+  const [list, setList] = useState(names);
+  const [isPending, startTransition] = useTransition();
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value); // Urgent: Update input field immediately
+
+    startTransition(() => {
+      // Low priority: Filter the list
+      setList(names.filter(item => item.includes(value)));
+    });
+  };
+
+  return (
+    <div>
+      <input type="text" value={query} onChange={handleChange} />
+      {isPending ? <p>Filtering...</p> : <ul>{list.map(i => <li key={i}>{i}</li>)}</ul>}
+    </div>
+  );
+}
+```
+
+---
+
+## Performance Checklist
+
+1. [ ] **Profile first**: Use the React DevTools Profiler to find actual bottlenecks.
+2. [ ] **Split chunks**: Use `lazy` for routes.
+3. [ ] **Memoize effectively**: Use `useMemo` for heavy computations.
+4. [ ] **Virtualize lists**: Don't render 10,000 rows.
+5. [ ] **Optimize images**: Use modern formats (WebP) or lazy loading.

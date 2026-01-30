@@ -15,8 +15,20 @@ book:
     - intro.qmd
     - SetupReactAppLocallyInSeconds.qmd
     - WhatNodeJSDoes.qmd
+    - ReactHooksDeepDive.qmd
+    - StateManagementPatterns.qmd
+    - Styling.qmd
+    - PerformanceOptimization.qmd
     - ErrorBoundary.qmd
     - MockOrInterceptAPI.qmd
+    - TestingReactApps.qmd
+    - MonorepoArchitecture.qmd
+    - CrossPlatformDesktopApps.qmd
+    - TheAISidecarPattern.qmd
+    - HighPerformanceCanvas.qmd
+    - CommandSystems.qmd
+    - SharedTypesAndSchemas.qmd
+    - ProductionDeployment.qmd
 
 
 website:
@@ -30,14 +42,40 @@ website:
         href: index.qmd
       - text: "Intro"
         href: intro.qmd
-      - text: "SetupReactAppLocallyInSeconds"
+      - text: "Setup"
         href: SetupReactAppLocallyInSeconds.qmd
-      - text: "WhatNodeJSDoes"
+      - text: "Node"
         href: WhatNodeJSDoes.qmd
-      - text: "ErrorBoundary"
+      - text: "Hooks"
+        href: ReactHooksDeepDive.qmd
+      - text: "State"
+        href: StateManagementPatterns.qmd
+      - text: "Styling"
+        href: Styling.qmd
+      - text: "Perf"
+        href: PerformanceOptimization.qmd
+      - text: "Errors"
         href: ErrorBoundary.qmd
-      - text: "MockOrInterceptAPI"
+      - text: "Mocking"
         href: MockOrInterceptAPI.qmd
+      - text: "Testing"
+        href: TestingReactApps.qmd
+      - text: "App Arch"
+        menu:
+          - text: "Monorepos"
+            href: MonorepoArchitecture.qmd
+          - text: "Desktop (Tauri)"
+            href: CrossPlatformDesktopApps.qmd
+          - text: "AI Sidecar"
+            href: TheAISidecarPattern.qmd
+          - text: "Canvas"
+            href: HighPerformanceCanvas.qmd
+          - text: "Commands"
+            href: CommandSystems.qmd
+          - text: "Shared Types"
+            href: SharedTypesAndSchemas.qmd
+          - text: "Deployment"
+            href: ProductionDeployment.qmd
 
 
 

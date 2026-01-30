@@ -2,10 +2,12 @@
 
 Before diving into code architecture and patterns, it’s useful to have a working React app scaffolded quickly — so you can focus immediately on building features.
 
+In the past, `create-react-app` (CRA) was the go-to standard. However, the ecosystem has evolved. Today, **Vite** is the industry standard for starting new React projects. It offers significantly faster dev server startup, instant hot module replacement (HMR), and optimized production builds.
+
 In this chapter, you’ll get a highly streamlined shell script that:
 
 1. Prompts you for the project name (with a handy default)
-2. SSets up a new React app using modern tools (Vite preferred)
+2. Sets up a new React app using **Vite** (the modern standard)
 3. Installs dependencies
 4. Launches the development server
 
@@ -21,12 +23,11 @@ All of this happens in just a few seconds, assuming Node.js is already installed
 
 ---
 
-### 🎯 Why This Script Matters
+### 🎯 Why Vite?
 
-- **Zero boilerplate fuss**: No manual commands needed
-- **Modern tooling**: Uses Vite for fast builds or CRA if preferred
-- **Customizable**: Easily extended to include TypeScript, ESLint, state libraries like Recoil, or CI integration
-- **Perfect for new projects**: Get productive in seconds
+- **Instant Server Start**: Unlike CRA, which bundles your entire app before starting, Vite serves modules on demand.
+- **Lightning Fast HMR**: Changes appear instantly, regardless of app size.
+- **Rich Plugin Ecosystem**: First-class support for TypeScript, JSX, CSS modules, and more out of the box.
 
 ---
 
@@ -40,7 +41,7 @@ All of this happens in just a few seconds, assuming Node.js is already installed
 
 📌 Now, let's look at the actual shell script for this automation:
 
-📄 run-react-app.sh
+📄 `run-react-app.sh`
 
 ```bash
 #!/usr/bin/env bash
@@ -50,52 +51,43 @@ read -p "Enter your React project name (default: my-react-app): " APP_NAME
 APP_NAME=${APP_NAME:-my-react-app}
 
 # Prompt for TypeScript option
-read -p "Use TypeScript? (y/n, default n): " USE_TS
-USE_TS=${USE_TS:-n}
+read -p "Use TypeScript? (y/n, default y): " USE_TS
+USE_TS=${USE_TS:-y}
 
-# Prompt for preferred tool (Vite or CRA)
-read -p "Use Vite scaffold? (y/n, default y): " USE_VITE
-USE_VITE=${USE_VITE:-y}
+echo "🚧 Creating project: $APP_NAME with Vite..."
 
-echo "🚧 Creating project: $APP_NAME"
-
-if [ "$USE_VITE" == "y" ]; then
-  if [ "$USE_TS" == "y" ]; then
-    npm create vite@latest "$APP_NAME" -- --template react-ts
-  else
-    npm create vite@latest "$APP_NAME" -- --template react
-  fi
-  cd "$APP_NAME"
-  npm install
-  npm run dev
+if [ "$USE_TS" == "y" ]; then
+  npm create vite@latest "$APP_NAME" -- --template react-ts
 else
-  if [ "$USE_TS" == "y" ]; then
-    npx create-react-app "$APP_NAME" --template typescript
-  else
-    npx create-react-app "$APP_NAME"
-  fi
-  cd "$APP_NAME"
-  npm start
+  npm create vite@latest "$APP_NAME" -- --template react
 fi
-```
 
+cd "$APP_NAME"
+
+echo "📦 Installing dependencies..."
+npm install
+
+echo "🚀 Starting development server..."
+npm run dev
+```
 
 📌 **How to Use**:
 
-	1.	Save the script as run-react-app.sh
-	2.	Make it executable:
+1.	Save the script as `run-react-app.sh`
+2.	Make it executable:
 
 ```bash
 chmod +x run-react-app.sh
 ```
-    3.	Run it in a terminal:
+
+3.	Run it in a terminal:
 
 ```bash
 ./run-react-app.sh
 ```
 
+You'll be prompted for a project name and TypeScript preference. Within seconds, you’ll have your React app running at `localhost:5173`.
 
-You'll be prompted for project name, TypeScript preference, and whether to use Vite or CRA. Within seconds, you’ll have your React app running at localhost:3000 (CRA) or localhost:5173 (Vite).
 
 
 

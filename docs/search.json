@@ -1,0 +1,282 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The React Blueprint",
+    "section": "",
+    "text": "The React Blueprint\nFirst Edition (Version 1.0)\nCopyright © 2025 Amit Verma. All rights reserved.\nNo part of this publication may be reproduced, distributed, or transmitted in any form or by any means—including electronic or mechanical methods—without the prior written permission of the author, except in the case of brief quotations used in reviews or scholarly works. This eBook is published through Kindle Direct Publishing and is intended for personal, non-commercial use only. For permission requests or inquiries, please contact: booksbyamit@gmail.com",
+    "crumbs": [
+      "The React Blueprint"
+    ]
+  },
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "The React Blueprint",
+    "section": "Welcome!",
+    "text": "Welcome!\nWelcome to The React Blueprint — your hands-on, battle-tested guide to mastering React.js the modern way.\nWhether you’re crafting sleek frontends, scaling robust enterprise UI systems, or simply aiming for seamless integration with REST APIs, this book is your essential blueprint. We’ve distilled years of real-world experience into clear patterns, intelligent tools, and production-ready practices, empowering you to architect, code, and launch with confidence.\nAs a fellow software engineer, you already know that writing React code itself isn’t the hardest part. The true challenge lies in scaling, testing, and maintaining it efficiently in a fast-paced environment. That’s precisely where The React Blueprint steps in.\nInside, you’ll discover:\n\nCore Best Practices: Go beyond basic syntax to understand why and how to build resilient React applications.\nAdvanced Component Architecture: Learn to design highly reusable and maintainable component systems.\nEffective API Mocking with MSW: Accelerate your development and testing workflows by mastering API mocking techniques.\nRobust Error Handling & Resilience: Implement strategies to create applications that gracefully handle edge cases and unexpected issues.\nRapid Deployment Strategies: Leverage scripts and techniques to get your applications live in seconds.\nProduction-Ready Code Examples: Dive into real-world scenarios, complete with TypeScript, comprehensive tests, and adaptable patterns.\n\nThis book is designed to evolve with your journey—from setting up a pristine local development environment to building and maintaining sophisticated, production-grade React systems. We prioritize minimal boilerplate and maximum clarity, ensuring every concept is easy to grasp and apply.\nLet’s build smarter UIs together.",
+    "crumbs": [
+      "The React Blueprint"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Dedication",
+    "section": "",
+    "text": "About the Author\nTo my family, friends, and mentors — thank you for your encouragement, patience, and belief. Your support made this journey possible and meaningful.\nAmit Kumar Verma is a Lead Software Engineer with over 15 years of professional experience in building large-scale, cloud-native applications. His expertise includes front-end development with frameworks like React and AngularJS, backend services with Java, Spring Boot, and Node.js, and DevOps practices leveraging Docker and Kubernetes.\nAmit is passionate about creating performant, maintainable user interfaces that scale. He has led successful frontend and full-stack teams in domains such as healthcare, fintech, retail, and insurance, and has worked extensively with tools like React, TypeScript, Redux, Recoil, Zustand, and Next.js.\nHe believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When he’s not writing code or leading architecture discussions, Amit enjoys exploring new frameworks, mentoring junior developers, and turning complex frontend problems into elegant patterns.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#acknowledgments",
+    "href": "intro.html#acknowledgments",
+    "title": "Dedication",
+    "section": "Acknowledgments",
+    "text": "Acknowledgments\nWriting this book has been a deeply rewarding experience. I’d like to thank the open-source community behind React and its ecosystem, whose continuous innovation and collaboration make building modern interfaces a joy.\nTo my colleagues, mentors, and readers — thank you for your feedback, inspiration, and energy. And to my family: your quiet sacrifices, love, and strength are behind every word in this book.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#preface",
+    "href": "intro.html#preface",
+    "title": "Dedication",
+    "section": "Preface",
+    "text": "Preface\nReact has fundamentally changed how we build user interfaces — not just in the browser, but across platforms. But as the frontend landscape grows more powerful, it also grows more complex.\nThe React Blueprint is my attempt to bring clarity, order, and real-world wisdom to that complexity. This book isn’t about memorizing hooks or learning JSX syntax — it’s about understanding how to design maintainable components, manage state at scale, mock APIs cleanly, and ship production-grade React applications with confidence.\nYou’ll learn how to: - Scaffold React apps quickly with the right tools - Use modern state management patterns effectively - Handle errors with resilience using error boundaries - Mock APIs like a pro using MSW - Write clean, scalable code with TypeScript\nThe ideas shared here come from years of leading frontend projects, debugging real production issues, and simplifying things that didn’t need to be hard. I hope this blueprint helps you navigate your React journey — and that you’ll share your blueprint with others, too.\nAmit Verma Chaska, Minnesota July 2025",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#how-to-use-this-book",
+    "href": "intro.html#how-to-use-this-book",
+    "title": "Dedication",
+    "section": "How to Use This Book",
+    "text": "How to Use This Book\n\nRead It End-to-End or Jump Around\nEach chapter is written to be self-contained and hands-on. If you’re new to React, you can start from the beginning. If you’re already comfortable, feel free to jump to what interests you most — whether that’s API mocking, state management, or app structure.\n\n\nPractical First\nYou won’t find theory for the sake of theory here. Every pattern, snippet, and technique is something you can apply right away. The book includes working examples, CLI tips, and dev workflow boosters to help you build faster and cleaner.\n\n\nTooling That Works\nThe examples use tools like create-react-app, Vite, TypeScript, MSW, and GitHub. You’ll see working package.json snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.\n\n\nCode You Can Trust\nAll code samples are tested and compatible with current React (v18+). If there are updates in the ecosystem, you’ll find them referenced online through the companion repo.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#disclaimer",
+    "href": "intro.html#disclaimer",
+    "title": "Dedication",
+    "section": "Disclaimer",
+    "text": "Disclaimer\nThis book is intended for educational and professional development purposes. While every effort has been made to ensure accuracy and completeness, the author and publisher assume no responsibility for errors, omissions, or misuse of information provided.\nAll implementation decisions and production uses of code examples are at your own discretion. Always follow secure coding practices, respect project requirements, and consult your organization’s development standards before applying code from this book.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html",
+    "href": "SetupReactAppLocallyInSeconds.html",
+    "title": "🚀 Setup React App Locally in Seconds",
+    "section": "",
+    "text": "Before diving into code architecture and patterns, it’s useful to have a working React app scaffolded quickly — so you can focus immediately on building features.\nIn this chapter, you’ll get a highly streamlined shell script that:\n\nPrompts you for the project name (with a handy default)\nSSets up a new React app using modern tools (Vite preferred)\nInstalls dependencies\nLaunches the development server\n\nAll of this happens in just a few seconds, assuming Node.js is already installed. The script works on macOS, Linux, and Windows Subsystem for Linux (WSL).\n\n🧠 What You Need Pre-installed\n\nNode.js (v18 or higher recommended)\nnpm (comes with Node.js)\nnpx (comes with Node.js)\n\n\n\n🎯 Why This Script Matters\n\nZero boilerplate fuss: No manual commands needed\nModern tooling: Uses Vite for fast builds or CRA if preferred\nCustomizable: Easily extended to include TypeScript, ESLint, state libraries like Recoil, or CI integration\nPerfect for new projects: Get productive in seconds\n\n\n\n\n🧪 What You’ll Learn\n\nAutomatically scaffolding a React project from scratch\nSetting up with either React+TypeScript or plain React\nHow to generalize the script for multiple environments or tooling preferences\n\n\n📌 Now, let’s look at the actual shell script for this automation:\n📄 run-react-app.sh\n#!/usr/bin/env bash\n\n# Prompt for project name, with a default value\nread -p \"Enter your React project name (default: my-react-app): \" APP_NAME\nAPP_NAME=${APP_NAME:-my-react-app}\n\n# Prompt for TypeScript option\nread -p \"Use TypeScript? (y/n, default n): \" USE_TS\nUSE_TS=${USE_TS:-n}\n\n# Prompt for preferred tool (Vite or CRA)\nread -p \"Use Vite scaffold? (y/n, default y): \" USE_VITE\nUSE_VITE=${USE_VITE:-y}\n\necho \"🚧 Creating project: $APP_NAME\"\n\nif [ \"$USE_VITE\" == \"y\" ]; then\n  if [ \"$USE_TS\" == \"y\" ]; then\n    npm create vite@latest \"$APP_NAME\" -- --template react-ts\n  else\n    npm create vite@latest \"$APP_NAME\" -- --template react\n  fi\n  cd \"$APP_NAME\"\n  npm install\n  npm run dev\nelse\n  if [ \"$USE_TS\" == \"y\" ]; then\n    npx create-react-app \"$APP_NAME\" --template typescript\n  else\n    npx create-react-app \"$APP_NAME\"\n  fi\n  cd \"$APP_NAME\"\n  npm start\nfi\n📌 How to Use:\n1.  Save the script as run-react-app.sh\n2.  Make it executable:\nchmod +x run-react-app.sh\n3.  Run it in a terminal:\n./run-react-app.sh\nYou’ll be prompted for project name, TypeScript preference, and whether to use Vite or CRA. Within seconds, you’ll have your React app running at localhost:3000 (CRA) or localhost:5173 (Vite).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>🚀 Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html",
+    "href": "WhatNodeJSDoes.html",
+    "title": "What Node.js Does in a React Project",
+    "section": "",
+    "text": "From Development Server to Production Build",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#understanding-node.js-the-unsung-hero-of-modern-react",
+    "href": "WhatNodeJSDoes.html#understanding-node.js-the-unsung-hero-of-modern-react",
+    "title": "What Node.js Does in a React Project",
+    "section": "Understanding Node.js: The Unsung Hero of Modern React",
+    "text": "Understanding Node.js: The Unsung Hero of Modern React\nNode.js, built on Chrome’s fast V8 engine, is more than just a JavaScript runtime. It’s a foundational piece of modern web development that allows JavaScript to run outside the browser — powering development servers, build tools, CLI utilities, and full-scale backend services.\nIn a modern React project, Node.js plays several crucial roles:\n\nDevelopment Server: Node.js powers local servers (like Create React App or Vite), enabling live reload and rapid development feedback loops.\nBuild Engine: It transforms source code into optimized assets using bundlers like Webpack or Vite, including transpilation, tree-shaking, and minification.\nBackend Server: Node.js runs REST APIs, server-side rendering (e.g., with Next.js), and CLI tools, and manages project dependencies via npm or yarn.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#development-vs-production-two-faces-of-node.js",
+    "href": "WhatNodeJSDoes.html#development-vs-production-two-faces-of-node.js",
+    "title": "What Node.js Does in a React Project",
+    "section": "Development vs Production: Two Faces of Node.js",
+    "text": "Development vs Production: Two Faces of Node.js\nUnderstanding how Node.js behaves in different environments is essential for building scalable applications:\n\n\n\n\n\n\n\n\n\nEnvironment\nNode.js Role\nOutput Characteristics\nPurpose\n\n\n\n\nDevelopment\nRuns dev server (CRA, Vite)\nUnminified code, source maps, fast HMR\nQuick iteration, debugging, and verbose feedback\n\n\nProduction\nExecutes build process\nMinified, optimized JS/CSS bundles\nMaximum performance, minimal footprint\n\n\n\nThe NODE_ENV variable is key: - NODE_ENV=development: Enables HMR, detailed errors, source maps. - NODE_ENV=production: Enables code minification, tree-shaking, optimizations.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#rendering-flow-how-react-app-runs-locally",
+    "href": "WhatNodeJSDoes.html#rendering-flow-how-react-app-runs-locally",
+    "title": "What Node.js Does in a React Project",
+    "section": "🖥️ Rendering Flow: How React App Runs Locally",
+    "text": "🖥️ Rendering Flow: How React App Runs Locally\n\n\n\n\n\nflowchart LR\n  A[Developer edits code] --&gt; B(Node.js Dev Server)\n  B --&gt; C[Transpile & Bundle]\n  C --&gt; D[Serve Bundle to Browser]\n  D --&gt; E[Browser Renders UI]",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#system-architecture-overview",
+    "href": "WhatNodeJSDoes.html#system-architecture-overview",
+    "title": "What Node.js Does in a React Project",
+    "section": "🧱 System Architecture Overview",
+    "text": "🧱 System Architecture Overview\n\n\n\n\n\n\n\nG\n\n\n\nSource\n\nUI Source Code\n\n\n\nDevServer\n\nDev Server\n(CRA/Vite)\n\n\n\nSource-&gt;DevServer\n\n\n\n\n\nBundler\n\nBuild Tools\n(Vite/Webpack)\n\n\n\nSource-&gt;Bundler\n\n\n\n\n\nBrowser\n\nReact UI in Browser\n\n\n\nDevServer-&gt;Browser\n\n\n\n\n\nMSW\n\nMock Service Worker\n\n\n\nBrowser-&gt;MSW\n\n\n\n\n\nOutput\n\nProduction Build\n(Static Files)\n\n\n\nBundler-&gt;Output\n\n\n\n\n\nHosting\n\nStatic Hosting/CDN\n\n\n\nOutput-&gt;Hosting\n\n\n\n\n\nBackend\n\nNode.js API Server\n\n\n\nOutput-&gt;Backend\n\n\nAPIs called from browser\n\n\n\nHosting-&gt;Browser\n\n\n\n\n\nnpmLib\n\nnpm Libraries\n\n\n\nnpmLib-&gt;Source\n\n\n\n\n\nnpmLib-&gt;Backend",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#anatomy-of-the-development-lifecycle",
+    "href": "WhatNodeJSDoes.html#anatomy-of-the-development-lifecycle",
+    "title": "What Node.js Does in a React Project",
+    "section": "Anatomy of the Development Lifecycle",
+    "text": "Anatomy of the Development Lifecycle\n\nSource and Dependencies\n\nUI Source Code: Your written React, CSS, and static assets.\nnpm Libraries: Open-source tools (e.g., React, Zustand, MSW), managed via package.json.\n\n\n\nDevelopment Mode\n\nDev Server: Tools like Vite or CRA watch your files and recompile instantly with Hot Module Replacement (HMR).\nMSW: Optional mock layer that intercepts API calls and returns static data for frontend testing.\n\n\n\nProduction Build\n\nBuild Tools: Run with npm run build, producing a static set of files — HTML, minified JS, CSS. This build process is typically powered by tools like Webpack, Vite, Parcel, or esbuild — each transforming your modular JavaScript code and assets into optimized static bundles. Webpack, being the most widely adopted, performs module bundling, code splitting, tree-shaking, and asset compression. Vite, on the other hand, is gaining popularity for its lightning-fast performance during both development and production. These tools analyze your project dependencies, apply loaders (like Babel or PostCSS), and output static files suitable for deployment.\nOutput: The build process generates a dist or build folder containing static files — typically index.html, minified JavaScript bundles (like main.[hash].js), CSS files, images, and fonts. These files are fully self-contained and do not require a Node.js server to run. You can deploy them on:\n\nGitHub Pages: Ideal for free personal or project websites. Just push the build folder to the gh-pages branch and enable GitHub Pages in the repository settings.\nNetlify: A popular platform for static site deployment with CI/CD, custom domains, and edge functions. Just link your repo and it handles everything automatically.\nS3 with CloudFront (AWS): For scalable, production-grade hosting. Upload files to an S3 bucket and serve them globally using CloudFront CDN.\nVercel, Firebase Hosting, or Render: Other options with fast deployment workflows, great for frontend projects.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#hosting-and-deployment",
+    "href": "WhatNodeJSDoes.html#hosting-and-deployment",
+    "title": "What Node.js Does in a React Project",
+    "section": "Hosting and Deployment",
+    "text": "Hosting and Deployment\nReact builds are static and server-agnostic — you don’t need Node.js to host them.\n\nWeb Servers: Nginx, Apache, or Express\nCDNs: Netlify, Vercel, GitHub Pages, Cloudflare\nCloud Buckets: AWS S3, GCP Storage",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#runtime-the-live-application",
+    "href": "WhatNodeJSDoes.html#runtime-the-live-application",
+    "title": "What Node.js Does in a React Project",
+    "section": "Runtime: The Live Application",
+    "text": "Runtime: The Live Application\nIn the browser, your deployed React app becomes interactive by calling APIs hosted on your Node.js backend — using fetch, GraphQL, or WebSockets.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#summary",
+    "href": "WhatNodeJSDoes.html#summary",
+    "title": "What Node.js Does in a React Project",
+    "section": "Summary",
+    "text": "Summary\nNode.js bridges the entire React app lifecycle:\n\nIn development: live reloading, HMR, fast feedback\nIn production: build optimization, bundling, and backend APIs\n\nIt’s the foundation behind both the UI development experience and the deployment pipeline. Mastering its role ensures smoother development and faster production releases.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html",
+    "href": "ErrorBoundary.html",
+    "title": "Chapter: Error Boundary in React",
+    "section": "",
+    "text": "What is an Error Boundary?\nAs your application grows, more components are added and it becomes harder to track all possible exceptions that might occur during rendering. React offers a powerful feature to catch such errors: Error Boundaries.\nAn Error Boundary is a special kind of React component that catches JavaScript errors anywhere in its child component tree, logs those errors, and displays a fallback UI instead of the component tree that crashed.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#what-is-an-error-boundary",
+    "href": "ErrorBoundary.html#what-is-an-error-boundary",
+    "title": "Chapter: Error Boundary in React",
+    "section": "",
+    "text": "Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#why-do-we-need-error-boundaries",
+    "href": "ErrorBoundary.html#why-do-we-need-error-boundaries",
+    "title": "Chapter: Error Boundary in React",
+    "section": "Why Do We Need Error Boundaries?",
+    "text": "Why Do We Need Error Boundaries?\nIn a large application, it’s not practical to wrap every small component in a try-catch. Error Boundaries help you:\n\nPrevent the whole app from crashing.\nShow a user-friendly message.\nLog errors for debugging or analytics.\nAllow the rest of the app to continue functioning.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#when-dont-they-work",
+    "href": "ErrorBoundary.html#when-dont-they-work",
+    "title": "Chapter: Error Boundary in React",
+    "section": "When Don’t They Work?",
+    "text": "When Don’t They Work?\nError boundaries do not catch errors for:\n\nEvent handlers (you still need try-catch for those).\nAsynchronous code (e.g., setTimeout or fetch).\nServer-side rendering.\nErrors thrown in the error boundary itself.\n\n\nRobust ErrorBoundary\n•   Capture stack traces\n•   Identify failing components\n•   Log meaningful info with optional external logging\n•   Show fallback UI safely\n•   Help debug internal TypeScript component libs\n✅ Production-Ready ErrorBoundary.tsx (with full logging)\n\n    import React from 'react'\n\n    type ErrorBoundaryProps = {\n      name?: string  // optional label for where the boundary is used\n      fallback?: React.ReactNode\n      children: React.ReactNode\n    }\n\n    type ErrorBoundaryState = {\n      hasError: boolean\n      error?: Error\n      errorInfo?: React.ErrorInfo\n    }\n\n    export class ErrorBoundary extends React.Component&lt;ErrorBoundaryProps, ErrorBoundaryState&gt; {\n      constructor(props: ErrorBoundaryProps) {\n        super(props)\n        this.state = {\n          hasError: false,\n        }\n      }\n\n      static getDerivedStateFromError(error: Error) {\n        return { hasError: true, error }\n      }\n\n      componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {\n        const boundaryName = this.props.name || 'Unknown Boundary'\n\n        console.group(`[ErrorBoundary] ${boundaryName}`)\n        console.error('Error:', error)\n        console.error('Component Stack:', errorInfo.componentStack)\n        console.groupEnd()\n\n        // Optional: Send to remote logger\n        // sendErrorToLoggingService({ name: boundaryName, error, stack: errorInfo.componentStack })\n      }\n\n      render() {\n        if (this.state.hasError) {\n          return this.props.fallback || (\n            &lt;div style={{ color: 'red', padding: '1rem' }}&gt;\n              &lt;strong&gt;{this.props.name || 'Something went wrong'}&lt;/strong&gt;&lt;br /&gt;\n              &lt;code&gt;{this.state.error?.message}&lt;/code&gt;\n            &lt;/div&gt;\n          )\n        }\n        return this.props.children\n      }\n    }\n\n### 🧩 Example Usage to Isolate Internal Component Failures\nimport { ErrorBoundary } from './ErrorBoundary'\nimport MyComponent from '@internal-lib/MyComponent'\n\nexport default function App() {\n  return (\n    &lt;ErrorBoundary name=\"App\"&gt;\n      &lt;Header /&gt;\n      &lt;ErrorBoundary name=\"InternalLib:MyComponent\"&gt;\n        &lt;MyComponent /&gt;\n      &lt;/ErrorBoundary&gt;\n      &lt;Footer /&gt;\n    &lt;/ErrorBoundary&gt;\n  )\n}\n⚙️ Bonus: Enable Source Maps in Your Builds\nMake sure your tsconfig.json and vite/webpack config includes:\n{\n  \"compilerOptions\": {\n    \"sourceMap\": true\n  }\n}\nIn webpack:\ndevtool: 'source-map'",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#best-practices",
+    "href": "ErrorBoundary.html#best-practices",
+    "title": "Chapter: Error Boundary in React",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nUse error boundaries strategically (e.g., around routes, widgets, or external integrations).\nCombine with logging tools (like Sentry or LogRocket) to track and report issues.\nKeep fallback UI helpful and minimal.\nAvoid putting an error boundary around your entire app unless you have a good reason (like a global crash screen).",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "MockOrInterceptAPI.html",
+    "href": "MockOrInterceptAPI.html",
+    "title": "Mocking APIs with MSW",
+    "section": "",
+    "text": "In modern frontend development, building and testing React applications often requires reliable API responses — even before the backend is ready. Instead of relying on unstable endpoints or waiting for real data, developers can simulate server behavior directly in the browser using Mock Service Worker (MSW).\nMSW is a powerful tool that intercepts HTTP requests made by your app and serves mocked responses, all while using the browser’s native Service Worker API. Unlike traditional mocking tools that rely on hardcoded stubs or test-only environments, MSW works at the network level. This means your application behaves as if it’s communicating with a real server, enabling realistic development, testing, and debugging — with zero backend dependency.\nWhether you’re building features locally, running integration tests, or simulating failure scenarios, MSW empowers you to control API behavior with precision and clarity — making it an essential tool in the modern React developer’s toolkit.\n\n📚 Learn more: Mock Service Worker – Quick Start Guide\n\n\nGetting Hands-On with MSW\nTo demonstrate MSW in action, let’s walk through a hands-on example where we simulate a simple API for fetching user information in a React app. Instead of relying on a real backend, we’ll use MSW to intercept the /api/user request and return a mocked JSON response directly in the browser.\nThis approach not only allows us to start building our frontend independently, but also makes it easier to test edge cases, simulate failures, and ensure consistent development workflows.\nThe steps below will show you how to: - Define mock API handlers using MSW - Register the service worker for local development - Use fetch() inside a React component and receive a mocked response\nLet’s start by creating the request handler for /api/user.\n\n\nStep 1: Install MSW\nnpm install msw@latest\n📁 Folder Structure (recommended)\nsrc/\n  mocks/\n    handlers.ts\n    browser.ts\n  index.tsx\nDefines a list of mock API endpoints and how to respond to them.\n📄handlers.ts :\n// src/mocks/handlers.ts\nimport { http, HttpResponse } from 'msw'\n\nexport const handlers = [\n  http.get('/api/user', () =&gt; {\n    return HttpResponse.json({ id: 1, name: 'Amit Verma' });\n  }),\n];\n📌 Sets up the MSW worker in the browser and uses the handlers from 📄handlers.ts.\n// src/mocks/browser.ts\nimport { setupWorker } from 'msw/browser'\nimport { handlers } from './handlers'\n\nexport const worker = setupWorker(...handlers);\n\nworker.start({\n  onUnhandledRequest: 'warn'\n});\nsetupWorker() starts a Service Worker that listens to fetch and intercepts API calls in the browser. 🧠 This acts like your mock backend — it returns fake data instead of calling the real server.\nThen in 📄index.tsx:\n\nimport React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport './index.css';\nimport App from './App';\nimport reportWebVitals from './reportWebVitals';\n\nconst startApp = () =&gt; {\n  const root = ReactDOM.createRoot(\n    document.getElementById('root') as HTMLElement\n  );\n  root.render(\n    &lt;React.StrictMode&gt;\n      &lt;App /&gt;\n    &lt;/React.StrictMode&gt;\n  );\n};\n\nif (process.env.NODE_ENV === 'development') {\n  import('./mocks/browser').then(({ worker }) =&gt; {\n    worker.start({ onUnhandledRequest: 'warn' }).then(() =&gt; {\n      startApp(); // ⏳ Only render app after MSW is ready\n    });\n  });\n} else {\n  startApp();\n}\n\nreportWebVitals();\n📄App.tsx\nimport React from 'react';\nimport './App.css';\nimport MyComp from './MyComp';\n\nfunction App() {\n\n  return (\n    &lt;div className=\"App\"&gt;\n      &lt;MyComp /&gt;\n    &lt;/div&gt;\n  );\n}\n\nexport default App;\n📄MyComp.tsx :\n\nimport React, { useEffect, useState } from 'react';\n\n\ntype User = {\n    id: number;\n    name: string;\n};\n\nconst MyComp = () =&gt; {\n    const [user, setUser] = useState&lt;User | null&gt;(null);\n\nuseEffect(() =&gt; {\n  fetch('/api/user')\n    .then(async (response) =&gt; {\n      const contentType = response.headers.get('Content-Type');\n      if (contentType && contentType.includes('application/json')) {\n        const data = await response.json();\n        setUser(data);\n      } else {\n        throw new Error('Response is not JSON');\n      }\n    })\n    .catch(error =&gt; console.error('Error fetching user:', error));\n}, []);\n\n    return (\n        &lt;div&gt;\n        {user ? (\n            &lt;div&gt;\n                &lt;h1&gt;User Details&lt;/h1&gt;\n                &lt;p&gt;ID: {user.id}&lt;/p&gt;\n                &lt;p&gt;Name: {user.name}&lt;/p&gt;\n                &lt;p&gt;Role: {user.role}&lt;/p&gt;\n            &lt;/div&gt;\n\n        ) : (\n            &lt;p&gt;Loading user...&lt;/p&gt;\n        )}\n        &lt;/div&gt;\n    );\n\n};\n\nexport default MyComp;\nwe also need to run\nnpx msw init public/ --save\nThis command copies the actual service worker file (mockServiceWorker.js) into your public/ folder. Why It’s Critical • This file is registered by your browser via setupWorker(…) • Without it, you’ll see errors like:\n[MSW] Failed to register a Service Worker\n[MSW] Error: TypeError: Failed to register a ServiceWorker for scope...\n🔄 Flow Summary\nApp → fetch('/api/user')\n     ↓\n[MSW Service Worker]\n     ↓\nhandlers.ts → Matches rest.get('/api/user')\n     ↓\nReturns mocked response (e.g. { id: 1, name: \"Amit\" })\n🧪 Test It\nIn your React component, write:\nuseEffect(() =&gt; {\n  fetch('/api/user')\n    .then(res =&gt; res.json())\n    .then(data =&gt; console.log('Mocked User:', data))\n}, [])\nWhen you run your app, it should log: Mocked User: { id: 1, name: ‘Amit Verma’, role: ‘Lead Software Engineer’ }\n📄package.json\n{\n  \"name\": \"my-react-app\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"dependencies\": {\n    \"@testing-library/dom\": \"^10.4.0\",\n    \"@testing-library/jest-dom\": \"^6.6.3\",\n    \"@testing-library/react\": \"^16.3.0\",\n    \"@testing-library/user-event\": \"^13.5.0\",\n    \"@types/jest\": \"^27.5.2\",\n    \"@types/node\": \"^16.18.126\",\n    \"@types/react\": \"^19.1.8\",\n    \"@types/react-dom\": \"^19.1.6\",\n    \"msw\": \"^2.10.4\",\n    \"react\": \"^19.1.0\",\n    \"react-dom\": \"^19.1.0\",\n    \"react-scripts\": \"5.0.1\",\n    \"typescript\": \"^4.9.5\",\n    \"web-vitals\": \"^2.1.4\"\n  },\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\",\n    \"test\": \"react-scripts test\",\n    \"eject\": \"react-scripts eject\"\n  },\n  \"eslintConfig\": {\n    \"extends\": [\n      \"react-app\",\n      \"react-app/jest\"\n    ]\n  },\n  \"browserslist\": {\n    \"production\": [\n      \"&gt;0.2%\",\n      \"not dead\",\n      \"not op_mini all\"\n    ],\n    \"development\": [\n      \"last 1 chrome version\",\n      \"last 1 firefox version\",\n      \"last 1 safari version\"\n    ]\n  },\n  \"msw\": {\n    \"workerDirectory\": [\n      \"public\"\n    ]\n  }\n}",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Mocking APIs with MSW</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html",
+    "href": "Styling.html",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "",
+    "text": "The Traditional Path: Separation with CSS & SCSS\nIn modern React development, how you style your components is as crucial as how you build them. The right styling strategy can lead to a maintainable, scalable, and enjoyable developer experience, while the wrong one can result in a tangled mess of conflicting rules and “!important” hacks.\nThis chapter explores the two dominant paradigms for styling React applications:\nBy the end, you’ll understand the philosophy, pros, and cons of each approach, empowering you to make an informed decision for your next project.\nThe classic approach to web styling is built on the principle of separation of concerns: HTML provides structure, JavaScript handles behavior, and CSS manages presentation. In a modern React app, this means keeping your styles in dedicated files, separate from your component logic.\nSCSS (Sassy CSS) is a popular CSS preprocessor that enhances standard CSS with features like variables, nested rules, and mixins, making stylesheets more organized and powerful.\nHowever, CSS’s global nature presents a challenge. A style defined for a .button in one file can unintentionally affect a .button elsewhere. The modern solution to this is CSS Modules.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#the-traditional-path-separation-with-css-scss",
+    "href": "Styling.html#the-traditional-path-separation-with-css-scss",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "",
+    "text": "How CSS Modules Work\nWhen you import a stylesheet as a module (e.g., import styles from './Button.module.scss'), your build tool transforms the class names into unique, locally-scoped identifiers. This guarantees that styles for one component won’t leak out and affect another.\n\n\nExample: A Button Component with SCSS Modules\nLet’s see it in action.\n/* Button.module.scss */\n/* Define variables for easy reuse */\n$primary-color: #007bff;\n$text-color: #ffffff;\n\n/* Base button styles */\n.button {\n  border-radius: 8px;\n  border: 1px solid transparent;\n  padding: 0.6em 1.2em;\n  font-size: 1em;\n  font-weight: 500;\n  cursor: pointer;\n  transition: border-color 0.25s;\n  background-color: #f9f9f9;\n  color: #213547;\n}\n\n/* A modifier class for the primary variant */\n.primary {\n  background-color: $primary-color;\n  color: $text-color;\n}\n// Button.jsx\nimport styles from './Button.module.scss';\nimport clsx from 'clsx'; // A utility for conditionally joining class names\n\n// The 'primary' prop determines which style modifier to apply\nexport function Button({ primary, children, onClick }) {\n  const buttonClasses = clsx(\n    styles.button,\n    primary && styles.primary // Apply styles.primary only if the 'primary' prop is true\n  );\n\n  return (\n    &lt;button className={buttonClasses} onClick={onClick}&gt;\n      {children}\n    &lt;/button&gt;\n  );\n}\n\n\nPros and Cons of Traditional Stylesheets\n\n\n\n\n\n\n\nPros\nCons\n\n\n\n\n- Clear Separation of Concerns: Style, logic, and structure live in different files, which many developers find clean and organized.\n- Context Switching: You have to jump between JS and SCSS files to understand a component fully.\n\n\n- Standard Tooling: Works with standard CSS and preprocessors like Sass/SCSS, which have a mature ecosystem.\n- Class Name Management: Even with CSS Modules, you are still managing class name logic (e.g., using clsx or template literals).\n\n\n- Static Analysis: CSS can be linted and analyzed independently of your JavaScript.\n- “Dead Code” Elimination: It can be difficult to confidently delete a style rule, as it’s hard to be certain it isn’t used somewhere in your application.\n\n\n- Potentially Faster Initial Renders: All CSS can be bundled into a single .css file and loaded efficiently by the browser.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#the-component-driven-path-co-location-with-emotion",
+    "href": "Styling.html#the-component-driven-path-co-location-with-emotion",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "The Component-Driven Path: Co-location with Emotion",
+    "text": "The Component-Driven Path: Co-location with Emotion\nCSS-in-JS flips the traditional model on its head. The core philosophy is co-location: a component is a self-contained unit, and its styles are an integral part of its definition. Therefore, styles should live inside the component file.\nEmotion is a leading CSS-in-JS library known for its high performance, small bundle size, and flexible API. It allows you to create React components that have styles attached to them.\n\nHow Emotion Works\nEmotion uses JavaScript’s tagged template literals to let you write actual CSS syntax. At runtime (or build time, depending on configuration), it processes this CSS and injects it into the DOM with unique, generated class names. This provides automatic scoping without any extra setup.\nThe biggest advantage is the ability to use a component’s props directly within your style definitions, making dynamic styling incredibly intuitive.\n\n\nExample: A Button Component with Emotion\nHere is the same button, rebuilt with Emotion.\n// Button.jsx\nimport styled from '@emotion/styled';\n\n// All logic and styling live in this single file.\n// The 'styled.button' syntax creates a React component that renders a &lt;button&gt; tag.\nconst StyledButton = styled.button`\n  border-radius: 8px;\n  border: 1px solid transparent;\n  padding: 0.6em 1.2em;\n  font-size: 1em;\n  font-weight: 500;\n  cursor: pointer;\n  transition: border-color 0.25s;\n\n  /* Use props directly inside the CSS! */\n  background-color: ${props =&gt; (props.primary ? '#007bff' : '#f9f9f9')};\n  color: ${props =&gt; (props.primary ? '#ffffff' : '#213547')};\n`;\n\n// The final component is clean and simple.\n// It passes all its props (like 'primary') down to the StyledButton.\nexport function Button(props) {\n  return &lt;StyledButton {...props} /&gt;;\n}\n\n\nPros and Cons of Emotion (CSS-in-JS)\n\n\n\n\n\n\n\nPros\nCons\n\n\n\n\n- True Encapsulation: All aspects of a component (logic, styles, structure) are in one place. When you delete the component, you delete its styles. No dead code.\n- Learning Curve: Requires learning a new library and paradigm.\n\n\n- Intuitive Dynamic Styling: Using props to alter styles is simple and direct, eliminating the need for managing class name strings.\n- Runtime Overhead: A small runtime is needed to process styles, though libraries like Emotion are highly optimized.\n\n\n- Confidence in Changes: Since styles are scoped locally, you can refactor a component’s styles without fear of breaking something else.\n- Breaks “Separation of Concerns”: For developers accustomed to traditional methods, mixing CSS in JS can feel unnatural.\n\n\n- Excellent for Component Libraries: The encapsulation makes it the ideal choice for creating reusable, themeable components.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#head-to-head-comparison",
+    "href": "Styling.html#head-to-head-comparison",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "Head-to-Head Comparison",
+    "text": "Head-to-Head Comparison\n\n\n\n\n\n\n\n\nAspect\nCSS / SCSS (with CSS Modules)\nEmotion (CSS-in-JS)\n\n\n\n\nFile Structure\nStyles in .scss, logic in .jsx.\nStyles and logic co-located in .jsx.\n\n\nStyle Scoping\nOpt-in via CSS Modules.\nAutomatic and by default.\n\n\nDynamic Styling\nManage conditional class names.\nUse props directly in style rules.\n\n\nDependencies\nsass preprocessor, clsx (optional).\n@emotion/react, @emotion/styled.\n\n\nKey Philosophy\nSeparation of Concerns.\nCo-location and Component Encapsulation.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#conclusion-which-path-is-right-for-you",
+    "href": "Styling.html#conclusion-which-path-is-right-for-you",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "Conclusion: Which Path Is Right for You?",
+    "text": "Conclusion: Which Path Is Right for You?\nThere is no single “best” way to style a React application. The optimal choice depends on your project’s needs, your team’s experience, and your personal philosophy.\nChoose Traditional CSS/SCSS if:\n\nYour team has strong CSS skills and prefers a clear separation between styling and logic.\nYou are working on a project with a large, pre-existing CSS codebase.\nYou prioritize leveraging the browser’s native CSS parsing for the fastest possible initial paint.\n\nChoose Emotion (CSS-in-JS) if:\n\nYou are building a design system or a reusable component library.\nYour application features highly dynamic and complex UI that changes based on state.\nYour team values component encapsulation and wants to eliminate the risk of style conflicts or unused CSS.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  }
+]

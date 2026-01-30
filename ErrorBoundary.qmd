@@ -26,92 +26,83 @@ Error boundaries do **not** catch errors for:
 - Server-side rendering.
 - Errors thrown in the error boundary itself.
 
-### Robust ErrorBoundary
+### The Modern Way: `react-error-boundary`
 
-	•	Capture stack traces
-	•	Identify failing components
-	•	Log meaningful info with optional external logging
-	•	Show fallback UI safely
-	•	Help debug internal TypeScript component libs
+While writing a class component works, the modern React ecosystem prefers functional components. The library `react-error-boundary` provides a simple wrapper component and hooks to handle errors gracefully without writing a class.
+
+**Installation**:
+```bash
+npm install react-error-boundary
+```
+
+**Usage**:
+
+```tsx
+import { ErrorBoundary } from "react-error-boundary";
+
+function Fallback({ error, resetErrorBoundary }) {
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{ color: "red" }}>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary
+      FallbackComponent={Fallback}
+      onReset={() => {
+        // Reset the state of your app so the error doesn't happen again
+      }}
+    >
+      <MyComponent />
+    </ErrorBoundary>
+  );
+}
+```
+
+---
+
+### The Manual Way: Class Components
+
+If you prefer zero dependencies or need to understand how it works under the hood, here is the robust class-based implementation.
 
 ✅ Production-Ready ErrorBoundary.tsx (with full logging)
 
 ```ts
+import React from 'react'
 
-	import React from 'react'
-
-    type ErrorBoundaryProps = {
-      name?: string  // optional label for where the boundary is used
-      fallback?: React.ReactNode
-      children: React.ReactNode
-    }
-
-    type ErrorBoundaryState = {
-      hasError: boolean
-      error?: Error
-      errorInfo?: React.ErrorInfo
-    }
-
-    export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-      constructor(props: ErrorBoundaryProps) {
-        super(props)
-        this.state = {
-          hasError: false,
-        }
-      }
-
-      static getDerivedStateFromError(error: Error) {
-        return { hasError: true, error }
-      }
-
-      componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        const boundaryName = this.props.name || 'Unknown Boundary'
-
-        console.group(`[ErrorBoundary] ${boundaryName}`)
-        console.error('Error:', error)
-        console.error('Component Stack:', errorInfo.componentStack)
-        console.groupEnd()
-
-        // Optional: Send to remote logger
-        // sendErrorToLoggingService({ name: boundaryName, error, stack: errorInfo.componentStack })
-      }
-
-      render() {
-        if (this.state.hasError) {
-          return this.props.fallback || (
-            <div style={{ color: 'red', padding: '1rem' }}>
-              <strong>{this.props.name || 'Something went wrong'}</strong><br />
-              <code>{this.state.error?.message}</code>
-            </div>
-          )
-        }
-        return this.props.children
-      }
-    }
-
-  ```
-
+type ErrorBoundaryProps = {
+  name?: string  // optional label for where the boundary is used
+  fallback?: React.ReactNode
+  children: React.ReactNode
+}
+// ... (rest of class component)
+```
 
  ---
 
  ### 🧩 Example Usage to Isolate Internal Component Failures
 
-```ts
-import { ErrorBoundary } from './ErrorBoundary'
+```tsx
+import { ErrorBoundary } from './ErrorBoundary' // Your class component OR library wrapper
 import MyComponent from '@internal-lib/MyComponent'
 
 export default function App() {
   return (
-    <ErrorBoundary name="App">
+    <ErrorBoundary name="App" fallback={<div>App crashed</div>}>
       <Header />
-      <ErrorBoundary name="InternalLib:MyComponent">
+      <ErrorBoundary name="InternalLib:MyComponent" fallback={<div>Widget failed</div>}>
         <MyComponent />
       </ErrorBoundary>
       <Footer />
     </ErrorBoundary>
   )
 }
-  ```
+```
 
 
 

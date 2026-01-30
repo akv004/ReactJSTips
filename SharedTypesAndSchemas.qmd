@@ -1,0 +1,77 @@
+# Shared Types & Schemas: The Glue of Your Architecture
+
+In a full-stack project (like our React + Rust + Python monorepo), the biggest source of bugs is **Protocol Mismatch**.
+
+- The Python Sidecar expects `{ "prompt": "string" }`.
+- The React UI sends `{ "text": "string" }`.
+- 💥 Crash.
+
+To fix this, we need a Single Source of Truth for our data schemas.
+
+---
+
+## 1. Zod: Runtime Validation + Static Types
+
+TypeScript types disappear at runtime. **Zod** schemas stay. They are perfect for validation *and* type generation.
+
+In `packages/shared/src/schemas.ts`:
+
+```ts
+import { z } from 'zod';
+
+export const ProjectSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  createdAt: z.string().datetime(),
+  settings: z.object({
+    theme: z.enum(['light', 'dark']),
+    notifications: z.boolean(),
+  }),
+});
+
+// Auto-derive the TypeScript type!
+export type Project = z.infer<typeof ProjectSchema>;
+```
+
+---
+
+## 2. Consuming in React (UI)
+
+Now, your UI components are type-safe.
+
+```tsx
+import { Project, ProjectSchema } from '@my-studio/shared';
+
+function ProjectSettings({ project }: { project: Project }) {
+  // Validate incoming data (e.g. from API)
+  const result = ProjectSchema.safeParse(project);
+
+  if (!result.success) {
+    console.error("Invalid project data!", result.error);
+    return <div>Error loading project</div>;
+  }
+  
+  return <h1>{project.name}</h1>;
+}
+```
+
+---
+
+## 3. Consuming in Python (Sidecar)
+
+Wait, Python can't read TypeScript files!
+
+Correct. But we can generate Python Pydantic models from our Zod/JSON schemas, or simply ensure they match.
+
+A common pattern is to export the JSON Schema from Zod:
+
+```ts
+import { zodToJsonSchema } from 'zod-to-json-schema';
+
+const jsonSchema = zodToJsonSchema(ProjectSchema, 'Project');
+console.log(JSON.stringify(jsonSchema, null, 2));
+```
+
+You can then use tools like `datamodel-code-generator` in Python to convert this JSON Schema into a Pydantic class automatically during your build process.
+
+**Result**: You change a field in `packages/shared`, run a script, and both your React UI and Python Backend types are updated. Sync nirvana.

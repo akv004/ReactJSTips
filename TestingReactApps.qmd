@@ -1,0 +1,102 @@
+# Testing Strategies for React Applications
+
+Testing isn't just about finding bugs—it's about **confidence**. It allows you to refactor legacy code, upgrade dependencies, and ship features without the constant fear of breaking something.
+
+In the React ecosystem, we follow the "Testing Trophy" philosophy: **Write tests. Not too many. Mostly integration.**
+
+---
+
+## 1. The Stack: Vitest & React Testing Library
+
+- **Vitest**: A blazing fast unit test runner (compatible with Jest) powered by Vite.
+- **React Testing Library (RTL)**: Utilities to test React components in a way that resembles how users interact with them.
+
+```bash
+npm install -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+---
+
+## 2. Writing Your First Test
+
+Let's test a simple Counter component.
+
+**Component**:
+```tsx
+function Counter() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(c => c + 1)}>Increment</button>
+    </div>
+  );
+}
+```
+
+**Test**:
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Counter from './Counter';
+
+test('increments count when button is clicked', async () => {
+  render(<Counter />);
+
+  const button = screen.getByRole('button', { name: /increment/i });
+  const countText = screen.getByText(/count: 0/i);
+
+  expect(countText).toBeInTheDocument();
+
+  // Simulate user click
+  await userEvent.click(button);
+
+  // Assert expectation
+  expect(screen.getByText(/count: 1/i)).toBeInTheDocument();
+});
+```
+
+### Key Principle: Query by Role
+Avoid testing implementation details (like class names or internal state). Instead, query by what the user sees:
+- `getByRole('button', ...)`
+- `getByLabelText(...)`
+- `getByText(...)`
+
+---
+
+## 3. Mocking API Calls
+
+Don't make real network requests in tests! Use **MSW (Mock Service Worker)** to intercept them.
+
+```tsx
+// test-setup.ts
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
+
+export const server = setupServer(
+  http.get('/api/user', () => {
+    return HttpResponse.json({ name: 'John Doe' });
+  })
+);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
+
+---
+
+## 4. Integration vs. Unit Tests
+
+- **Unit Tests**: Test a single function or hook in isolation. Good for complex logic.
+- **Integration Tests**: Render a whole page or feature (e.g., a form wizard) and test the flow. This provides the most value for the least effort.
+
+### Snapshot Testing?
+Snapshots are brittle. Use them sparingly, mainly for ensuring static UI (like strict legal text) doesn't change accidentally.
+
+---
+
+## Conclusion
+
+Testing is an investment. By focusing on **user interactions** rather than implementation details, your tests become resilient to refactoring and provide long-term value.

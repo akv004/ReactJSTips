@@ -7,9 +7,12 @@ Node.js, built on Chrome's fast V8 engine, is more than just a JavaScript runtim
 
 In a modern React project, Node.js plays several crucial roles:
 
-- **Development Server**: Node.js powers local servers (like Create React App or Vite), enabling live reload and rapid development feedback loops.
-- **Build Engine**: It transforms source code into optimized assets using bundlers like Webpack or Vite, including transpilation, tree-shaking, and minification.
+- **Development Server**: Node.js powers local servers (like Vite), enabling live reload and rapid development feedback loops.
+- **Build Engine**: It transforms source code into optimized assets using bundlers like Vite or Webpack, including transpilation, tree-shaking, and minification.
 - **Backend Server**: Node.js runs REST APIs, server-side rendering (e.g., with Next.js), and CLI tools, and manages project dependencies via `npm` or `yarn`.
+
+> [!NOTE]
+> **Common Misconception**: You do **not** need Node.js installed on your production web server to host a standard React app. The output of a React build is just static HTML, CSS, and JS files, which can be served by Nginx, Apache, S3, or any static host. Node.js is only required if you are doing **Server-Side Rendering (SSR)**.
 
 ---
 

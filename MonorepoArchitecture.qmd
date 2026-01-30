@@ -1,0 +1,98 @@
+# Monorepo Architecture: Scaling Beyond a Single App
+
+As your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to "dependency hell" and code duplication.
+
+The solution? **A Monorepo**.
+
+In this chapter, we'll explore how to structure a modern React monorepo using **npm/pnpm workspaces**, inspired by the architecture of high-performance tools like `ai-studio-template`.
+
+---
+
+## The "Apps vs. Packages" Pattern
+
+State-of-the-art monorepos typically follow this directory structure:
+
+```mermaid
+graph TD
+    Root[Root /] --> Apps[apps /]
+    Root --> Pkgs[packages /]
+    
+    Apps --> Desktop[desktop / (Tauri + Rust)]
+    Apps --> Web[web / (Next.js or Vite)]
+    Apps --> Sidecar[sidecar / (Python AI)]
+    
+    Pkgs --> Shared[shared / (Types & Config)]
+    Pkgs --> UI[ui-kit / (React Components)]
+    
+    Desktop -.-> Shared
+    Web -.-> Shared
+    Web -.-> UI
+```
+
+- **apps/**: Deployable applications. They consume packages but are rarely consumed themselves.
+- **packages/**: Shared libraries. Hosted internally and imported by apps.
+
+---
+
+## Setting Up Workspaces
+
+You don't need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.
+
+**`package.json` (Root)**:
+
+```json
+{
+  "name": "my-ai-studio",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
+```
+
+Now, any folder inside `apps` or `packages` with its own `package.json` is treated as a workspace.
+
+---
+
+## 3. The Power of `packages/shared`
+
+Imagine you have a TypeScript interface `Project` that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).
+
+Instead of copying `types.ts` into every folder, you create a shared package.
+
+**`packages/shared/package.json`**:
+```json
+{
+  "name": "@my-studio/shared",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts"
+}
+```
+
+**Usage in React App**:
+
+```bash
+npm install @my-studio/shared
+```
+
+```tsx
+import { Project } from '@my-studio/shared';
+
+export function ProjectCard({ project }: { project: Project }) {
+  return <div>{project.name}</div>;
+}
+```
+
+Now, when you update the type definition in one place, **every** app gets the update instantly (and TypeScript will scream at you if you broke something).
+
+---
+
+## Why This approach?
+
+1.  **Single Source of Truth**: Define types and utilities once.
+2.  **Atomic Commits**: You can change the API and the UI in a single PR.
+3.  **Unified Tooling**: Run `npm install` once at the root to install dependencies for ALL apps.
+
+In the next chapter, we'll see how to wrap one of these apps in a native shell using Tauri.

@@ -8,6 +8,8 @@ Whether you're building features locally, running integration tests, or simulati
 
 > 📚 Learn more: [Mock Service Worker – Quick Start Guide](https://mswjs.io/docs/quick-start)
 
+> [!TIP]
+> **Verify MSW is Running**: When your app starts, look for the `[MSW] Mocking enabled.` message in your browser's console. If you don't see it, your worker might not be registered correctly.
 
 ### Getting Hands-On with MSW
 

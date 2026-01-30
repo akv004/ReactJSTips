@@ -1,0 +1,115 @@
+# State Management Patterns
+
+Managing state is arguably the hardest part of building large React applications. "State" is the data that changes over time—user inputs, server responses, UI toggles.
+
+In the early days, we only had Redux. Today, we have a rich ecosystem of tools tailored for specific problems. This chapter guides you through choosing the right one.
+
+---
+
+## 1. Local State: `useState` & `useReducer`
+
+For UI state that belongs to a single component (e.g., form inputs, toggles), sticking to React's built-in hooks is best.
+
+- **`useState`**: Simple values.
+- **`useReducer`**: Complex state logic or next-state dependency.
+
+---
+
+## 2. Global State: The Context API
+
+When you need to share state across many components (e.g., Theme, User Auth, Language), usage of **React Context** prevents "Prop Drilling".
+
+### Best Practice: Separate State and Dispatch
+To avoid unnecessary re-renders, split your context into two: one for the value, one for the update function.
+
+```tsx
+const UserContext = createContext<User | null>(null);
+const UserDispatchContext = createContext<Dispatch<UserAction> | null>(null);
+```
+
+### Warning: Performance Pitfall
+Context is **not** optimized for high-frequency updates (like mouse coordinates or stock tickers). Every consumer re-renders when the value changes. For those cases, use an external store.
+
+---
+
+## 3. Atomic State: Zustand
+
+For global state that changes often or needs to be accessed anywhere (outside components), **Zustand** is the modern favorite. It's tiny, fast, and hook-based.
+
+```bash
+npm install zustand
+```
+
+### Creating the Store
+
+```ts
+import { create } from 'zustand'
+
+interface BearState {
+  bears: number
+  increase: () => void
+}
+
+const useStore = create<BearState>((set) => ({
+  bears: 0,
+  increase: () => set((state) => ({ bears: state.bears + 1 })),
+}))
+```
+
+### Using the Store
+
+```tsx
+function BearCounter() {
+  // Select only what you need! Components re-render ONLY if 'bears' changes.
+  const bears = useStore((state) => state.bears)
+  return <h1>{bears} around here ...</h1>
+}
+```
+
+---
+
+## 4. Server State: TanStack Query (React Query)
+
+**Stop putting server data in Redux!**
+
+Server state (API responses) is different from Client state. It needs caching, deduplication, background updates, and stale-while-revalidate logic.
+
+**TanStack Query** handles all of this automatically.
+
+```bash
+npm install @tanstack/react-query
+```
+
+```tsx
+function Todos() {
+  const { isPending, error, data } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodoList,
+  })
+
+  if (isPending) return 'Loading...'
+  if (error) return 'An error has occurred: ' + error.message
+
+  return (
+    <ul>
+      {data.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+---
+
+## Summary: Which One to Choose?
+
+| Scenario | Recommended Tool |
+| :--- | :--- |
+| **Form Inputs, Toggles** | `useState` / `useReducer` |
+| **Theming, Auth, Config** | React Context |
+| **Complex App State (shopping cart, sidebar)** | Zustand (or Redux Toolkit) |
+| **API Data Caching** | TanStack Query |
+| **Form Management** | React Hook Form |
+
+By separating **Server State** (Query) from **Client State** (Zustand/Context), you drastically simplify your application logic.

@@ -1,0 +1,125 @@
+# Deep Dive into React Hooks
+
+Hooks revolutionized React in version 16.8, allowing us to use state and other React features without writing a class. But mastering them requires more than just knowing the syntax—it requires thinking in "sync" with the rendering cycle.
+
+In this chapter, we go beyond `useState` and explore the patterns and pitfalls of React's more advanced hooks.
+
+---
+
+## The Dependency Array: `useEffect` Mastery
+
+The `useEffect` hook is often misunderstood as a lifecycle method replacement (like `componentDidMount`). Instead, think of it as a way to **synchronize** your component with an external system (DOM, network, subscriptions).
+
+### The Golden Rule
+> **All variables used inside the effect must be in the dependency array.**
+
+If you lie to React about your dependencies, your effect will rely on stale values, creating subtle bugs.
+
+### Common Pitfall: Infinite Loops
+
+```javascript
+// ❌ WRONG: Creating an object in render and using it as a dependency
+function BadComponent() {
+  const options = { id: 1 }; // Created fresh every render!
+
+  useEffect(() => {
+    fetchData(options);
+  }, [options]); // 💥 Triggers every render -> Infinite Loop
+}
+```
+
+### The Fix: `useMemo` or Move it Inside
+
+```javascript
+// ✅ BETTER: Memoize the object
+function GoodComponent() {
+  const options = useMemo(() => ({ id: 1 }), []);
+
+  useEffect(() => {
+    fetchData(options);
+  }, [options]); // Safe!
+}
+```
+
+---
+
+## Referential Stability: `useCallback` & `useMemo`
+
+React relies on reference equality (`===`) to detect changes.
+
+- **`useMemo`**: Cache the *result* of a calculation.
+- **`useCallback`**: Cache the *function definition* itself.
+
+Use these primarily when passing props to heavy child components wrapped in `React.memo`, or when adding functions to a dependency array.
+
+```javascript
+const handleSave = useCallback(() => {
+  console.log('Saved!', user.id);
+}, [user.id]); // only re-creates if user.id changes
+```
+
+---
+
+## Custom Hooks: The Real Power
+
+The true magic of hooks is **logic extraction**. If you find yourself copying `useEffect` code between components, extract it into a custom hook.
+
+### Example: `useFetch`
+
+Let's build a hook that fetches data and handles loading/error states.
+
+```typescript
+import { useState, useEffect } from 'react';
+
+function useFetch<T>(url: string) {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted) setData(data);
+      })
+      .catch(err => {
+        if (isMounted) setError(err);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    // Cleanup prevents setting state on unmounted component
+    return () => {
+      isMounted = false;
+    };
+  }, [url]);
+
+  return { data, loading, error };
+}
+```
+
+### Usage
+
+```tsx
+function UserProfile({ userId }) {
+  const { data, loading, error } = useFetch<User>(`/api/users/${userId}`);
+
+  if (loading) return <Spinner />;
+  if (error) return <ErrorDisplay error={error} />;
+
+  return <div>Welcome, {data?.name}</div>;
+}
+```
+
+---
+
+## Rules of Hooks Recap
+
+1. **Only call Hooks at the top level**. Don’t call Hooks inside loops, conditions, or nested functions.
+2. **Only call Hooks from React function components** (or custom hooks).
+
+By adhering to these rules and understanding the dependency graph, you can build complex, reactive applications that remain readable and maintainable.

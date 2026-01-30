@@ -1,0 +1,72 @@
+# The AI Sidecar Pattern: Python for Intelligence, React for Beauty
+
+React is amazing for UIs. But let's be honest: JavaScript isn't the best language for heavy AI workloads. Python is the undisputed king of AI (PyTorch, TensorFlow, Pandas).
+
+So, how do you build a desktop app that has the **interactivity of React** but the **intelligence of Python**?
+
+You use the **Sidecar Pattern**.
+
+---
+
+## What is a Sidecar?
+
+In our architecture, the main application (Tauri/Electron) spawns a separate, invisible child process—the Sidecar. In this case, it's a Python server (FastAPI or Flask).
+
+1.  **Main App Creates Child Process**: On startup, Tauri launches `server.py`.
+2.  **Health Check**: The main app pings `localhost:8000/health` until the Python server is ready.
+3.  **Communication**: The React UI calls the Python API via standard HTTP requests (or WebSockets).
+4.  **Shutdown**: When the main window closes, Tauri kills the Python process.
+
+---
+
+## 2. Setting Up the Python Sidecar
+
+In `apps/sidecar/server.py`:
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class InferenceRequest(BaseModel):
+    prompt: str
+
+@app.post("/infer")
+async def infer(req: InferenceRequest):
+    # This is where you load PyTorch / Llama / Stable Diffusion
+    result = perform_heavy_computation(req.prompt)
+    return {"result": result}
+```
+
+This server runs independently. You can dev it, test it, and debug it without even touching the UI.
+
+---
+
+## 3. The React Client
+
+From the perspective of React, this is just another REST API.
+
+```tsx
+// Using React Query for sidecar calls
+const { mutate } = useMutation({
+    mutationFn: async (prompt: string) => {
+        const res = await fetch('http://localhost:8000/infer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt })
+        });
+        return res.json();
+    }
+});
+```
+
+---
+
+## 4. Why This Architecture Wins
+
+- **Decoupling**: The UI team can iterate on React components while the AI team iterates on the Python model. The API contract is the only touchpoint.
+- **Stability**: If the Python process crashes (OOM), the UI doesn't freeze. React can show a "Service Restarting..." message and relaunch the sidecar.
+- **Ecosystem**: You get access to `npm` packages for UI and `pip` packages for AI.
+
+In the next chapter, we'll discuss how to render the complex visual outputs of these AI models using a High-Performance Canvas.
