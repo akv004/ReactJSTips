@@ -1,0 +1,842 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The React Blueprint",
+    "section": "",
+    "text": "The React Blueprint\nFirst Edition (Version 1.0)\nCopyright © 2025 Amit Verma. All rights reserved.\nNo part of this publication may be reproduced, distributed, or transmitted in any form or by any means—including electronic or mechanical methods—without the prior written permission of the author, except in the case of brief quotations used in reviews or scholarly works. This eBook is published through Kindle Direct Publishing and is intended for personal, non-commercial use only. For permission requests or inquiries, please contact: booksbyamit@gmail.com",
+    "crumbs": [
+      "The React Blueprint"
+    ]
+  },
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "The React Blueprint",
+    "section": "Welcome!",
+    "text": "Welcome!\nWelcome to The React Blueprint — your hands-on, battle-tested guide to mastering React.js the modern way.\nWhether you’re crafting sleek frontends, scaling robust enterprise UI systems, or simply aiming for seamless integration with REST APIs, this book is your essential blueprint. We’ve distilled years of real-world experience into clear patterns, intelligent tools, and production-ready practices, empowering you to architect, code, and launch with confidence.\nAs a fellow software engineer, you already know that writing React code itself isn’t the hardest part. The true challenge lies in scaling, testing, and maintaining it efficiently in a fast-paced environment. That’s precisely where The React Blueprint steps in.\nInside, you’ll discover:\n\nCore Best Practices: Go beyond basic syntax to understand why and how to build resilient React applications.\nAdvanced Component Architecture: Learn to design highly reusable and maintainable component systems.\nEffective API Mocking with MSW: Accelerate your development and testing workflows by mastering API mocking techniques.\nRobust Error Handling & Resilience: Implement strategies to create applications that gracefully handle edge cases and unexpected issues.\nRapid Deployment Strategies: Leverage scripts and techniques to get your applications live in seconds.\nProduction-Ready Code Examples: Dive into real-world scenarios, complete with TypeScript, comprehensive tests, and adaptable patterns.\n\nThis book is designed to evolve with your journey—from setting up a pristine local development environment to building and maintaining sophisticated, production-grade React systems. We prioritize minimal boilerplate and maximum clarity, ensuring every concept is easy to grasp and apply.\nLet’s build smarter UIs together.",
+    "crumbs": [
+      "The React Blueprint"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Dedication",
+    "section": "",
+    "text": "About the Author\nTo my family, friends, and mentors — thank you for your encouragement, patience, and belief. Your support made this journey possible and meaningful.\nAmit Kumar Verma is a Lead Software Engineer with over 15 years of professional experience in building large-scale, cloud-native applications. His expertise includes front-end development with frameworks like React and AngularJS, backend services with Java, Spring Boot, and Node.js, and DevOps practices leveraging Docker and Kubernetes.\nAmit is passionate about creating performant, maintainable user interfaces that scale. He has led successful frontend and full-stack teams in domains such as healthcare, fintech, retail, and insurance, and has worked extensively with tools like React, TypeScript, Redux, Recoil, Zustand, and Next.js.\nHe believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When he’s not writing code or leading architecture discussions, Amit enjoys exploring new frameworks, mentoring junior developers, and turning complex frontend problems into elegant patterns.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#acknowledgments",
+    "href": "intro.html#acknowledgments",
+    "title": "Dedication",
+    "section": "Acknowledgments",
+    "text": "Acknowledgments\nWriting this book has been a deeply rewarding experience. I’d like to thank the open-source community behind React and its ecosystem, whose continuous innovation and collaboration make building modern interfaces a joy.\nTo my colleagues, mentors, and readers — thank you for your feedback, inspiration, and energy. And to my family: your quiet sacrifices, love, and strength are behind every word in this book.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#preface",
+    "href": "intro.html#preface",
+    "title": "Dedication",
+    "section": "Preface",
+    "text": "Preface\nReact has fundamentally changed how we build user interfaces — not just in the browser, but across platforms. But as the frontend landscape grows more powerful, it also grows more complex.\nThe React Blueprint is my attempt to bring clarity, order, and real-world wisdom to that complexity. This book isn’t about memorizing hooks or learning JSX syntax — it’s about understanding how to design maintainable components, manage state at scale, mock APIs cleanly, and ship production-grade React applications with confidence.\nYou’ll learn how to: - Scaffold React apps quickly with the right tools - Use modern state management patterns effectively - Handle errors with resilience using error boundaries - Mock APIs like a pro using MSW - Write clean, scalable code with TypeScript\nThe ideas shared here come from years of leading frontend projects, debugging real production issues, and simplifying things that didn’t need to be hard. I hope this blueprint helps you navigate your React journey — and that you’ll share your blueprint with others, too.\nAmit Verma Chaska, Minnesota July 2025",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#how-to-use-this-book",
+    "href": "intro.html#how-to-use-this-book",
+    "title": "Dedication",
+    "section": "How to Use This Book",
+    "text": "How to Use This Book\n\nRead It End-to-End or Jump Around\nEach chapter is written to be self-contained and hands-on. If you’re new to React, you can start from the beginning. If you’re already comfortable, feel free to jump to what interests you most — whether that’s API mocking, state management, or app structure.\n\n\nPractical First\nYou won’t find theory for the sake of theory here. Every pattern, snippet, and technique is something you can apply right away. The book includes working examples, CLI tips, and dev workflow boosters to help you build faster and cleaner.\n\n\nTooling That Works\nThe examples use tools like create-react-app, Vite, TypeScript, MSW, and GitHub. You’ll see working package.json snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.\n\n\nCode You Can Trust\nAll code samples are tested and compatible with current React (v18+). If there are updates in the ecosystem, you’ll find them referenced online through the companion repo.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#disclaimer",
+    "href": "intro.html#disclaimer",
+    "title": "Dedication",
+    "section": "Disclaimer",
+    "text": "Disclaimer\nThis book is intended for educational and professional development purposes. While every effort has been made to ensure accuracy and completeness, the author and publisher assume no responsibility for errors, omissions, or misuse of information provided.\nAll implementation decisions and production uses of code examples are at your own discretion. Always follow secure coding practices, respect project requirements, and consult your organization’s development standards before applying code from this book.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html",
+    "href": "SetupReactAppLocallyInSeconds.html",
+    "title": "🚀 Setup React App Locally in Seconds",
+    "section": "",
+    "text": "Before diving into code architecture and patterns, it’s useful to have a working React app scaffolded quickly — so you can focus immediately on building features.\nIn the past, create-react-app (CRA) was the go-to standard. However, the ecosystem has evolved. Today, Vite is the industry standard for starting new React projects. It offers significantly faster dev server startup, instant hot module replacement (HMR), and optimized production builds.\nIn this chapter, you’ll get a highly streamlined shell script that:\n\nPrompts you for the project name (with a handy default)\nSets up a new React app using Vite (the modern standard)\nInstalls dependencies\nLaunches the development server\n\nAll of this happens in just a few seconds, assuming Node.js is already installed. The script works on macOS, Linux, and Windows Subsystem for Linux (WSL).\n\n🧠 What You Need Pre-installed\n\nNode.js (v18 or higher recommended)\nnpm (comes with Node.js)\nnpx (comes with Node.js)\n\n\n\n🎯 Why Vite?\n\nInstant Server Start: Unlike CRA, which bundles your entire app before starting, Vite serves modules on demand.\nLightning Fast HMR: Changes appear instantly, regardless of app size.\nRich Plugin Ecosystem: First-class support for TypeScript, JSX, CSS modules, and more out of the box.\n\n\n\n\n🧪 What You’ll Learn\n\nAutomatically scaffolding a React project from scratch\nSetting up with either React+TypeScript or plain React\nHow to generalize the script for multiple environments or tooling preferences\n\n\n📌 Now, let’s look at the actual shell script for this automation:\n📄 run-react-app.sh\n#!/usr/bin/env bash\n\n# Prompt for project name, with a default value\nread -p \"Enter your React project name (default: my-react-app): \" APP_NAME\nAPP_NAME=${APP_NAME:-my-react-app}\n\n# Prompt for TypeScript option\nread -p \"Use TypeScript? (y/n, default y): \" USE_TS\nUSE_TS=${USE_TS:-y}\n\necho \"🚧 Creating project: $APP_NAME with Vite...\"\n\nif [ \"$USE_TS\" == \"y\" ]; then\n  npm create vite@latest \"$APP_NAME\" -- --template react-ts\nelse\n  npm create vite@latest \"$APP_NAME\" -- --template react\nfi\n\ncd \"$APP_NAME\"\n\necho \"📦 Installing dependencies...\"\nnpm install\n\necho \"🚀 Starting development server...\"\nnpm run dev\n📌 How to Use:\n\nSave the script as run-react-app.sh\nMake it executable:\n\nchmod +x run-react-app.sh\n\nRun it in a terminal:\n\n./run-react-app.sh\nYou’ll be prompted for a project name and TypeScript preference. Within seconds, you’ll have your React app running at localhost:5173.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>🚀 Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html",
+    "href": "WhatNodeJSDoes.html",
+    "title": "What Node.js Does in a React Project",
+    "section": "",
+    "text": "From Development Server to Production Build",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#understanding-node.js-the-unsung-hero-of-modern-react",
+    "href": "WhatNodeJSDoes.html#understanding-node.js-the-unsung-hero-of-modern-react",
+    "title": "What Node.js Does in a React Project",
+    "section": "Understanding Node.js: The Unsung Hero of Modern React",
+    "text": "Understanding Node.js: The Unsung Hero of Modern React\nNode.js, built on Chrome’s fast V8 engine, is more than just a JavaScript runtime. It’s a foundational piece of modern web development that allows JavaScript to run outside the browser — powering development servers, build tools, CLI utilities, and full-scale backend services.\nIn a modern React project, Node.js plays several crucial roles:\n\nDevelopment Server: Node.js powers local servers (like Vite), enabling live reload and rapid development feedback loops.\nBuild Engine: It transforms source code into optimized assets using bundlers like Vite or Webpack, including transpilation, tree-shaking, and minification.\nBackend Server: Node.js runs REST APIs, server-side rendering (e.g., with Next.js), and CLI tools, and manages project dependencies via npm or yarn.\n\n\n[!NOTE] Common Misconception: You do not need Node.js installed on your production web server to host a standard React app. The output of a React build is just static HTML, CSS, and JS files, which can be served by Nginx, Apache, S3, or any static host. Node.js is only required if you are doing Server-Side Rendering (SSR).",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#development-vs-production-two-faces-of-node.js",
+    "href": "WhatNodeJSDoes.html#development-vs-production-two-faces-of-node.js",
+    "title": "What Node.js Does in a React Project",
+    "section": "Development vs Production: Two Faces of Node.js",
+    "text": "Development vs Production: Two Faces of Node.js\nUnderstanding how Node.js behaves in different environments is essential for building scalable applications:\n\n\n\n\n\n\n\n\n\nEnvironment\nNode.js Role\nOutput Characteristics\nPurpose\n\n\n\n\nDevelopment\nRuns dev server (CRA, Vite)\nUnminified code, source maps, fast HMR\nQuick iteration, debugging, and verbose feedback\n\n\nProduction\nExecutes build process\nMinified, optimized JS/CSS bundles\nMaximum performance, minimal footprint\n\n\n\nThe NODE_ENV variable is key: - NODE_ENV=development: Enables HMR, detailed errors, source maps. - NODE_ENV=production: Enables code minification, tree-shaking, optimizations.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#rendering-flow-how-react-app-runs-locally",
+    "href": "WhatNodeJSDoes.html#rendering-flow-how-react-app-runs-locally",
+    "title": "What Node.js Does in a React Project",
+    "section": "🖥️ Rendering Flow: How React App Runs Locally",
+    "text": "🖥️ Rendering Flow: How React App Runs Locally\n\n\n\n\n\nflowchart LR\n  A[Developer edits code] --&gt; B(Node.js Dev Server)\n  B --&gt; C[Transpile & Bundle]\n  C --&gt; D[Serve Bundle to Browser]\n  D --&gt; E[Browser Renders UI]",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#system-architecture-overview",
+    "href": "WhatNodeJSDoes.html#system-architecture-overview",
+    "title": "What Node.js Does in a React Project",
+    "section": "🧱 System Architecture Overview",
+    "text": "🧱 System Architecture Overview\n\n\n\n\n\n\n\nG\n\n\n\nSource\n\nUI Source Code\n\n\n\nDevServer\n\nDev Server\n(CRA/Vite)\n\n\n\nSource-&gt;DevServer\n\n\n\n\n\nBundler\n\nBuild Tools\n(Vite/Webpack)\n\n\n\nSource-&gt;Bundler\n\n\n\n\n\nBrowser\n\nReact UI in Browser\n\n\n\nDevServer-&gt;Browser\n\n\n\n\n\nMSW\n\nMock Service Worker\n\n\n\nBrowser-&gt;MSW\n\n\n\n\n\nOutput\n\nProduction Build\n(Static Files)\n\n\n\nBundler-&gt;Output\n\n\n\n\n\nHosting\n\nStatic Hosting/CDN\n\n\n\nOutput-&gt;Hosting\n\n\n\n\n\nBackend\n\nNode.js API Server\n\n\n\nOutput-&gt;Backend\n\n\nAPIs called from browser\n\n\n\nHosting-&gt;Browser\n\n\n\n\n\nnpmLib\n\nnpm Libraries\n\n\n\nnpmLib-&gt;Source\n\n\n\n\n\nnpmLib-&gt;Backend",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#anatomy-of-the-development-lifecycle",
+    "href": "WhatNodeJSDoes.html#anatomy-of-the-development-lifecycle",
+    "title": "What Node.js Does in a React Project",
+    "section": "Anatomy of the Development Lifecycle",
+    "text": "Anatomy of the Development Lifecycle\n\nSource and Dependencies\n\nUI Source Code: Your written React, CSS, and static assets.\nnpm Libraries: Open-source tools (e.g., React, Zustand, MSW), managed via package.json.\n\n\n\nDevelopment Mode\n\nDev Server: Tools like Vite or CRA watch your files and recompile instantly with Hot Module Replacement (HMR).\nMSW: Optional mock layer that intercepts API calls and returns static data for frontend testing.\n\n\n\nProduction Build\n\nBuild Tools: Run with npm run build, producing a static set of files — HTML, minified JS, CSS. This build process is typically powered by tools like Webpack, Vite, Parcel, or esbuild — each transforming your modular JavaScript code and assets into optimized static bundles. Webpack, being the most widely adopted, performs module bundling, code splitting, tree-shaking, and asset compression. Vite, on the other hand, is gaining popularity for its lightning-fast performance during both development and production. These tools analyze your project dependencies, apply loaders (like Babel or PostCSS), and output static files suitable for deployment.\nOutput: The build process generates a dist or build folder containing static files — typically index.html, minified JavaScript bundles (like main.[hash].js), CSS files, images, and fonts. These files are fully self-contained and do not require a Node.js server to run. You can deploy them on:\n\nGitHub Pages: Ideal for free personal or project websites. Just push the build folder to the gh-pages branch and enable GitHub Pages in the repository settings.\nNetlify: A popular platform for static site deployment with CI/CD, custom domains, and edge functions. Just link your repo and it handles everything automatically.\nS3 with CloudFront (AWS): For scalable, production-grade hosting. Upload files to an S3 bucket and serve them globally using CloudFront CDN.\nVercel, Firebase Hosting, or Render: Other options with fast deployment workflows, great for frontend projects.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#hosting-and-deployment",
+    "href": "WhatNodeJSDoes.html#hosting-and-deployment",
+    "title": "What Node.js Does in a React Project",
+    "section": "Hosting and Deployment",
+    "text": "Hosting and Deployment\nReact builds are static and server-agnostic — you don’t need Node.js to host them.\n\nWeb Servers: Nginx, Apache, or Express\nCDNs: Netlify, Vercel, GitHub Pages, Cloudflare\nCloud Buckets: AWS S3, GCP Storage",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#runtime-the-live-application",
+    "href": "WhatNodeJSDoes.html#runtime-the-live-application",
+    "title": "What Node.js Does in a React Project",
+    "section": "Runtime: The Live Application",
+    "text": "Runtime: The Live Application\nIn the browser, your deployed React app becomes interactive by calling APIs hosted on your Node.js backend — using fetch, GraphQL, or WebSockets.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "WhatNodeJSDoes.html#summary",
+    "href": "WhatNodeJSDoes.html#summary",
+    "title": "What Node.js Does in a React Project",
+    "section": "Summary",
+    "text": "Summary\nNode.js bridges the entire React app lifecycle:\n\nIn development: live reloading, HMR, fast feedback\nIn production: build optimization, bundling, and backend APIs\n\nIt’s the foundation behind both the UI development experience and the deployment pipeline. Mastering its role ensures smoother development and faster production releases.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>What Node.js Does in a React Project</span>"
+    ]
+  },
+  {
+    "objectID": "ReactHooksDeepDive.html",
+    "href": "ReactHooksDeepDive.html",
+    "title": "Deep Dive into React Hooks",
+    "section": "",
+    "text": "The Dependency Array: useEffect Mastery\nHooks revolutionized React in version 16.8, allowing us to use state and other React features without writing a class. But mastering them requires more than just knowing the syntax—it requires thinking in “sync” with the rendering cycle.\nIn this chapter, we go beyond useState and explore the patterns and pitfalls of React’s more advanced hooks.\nThe useEffect hook is often misunderstood as a lifecycle method replacement (like componentDidMount). Instead, think of it as a way to synchronize your component with an external system (DOM, network, subscriptions).",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Deep Dive into React Hooks</span>"
+    ]
+  },
+  {
+    "objectID": "ReactHooksDeepDive.html#the-dependency-array-useeffect-mastery",
+    "href": "ReactHooksDeepDive.html#the-dependency-array-useeffect-mastery",
+    "title": "Deep Dive into React Hooks",
+    "section": "",
+    "text": "The Golden Rule\n\nAll variables used inside the effect must be in the dependency array.\n\nIf you lie to React about your dependencies, your effect will rely on stale values, creating subtle bugs.\n\n\nCommon Pitfall: Infinite Loops\n// ❌ WRONG: Creating an object in render and using it as a dependency\nfunction BadComponent() {\n  const options = { id: 1 }; // Created fresh every render!\n\n  useEffect(() =&gt; {\n    fetchData(options);\n  }, [options]); // 💥 Triggers every render -&gt; Infinite Loop\n}\n\n\nThe Fix: useMemo or Move it Inside\n// ✅ BETTER: Memoize the object\nfunction GoodComponent() {\n  const options = useMemo(() =&gt; ({ id: 1 }), []);\n\n  useEffect(() =&gt; {\n    fetchData(options);\n  }, [options]); // Safe!\n}",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Deep Dive into React Hooks</span>"
+    ]
+  },
+  {
+    "objectID": "ReactHooksDeepDive.html#referential-stability-usecallback-usememo",
+    "href": "ReactHooksDeepDive.html#referential-stability-usecallback-usememo",
+    "title": "Deep Dive into React Hooks",
+    "section": "Referential Stability: useCallback & useMemo",
+    "text": "Referential Stability: useCallback & useMemo\nReact relies on reference equality (===) to detect changes.\n\nuseMemo: Cache the result of a calculation.\nuseCallback: Cache the function definition itself.\n\nUse these primarily when passing props to heavy child components wrapped in React.memo, or when adding functions to a dependency array.\nconst handleSave = useCallback(() =&gt; {\n  console.log('Saved!', user.id);\n}, [user.id]); // only re-creates if user.id changes",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Deep Dive into React Hooks</span>"
+    ]
+  },
+  {
+    "objectID": "ReactHooksDeepDive.html#custom-hooks-the-real-power",
+    "href": "ReactHooksDeepDive.html#custom-hooks-the-real-power",
+    "title": "Deep Dive into React Hooks",
+    "section": "Custom Hooks: The Real Power",
+    "text": "Custom Hooks: The Real Power\nThe true magic of hooks is logic extraction. If you find yourself copying useEffect code between components, extract it into a custom hook.\n\nExample: useFetch\nLet’s build a hook that fetches data and handles loading/error states.\nimport { useState, useEffect } from 'react';\n\nfunction useFetch&lt;T&gt;(url: string) {\n  const [data, setData] = useState&lt;T | null&gt;(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState&lt;Error | null&gt;(null);\n\n  useEffect(() =&gt; {\n    let isMounted = true;\n    setLoading(true);\n\n    fetch(url)\n      .then(res =&gt; res.json())\n      .then(data =&gt; {\n        if (isMounted) setData(data);\n      })\n      .catch(err =&gt; {\n        if (isMounted) setError(err);\n      })\n      .finally(() =&gt; {\n        if (isMounted) setLoading(false);\n      });\n\n    // Cleanup prevents setting state on unmounted component\n    return () =&gt; {\n      isMounted = false;\n    };\n  }, [url]);\n\n  return { data, loading, error };\n}\n\n\nUsage\nfunction UserProfile({ userId }) {\n  const { data, loading, error } = useFetch&lt;User&gt;(`/api/users/${userId}`);\n\n  if (loading) return &lt;Spinner /&gt;;\n  if (error) return &lt;ErrorDisplay error={error} /&gt;;\n\n  return &lt;div&gt;Welcome, {data?.name}&lt;/div&gt;;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Deep Dive into React Hooks</span>"
+    ]
+  },
+  {
+    "objectID": "ReactHooksDeepDive.html#rules-of-hooks-recap",
+    "href": "ReactHooksDeepDive.html#rules-of-hooks-recap",
+    "title": "Deep Dive into React Hooks",
+    "section": "Rules of Hooks Recap",
+    "text": "Rules of Hooks Recap\n\nOnly call Hooks at the top level. Don’t call Hooks inside loops, conditions, or nested functions.\nOnly call Hooks from React function components (or custom hooks).\n\nBy adhering to these rules and understanding the dependency graph, you can build complex, reactive applications that remain readable and maintainable.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Deep Dive into React Hooks</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html",
+    "href": "StateManagementPatterns.html",
+    "title": "State Management Patterns",
+    "section": "",
+    "text": "1. Local State: useState & useReducer\nManaging state is arguably the hardest part of building large React applications. “State” is the data that changes over time—user inputs, server responses, UI toggles.\nIn the early days, we only had Redux. Today, we have a rich ecosystem of tools tailored for specific problems. This chapter guides you through choosing the right one.\nFor UI state that belongs to a single component (e.g., form inputs, toggles), sticking to React’s built-in hooks is best.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#local-state-usestate-usereducer",
+    "href": "StateManagementPatterns.html#local-state-usestate-usereducer",
+    "title": "State Management Patterns",
+    "section": "",
+    "text": "useState: Simple values.\nuseReducer: Complex state logic or next-state dependency.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#global-state-the-context-api",
+    "href": "StateManagementPatterns.html#global-state-the-context-api",
+    "title": "State Management Patterns",
+    "section": "2. Global State: The Context API",
+    "text": "2. Global State: The Context API\nWhen you need to share state across many components (e.g., Theme, User Auth, Language), usage of React Context prevents “Prop Drilling”.\n\nBest Practice: Separate State and Dispatch\nTo avoid unnecessary re-renders, split your context into two: one for the value, one for the update function.\nconst UserContext = createContext&lt;User | null&gt;(null);\nconst UserDispatchContext = createContext&lt;Dispatch&lt;UserAction&gt; | null&gt;(null);\n\n\nWarning: Performance Pitfall\nContext is not optimized for high-frequency updates (like mouse coordinates or stock tickers). Every consumer re-renders when the value changes. For those cases, use an external store.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#atomic-state-zustand",
+    "href": "StateManagementPatterns.html#atomic-state-zustand",
+    "title": "State Management Patterns",
+    "section": "3. Atomic State: Zustand",
+    "text": "3. Atomic State: Zustand\nFor global state that changes often or needs to be accessed anywhere (outside components), Zustand is the modern favorite. It’s tiny, fast, and hook-based.\nnpm install zustand\n\nCreating the Store\nimport { create } from 'zustand'\n\ninterface BearState {\n  bears: number\n  increase: () =&gt; void\n}\n\nconst useStore = create&lt;BearState&gt;((set) =&gt; ({\n  bears: 0,\n  increase: () =&gt; set((state) =&gt; ({ bears: state.bears + 1 })),\n}))\n\n\nUsing the Store\nfunction BearCounter() {\n  // Select only what you need! Components re-render ONLY if 'bears' changes.\n  const bears = useStore((state) =&gt; state.bears)\n  return &lt;h1&gt;{bears} around here ...&lt;/h1&gt;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#server-state-tanstack-query-react-query",
+    "href": "StateManagementPatterns.html#server-state-tanstack-query-react-query",
+    "title": "State Management Patterns",
+    "section": "4. Server State: TanStack Query (React Query)",
+    "text": "4. Server State: TanStack Query (React Query)\nStop putting server data in Redux!\nServer state (API responses) is different from Client state. It needs caching, deduplication, background updates, and stale-while-revalidate logic.\nTanStack Query handles all of this automatically.\nnpm install @tanstack/react-query\nfunction Todos() {\n  const { isPending, error, data } = useQuery({\n    queryKey: ['todos'],\n    queryFn: fetchTodoList,\n  })\n\n  if (isPending) return 'Loading...'\n  if (error) return 'An error has occurred: ' + error.message\n\n  return (\n    &lt;ul&gt;\n      {data.map((todo) =&gt; (\n        &lt;li key={todo.id}&gt;{todo.title}&lt;/li&gt;\n      ))}\n    &lt;/ul&gt;\n  )\n}",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#summary-which-one-to-choose",
+    "href": "StateManagementPatterns.html#summary-which-one-to-choose",
+    "title": "State Management Patterns",
+    "section": "Summary: Which One to Choose?",
+    "text": "Summary: Which One to Choose?\n\n\n\n\n\n\n\nScenario\nRecommended Tool\n\n\n\n\nForm Inputs, Toggles\nuseState / useReducer\n\n\nTheming, Auth, Config\nReact Context\n\n\nComplex App State (shopping cart, sidebar)\nZustand (or Redux Toolkit)\n\n\nAPI Data Caching\nTanStack Query\n\n\nForm Management\nReact Hook Form\n\n\n\nBy separating Server State (Query) from Client State (Zustand/Context), you drastically simplify your application logic.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html",
+    "href": "Styling.html",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "",
+    "text": "The Traditional Path: Separation with CSS & SCSS\nIn modern React development, how you style your components is as crucial as how you build them. The right styling strategy can lead to a maintainable, scalable, and enjoyable developer experience, while the wrong one can result in a tangled mess of conflicting rules and “!important” hacks.\nThis chapter explores the two dominant paradigms for styling React applications:\nBy the end, you’ll understand the philosophy, pros, and cons of each approach, empowering you to make an informed decision for your next project.\nThe classic approach to web styling is built on the principle of separation of concerns: HTML provides structure, JavaScript handles behavior, and CSS manages presentation. In a modern React app, this means keeping your styles in dedicated files, separate from your component logic.\nSCSS (Sassy CSS) is a popular CSS preprocessor that enhances standard CSS with features like variables, nested rules, and mixins, making stylesheets more organized and powerful.\nHowever, CSS’s global nature presents a challenge. A style defined for a .button in one file can unintentionally affect a .button elsewhere. The modern solution to this is CSS Modules.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#the-traditional-path-separation-with-css-scss",
+    "href": "Styling.html#the-traditional-path-separation-with-css-scss",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "",
+    "text": "How CSS Modules Work\nWhen you import a stylesheet as a module (e.g., import styles from './Button.module.scss'), your build tool transforms the class names into unique, locally-scoped identifiers. This guarantees that styles for one component won’t leak out and affect another.\n\n\nExample: A Button Component with SCSS Modules\nLet’s see it in action.\n/* Button.module.scss */\n/* Define variables for easy reuse */\n$primary-color: #007bff;\n$text-color: #ffffff;\n\n/* Base button styles */\n.button {\n  border-radius: 8px;\n  border: 1px solid transparent;\n  padding: 0.6em 1.2em;\n  font-size: 1em;\n  font-weight: 500;\n  cursor: pointer;\n  transition: border-color 0.25s;\n  background-color: #f9f9f9;\n  color: #213547;\n}\n\n/* A modifier class for the primary variant */\n.primary {\n  background-color: $primary-color;\n  color: $text-color;\n}\n// Button.jsx\nimport styles from './Button.module.scss';\nimport clsx from 'clsx'; // A utility for conditionally joining class names\n\n// The 'primary' prop determines which style modifier to apply\nexport function Button({ primary, children, onClick }) {\n  const buttonClasses = clsx(\n    styles.button,\n    primary && styles.primary // Apply styles.primary only if the 'primary' prop is true\n  );\n\n  return (\n    &lt;button className={buttonClasses} onClick={onClick}&gt;\n      {children}\n    &lt;/button&gt;\n  );\n}\n\n\nPros and Cons of Traditional Stylesheets\n\n\n\n\n\n\n\nPros\nCons\n\n\n\n\n- Clear Separation of Concerns: Style, logic, and structure live in different files, which many developers find clean and organized.\n- Context Switching: You have to jump between JS and SCSS files to understand a component fully.\n\n\n- Standard Tooling: Works with standard CSS and preprocessors like Sass/SCSS, which have a mature ecosystem.\n- Class Name Management: Even with CSS Modules, you are still managing class name logic (e.g., using clsx or template literals).\n\n\n- Static Analysis: CSS can be linted and analyzed independently of your JavaScript.\n- “Dead Code” Elimination: It can be difficult to confidently delete a style rule, as it’s hard to be certain it isn’t used somewhere in your application.\n\n\n- Potentially Faster Initial Renders: All CSS can be bundled into a single .css file and loaded efficiently by the browser.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#the-component-driven-path-co-location-with-emotion",
+    "href": "Styling.html#the-component-driven-path-co-location-with-emotion",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "The Component-Driven Path: Co-location with Emotion",
+    "text": "The Component-Driven Path: Co-location with Emotion\nCSS-in-JS flips the traditional model on its head. The core philosophy is co-location: a component is a self-contained unit, and its styles are an integral part of its definition. Therefore, styles should live inside the component file.\nEmotion is a leading CSS-in-JS library known for its high performance, small bundle size, and flexible API. It allows you to create React components that have styles attached to them.\n\nHow Emotion Works\nEmotion uses JavaScript’s tagged template literals to let you write actual CSS syntax. At runtime (or build time, depending on configuration), it processes this CSS and injects it into the DOM with unique, generated class names. This provides automatic scoping without any extra setup.\nThe biggest advantage is the ability to use a component’s props directly within your style definitions, making dynamic styling incredibly intuitive.\n\n\nExample: A Button Component with Emotion\nHere is the same button, rebuilt with Emotion.\n// Button.jsx\nimport styled from '@emotion/styled';\n\n// All logic and styling live in this single file.\n// The 'styled.button' syntax creates a React component that renders a &lt;button&gt; tag.\nconst StyledButton = styled.button`\n  border-radius: 8px;\n  border: 1px solid transparent;\n  padding: 0.6em 1.2em;\n  font-size: 1em;\n  font-weight: 500;\n  cursor: pointer;\n  transition: border-color 0.25s;\n\n  /* Use props directly inside the CSS! */\n  background-color: ${props =&gt; (props.primary ? '#007bff' : '#f9f9f9')};\n  color: ${props =&gt; (props.primary ? '#ffffff' : '#213547')};\n`;\n\n// The final component is clean and simple.\n// It passes all its props (like 'primary') down to the StyledButton.\nexport function Button(props) {\n  return &lt;StyledButton {...props} /&gt;;\n}\n\n\nPros and Cons of Emotion (CSS-in-JS)\n\n\n\n\n\n\n\nPros\nCons\n\n\n\n\n- True Encapsulation: All aspects of a component (logic, styles, structure) are in one place. When you delete the component, you delete its styles. No dead code.\n- Learning Curve: Requires learning a new library and paradigm.\n\n\n- Intuitive Dynamic Styling: Using props to alter styles is simple and direct, eliminating the need for managing class name strings.\n- Runtime Overhead: A small runtime is needed to process styles, though libraries like Emotion are highly optimized.\n\n\n- Confidence in Changes: Since styles are scoped locally, you can refactor a component’s styles without fear of breaking something else.\n- Breaks “Separation of Concerns”: For developers accustomed to traditional methods, mixing CSS in JS can feel unnatural.\n\n\n- Excellent for Component Libraries: The encapsulation makes it the ideal choice for creating reusable, themeable components.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#the-utility-first-path-tailwind-css",
+    "href": "Styling.html#the-utility-first-path-tailwind-css",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "The Utility-First Path: Tailwind CSS",
+    "text": "The Utility-First Path: Tailwind CSS\nA third paradigm has rapidly gained popularity: Utility-First CSS. Instead of writing custom CSS rules for every component, you compose styles using pre-defined utility classes directly in your HTML/JSX. Tailwind CSS is the leader in this space.\n\nHow Tailwind Works\nTailwind scans your files for class names (e.g., flex, p-4, text-blue-500) and generates a minimal CSS file containing only the styles you actually used.\n\n\nExample: A Button Component with Tailwind\n// Button.jsx\n// No import of external stylesheet or libraries needed (once Tailwind is setup)\n\nexport function Button({ primary, children, onClick }) {\n  // We conditionall apply the blue background if 'primary' is true\n  const baseClasses = \"rounded-lg border border-transparent px-5 py-2 text-base font-medium cursor-pointer transition-colors\";\n  const modeClasses = primary\n    ? \"bg-blue-500 text-white hover:bg-blue-600\"\n    : \"bg-gray-100 text-gray-800 hover:bg-gray-200\";\n\n  return (\n    &lt;button className={`${baseClasses} ${modeClasses}`} onClick={onClick}&gt;\n      {children}\n    &lt;/button&gt;\n  );\n}\n\n\nPros and Cons of Tailwind\n\n\n\n\n\n\n\nPros\nCons\n\n\n\n\nSpeed: You rarely leave your HTML/JSX file. Styling feels incredibly fast and fluid.\n“Ugly” Markup: JSX can become cluttered with long strings of class names.\n\n\nConsistency: You are constrained to a design system (spacing, colors) defined in your config, preventing “magic numbers”.\nLearning Curve: You must learn the utility class names (though VS Code extensions help immensely).\n\n\nPerformance: The final CSS bundle is tiny because it only contains used classes.\nComplex Selectors: Targeting pseudo-elements or complex children can be more verbose than standard CSS.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#head-to-head-comparison",
+    "href": "Styling.html#head-to-head-comparison",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "Head-to-Head Comparison",
+    "text": "Head-to-Head Comparison\n\n\n\n\n\n\n\n\nAspect\nCSS / SCSS (with CSS Modules)\nEmotion (CSS-in-JS)\n\n\n\n\nFile Structure\nStyles in .scss, logic in .jsx.\nStyles and logic co-located in .jsx.\n\n\nStyle Scoping\nOpt-in via CSS Modules.\nAutomatic and by default.\n\n\nDynamic Styling\nManage conditional class names.\nUse props directly in style rules.\n\n\nDependencies\nsass preprocessor, clsx (optional).\n@emotion/react, @emotion/styled.\n\n\nKey Philosophy\nSeparation of Concerns.\nCo-location and Component Encapsulation.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "Styling.html#conclusion-which-path-is-right-for-you",
+    "href": "Styling.html#conclusion-which-path-is-right-for-you",
+    "title": "Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets",
+    "section": "Conclusion: Which Path Is Right for You?",
+    "text": "Conclusion: Which Path Is Right for You?\nThere is no single “best” way to style a React application. The optimal choice depends on your project’s needs, your team’s experience, and your personal philosophy.\nChoose Traditional CSS/SCSS if:\n\nYour team has strong CSS skills and prefers a clear separation between styling and logic.\nYou are working on a project with a large, pre-existing CSS codebase.\nYou prioritize leveraging the browser’s native CSS parsing for the fastest possible initial paint.\n\nChoose Emotion (CSS-in-JS) if:\n\nYou are building a design system or a reusable component library.\nYour application features highly dynamic and complex UI that changes based on state.\nYour team values component encapsulation and wants to eliminate the risk of style conflicts or unused CSS.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Styling Paradigms: CSS-in-JS vs. Traditional Stylesheets</span>"
+    ]
+  },
+  {
+    "objectID": "PerformanceOptimization.html",
+    "href": "PerformanceOptimization.html",
+    "title": "Performance Optimization: Making React Fly",
+    "section": "",
+    "text": "1. Memoization with React.memo\nReact is fast by default, but complex applications can suffer from sluggish interactions if not optimized. This chapter explores techniques to keep your app responsive, focusing on rendering performance and bundle size.\nWhen a parent component re-renders, all its children re-render recursively. This is usually fine, but if a child is expensive, you can skip re-rendering if its props haven’t changed.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Performance Optimization: Making React Fly</span>"
+    ]
+  },
+  {
+    "objectID": "PerformanceOptimization.html#memoization-with-react.memo",
+    "href": "PerformanceOptimization.html#memoization-with-react.memo",
+    "title": "Performance Optimization: Making React Fly",
+    "section": "",
+    "text": "const ExpensiveChart = React.memo(({ data }) =&gt; {\n  console.log(\"Rendering chart...\");\n  return &lt;Chart data={data} /&gt;;\n});\n\nWhen NOT to Memoize\nDon’t wrap everything in memo. The comparison check itself has a cost! Use it only for: - Components with heavy rendering logic. - Components that re-render often with the exact same props.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Performance Optimization: Making React Fly</span>"
+    ]
+  },
+  {
+    "objectID": "PerformanceOptimization.html#code-splitting-react.lazy-suspense",
+    "href": "PerformanceOptimization.html#code-splitting-react.lazy-suspense",
+    "title": "Performance Optimization: Making React Fly",
+    "section": "2. Code Splitting: React.lazy & Suspense",
+    "text": "2. Code Splitting: React.lazy & Suspense\nInstead of shipping one giant JavaScript bundle to the user, split your code into smaller chunks that load on demand.\n\nRoute-Based Splitting\nThis is the most common pattern.\nimport React, { Suspense, lazy } from 'react';\nimport { BrowserRouter as Router, Routes, Route } from 'react-router-dom';\n\n// Load these components only when the route is visited!\nconst Home = lazy(() =&gt; import('./routes/Home'));\nconst Dashboard = lazy(() =&gt; import('./routes/Dashboard'));\n\nfunction App() {\n  return (\n    &lt;Router&gt;\n      &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;\n        &lt;Routes&gt;\n          &lt;Route path=\"/\" element={&lt;Home /&gt;} /&gt;\n          &lt;Route path=\"/dashboard\" element={&lt;Dashboard /&gt;} /&gt;\n        &lt;/Routes&gt;\n      &lt;/Suspense&gt;\n    &lt;/Router&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Performance Optimization: Making React Fly</span>"
+    ]
+  },
+  {
+    "objectID": "PerformanceOptimization.html#virtualization-handling-large-lists",
+    "href": "PerformanceOptimization.html#virtualization-handling-large-lists",
+    "title": "Performance Optimization: Making React Fly",
+    "section": "3. Virtualization: Handling Large Lists",
+    "text": "3. Virtualization: Handling Large Lists\nRendering thousands of DOM nodes will freeze the browser. Virtualization (or “windowing”) renders only the items currently visible in the viewport.\nLibraries like react-window or react-virtuoso make this easy.\nimport { FixedSizeList as List } from 'react-window';\n\nconst Row = ({ index, style }) =&gt; (\n  &lt;div style={style}&gt;Row {index}&lt;/div&gt;\n);\n\nconst Example = () =&gt; (\n  &lt;List\n    height={150}\n    itemCount={1000}\n    itemSize={35}\n    width={300}\n  &gt;\n    {Row}\n  &lt;/List&gt;\n);",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Performance Optimization: Making React Fly</span>"
+    ]
+  },
+  {
+    "objectID": "PerformanceOptimization.html#concurrent-react-usetransition",
+    "href": "PerformanceOptimization.html#concurrent-react-usetransition",
+    "title": "Performance Optimization: Making React Fly",
+    "section": "4. Concurrent React: useTransition",
+    "text": "4. Concurrent React: useTransition\nNew in React 18, concurrent features help keep the UI responsive during heavy updates.\nIf a state update causes the UI to freeze (like filtering a large list), wrap it in startTransition. This tells React: “This update is low priority. If the user types, interrupt this update to handle the input first.”\nimport { useState, useTransition } from 'react';\n\nfunction FilterList({ names }) {\n  const [query, setQuery] = useState('');\n  const [list, setList] = useState(names);\n  const [isPending, startTransition] = useTransition();\n\n  const handleChange = (e) =&gt; {\n    const value = e.target.value;\n    setQuery(value); // Urgent: Update input field immediately\n\n    startTransition(() =&gt; {\n      // Low priority: Filter the list\n      setList(names.filter(item =&gt; item.includes(value)));\n    });\n  };\n\n  return (\n    &lt;div&gt;\n      &lt;input type=\"text\" value={query} onChange={handleChange} /&gt;\n      {isPending ? &lt;p&gt;Filtering...&lt;/p&gt; : &lt;ul&gt;{list.map(i =&gt; &lt;li key={i}&gt;{i}&lt;/li&gt;)}&lt;/ul&gt;}\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Performance Optimization: Making React Fly</span>"
+    ]
+  },
+  {
+    "objectID": "PerformanceOptimization.html#performance-checklist",
+    "href": "PerformanceOptimization.html#performance-checklist",
+    "title": "Performance Optimization: Making React Fly",
+    "section": "Performance Checklist",
+    "text": "Performance Checklist\n\nProfile first: Use the React DevTools Profiler to find actual bottlenecks.\nSplit chunks: Use lazy for routes.\nMemoize effectively: Use useMemo for heavy computations.\nVirtualize lists: Don’t render 10,000 rows.\nOptimize images: Use modern formats (WebP) or lazy loading.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Performance Optimization: Making React Fly</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html",
+    "href": "ErrorBoundary.html",
+    "title": "Chapter: Error Boundary in React",
+    "section": "",
+    "text": "What is an Error Boundary?\nAs your application grows, more components are added and it becomes harder to track all possible exceptions that might occur during rendering. React offers a powerful feature to catch such errors: Error Boundaries.\nAn Error Boundary is a special kind of React component that catches JavaScript errors anywhere in its child component tree, logs those errors, and displays a fallback UI instead of the component tree that crashed.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#what-is-an-error-boundary",
+    "href": "ErrorBoundary.html#what-is-an-error-boundary",
+    "title": "Chapter: Error Boundary in React",
+    "section": "",
+    "text": "Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#why-do-we-need-error-boundaries",
+    "href": "ErrorBoundary.html#why-do-we-need-error-boundaries",
+    "title": "Chapter: Error Boundary in React",
+    "section": "Why Do We Need Error Boundaries?",
+    "text": "Why Do We Need Error Boundaries?\nIn a large application, it’s not practical to wrap every small component in a try-catch. Error Boundaries help you:\n\nPrevent the whole app from crashing.\nShow a user-friendly message.\nLog errors for debugging or analytics.\nAllow the rest of the app to continue functioning.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#when-dont-they-work",
+    "href": "ErrorBoundary.html#when-dont-they-work",
+    "title": "Chapter: Error Boundary in React",
+    "section": "When Don’t They Work?",
+    "text": "When Don’t They Work?\nError boundaries do not catch errors for:\n\nEvent handlers (you still need try-catch for those).\nAsynchronous code (e.g., setTimeout or fetch).\nServer-side rendering.\nErrors thrown in the error boundary itself.\n\n\nThe Modern Way: react-error-boundary\nWhile writing a class component works, the modern React ecosystem prefers functional components. The library react-error-boundary provides a simple wrapper component and hooks to handle errors gracefully without writing a class.\nInstallation:\nnpm install react-error-boundary\nUsage:\nimport { ErrorBoundary } from \"react-error-boundary\";\n\nfunction Fallback({ error, resetErrorBoundary }) {\n  return (\n    &lt;div role=\"alert\"&gt;\n      &lt;p&gt;Something went wrong:&lt;/p&gt;\n      &lt;pre style={{ color: \"red\" }}&gt;{error.message}&lt;/pre&gt;\n      &lt;button onClick={resetErrorBoundary}&gt;Try again&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\n\nexport default function App() {\n  return (\n    &lt;ErrorBoundary\n      FallbackComponent={Fallback}\n      onReset={() =&gt; {\n        // Reset the state of your app so the error doesn't happen again\n      }}\n    &gt;\n      &lt;MyComponent /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n}\n\n\n\nThe Manual Way: Class Components\nIf you prefer zero dependencies or need to understand how it works under the hood, here is the robust class-based implementation.\n✅ Production-Ready ErrorBoundary.tsx (with full logging)\nimport React from 'react'\n\ntype ErrorBoundaryProps = {\n  name?: string  // optional label for where the boundary is used\n  fallback?: React.ReactNode\n  children: React.ReactNode\n}\n// ... (rest of class component)\n\n### 🧩 Example Usage to Isolate Internal Component Failures\nimport { ErrorBoundary } from './ErrorBoundary' // Your class component OR library wrapper\nimport MyComponent from '@internal-lib/MyComponent'\n\nexport default function App() {\n  return (\n    &lt;ErrorBoundary name=\"App\" fallback={&lt;div&gt;App crashed&lt;/div&gt;}&gt;\n      &lt;Header /&gt;\n      &lt;ErrorBoundary name=\"InternalLib:MyComponent\" fallback={&lt;div&gt;Widget failed&lt;/div&gt;}&gt;\n        &lt;MyComponent /&gt;\n      &lt;/ErrorBoundary&gt;\n      &lt;Footer /&gt;\n    &lt;/ErrorBoundary&gt;\n  )\n}\n⚙️ Bonus: Enable Source Maps in Your Builds\nMake sure your tsconfig.json and vite/webpack config includes:\n{\n  \"compilerOptions\": {\n    \"sourceMap\": true\n  }\n}\nIn webpack:\ndevtool: 'source-map'",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#best-practices",
+    "href": "ErrorBoundary.html#best-practices",
+    "title": "Chapter: Error Boundary in React",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nUse error boundaries strategically (e.g., around routes, widgets, or external integrations).\nCombine with logging tools (like Sentry or LogRocket) to track and report issues.\nKeep fallback UI helpful and minimal.\nAvoid putting an error boundary around your entire app unless you have a good reason (like a global crash screen).",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+    ]
+  },
+  {
+    "objectID": "MockOrInterceptAPI.html",
+    "href": "MockOrInterceptAPI.html",
+    "title": "Mocking APIs with MSW",
+    "section": "",
+    "text": "In modern frontend development, building and testing React applications often requires reliable API responses — even before the backend is ready. Instead of relying on unstable endpoints or waiting for real data, developers can simulate server behavior directly in the browser using Mock Service Worker (MSW).\nMSW is a powerful tool that intercepts HTTP requests made by your app and serves mocked responses, all while using the browser’s native Service Worker API. Unlike traditional mocking tools that rely on hardcoded stubs or test-only environments, MSW works at the network level. This means your application behaves as if it’s communicating with a real server, enabling realistic development, testing, and debugging — with zero backend dependency.\nWhether you’re building features locally, running integration tests, or simulating failure scenarios, MSW empowers you to control API behavior with precision and clarity — making it an essential tool in the modern React developer’s toolkit.\n\n📚 Learn more: Mock Service Worker – Quick Start Guide\n\n\n[!TIP] Verify MSW is Running: When your app starts, look for the [MSW] Mocking enabled. message in your browser’s console. If you don’t see it, your worker might not be registered correctly.\n\n\nGetting Hands-On with MSW\nTo demonstrate MSW in action, let’s walk through a hands-on example where we simulate a simple API for fetching user information in a React app. Instead of relying on a real backend, we’ll use MSW to intercept the /api/user request and return a mocked JSON response directly in the browser.\nThis approach not only allows us to start building our frontend independently, but also makes it easier to test edge cases, simulate failures, and ensure consistent development workflows.\nThe steps below will show you how to: - Define mock API handlers using MSW - Register the service worker for local development - Use fetch() inside a React component and receive a mocked response\nLet’s start by creating the request handler for /api/user.\n\n\nStep 1: Install MSW\nnpm install msw@latest\n📁 Folder Structure (recommended)\nsrc/\n  mocks/\n    handlers.ts\n    browser.ts\n  index.tsx\nDefines a list of mock API endpoints and how to respond to them.\n📄handlers.ts :\n// src/mocks/handlers.ts\nimport { http, HttpResponse } from 'msw'\n\nexport const handlers = [\n  http.get('/api/user', () =&gt; {\n    return HttpResponse.json({ id: 1, name: 'Amit Verma' });\n  }),\n];\n📌 Sets up the MSW worker in the browser and uses the handlers from 📄handlers.ts.\n// src/mocks/browser.ts\nimport { setupWorker } from 'msw/browser'\nimport { handlers } from './handlers'\n\nexport const worker = setupWorker(...handlers);\n\nworker.start({\n  onUnhandledRequest: 'warn'\n});\nsetupWorker() starts a Service Worker that listens to fetch and intercepts API calls in the browser. 🧠 This acts like your mock backend — it returns fake data instead of calling the real server.\nThen in 📄index.tsx:\n\nimport React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport './index.css';\nimport App from './App';\nimport reportWebVitals from './reportWebVitals';\n\nconst startApp = () =&gt; {\n  const root = ReactDOM.createRoot(\n    document.getElementById('root') as HTMLElement\n  );\n  root.render(\n    &lt;React.StrictMode&gt;\n      &lt;App /&gt;\n    &lt;/React.StrictMode&gt;\n  );\n};\n\nif (process.env.NODE_ENV === 'development') {\n  import('./mocks/browser').then(({ worker }) =&gt; {\n    worker.start({ onUnhandledRequest: 'warn' }).then(() =&gt; {\n      startApp(); // ⏳ Only render app after MSW is ready\n    });\n  });\n} else {\n  startApp();\n}\n\nreportWebVitals();\n📄App.tsx\nimport React from 'react';\nimport './App.css';\nimport MyComp from './MyComp';\n\nfunction App() {\n\n  return (\n    &lt;div className=\"App\"&gt;\n      &lt;MyComp /&gt;\n    &lt;/div&gt;\n  );\n}\n\nexport default App;\n📄MyComp.tsx :\n\nimport React, { useEffect, useState } from 'react';\n\n\ntype User = {\n    id: number;\n    name: string;\n};\n\nconst MyComp = () =&gt; {\n    const [user, setUser] = useState&lt;User | null&gt;(null);\n\nuseEffect(() =&gt; {\n  fetch('/api/user')\n    .then(async (response) =&gt; {\n      const contentType = response.headers.get('Content-Type');\n      if (contentType && contentType.includes('application/json')) {\n        const data = await response.json();\n        setUser(data);\n      } else {\n        throw new Error('Response is not JSON');\n      }\n    })\n    .catch(error =&gt; console.error('Error fetching user:', error));\n}, []);\n\n    return (\n        &lt;div&gt;\n        {user ? (\n            &lt;div&gt;\n                &lt;h1&gt;User Details&lt;/h1&gt;\n                &lt;p&gt;ID: {user.id}&lt;/p&gt;\n                &lt;p&gt;Name: {user.name}&lt;/p&gt;\n                &lt;p&gt;Role: {user.role}&lt;/p&gt;\n            &lt;/div&gt;\n\n        ) : (\n            &lt;p&gt;Loading user...&lt;/p&gt;\n        )}\n        &lt;/div&gt;\n    );\n\n};\n\nexport default MyComp;\nwe also need to run\nnpx msw init public/ --save\nThis command copies the actual service worker file (mockServiceWorker.js) into your public/ folder. Why It’s Critical • This file is registered by your browser via setupWorker(…) • Without it, you’ll see errors like:\n[MSW] Failed to register a Service Worker\n[MSW] Error: TypeError: Failed to register a ServiceWorker for scope...\n🔄 Flow Summary\nApp → fetch('/api/user')\n     ↓\n[MSW Service Worker]\n     ↓\nhandlers.ts → Matches rest.get('/api/user')\n     ↓\nReturns mocked response (e.g. { id: 1, name: \"Amit\" })\n🧪 Test It\nIn your React component, write:\nuseEffect(() =&gt; {\n  fetch('/api/user')\n    .then(res =&gt; res.json())\n    .then(data =&gt; console.log('Mocked User:', data))\n}, [])\nWhen you run your app, it should log: Mocked User: { id: 1, name: ‘Amit Verma’, role: ‘Lead Software Engineer’ }\n📄package.json\n{\n  \"name\": \"my-react-app\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"dependencies\": {\n    \"@testing-library/dom\": \"^10.4.0\",\n    \"@testing-library/jest-dom\": \"^6.6.3\",\n    \"@testing-library/react\": \"^16.3.0\",\n    \"@testing-library/user-event\": \"^13.5.0\",\n    \"@types/jest\": \"^27.5.2\",\n    \"@types/node\": \"^16.18.126\",\n    \"@types/react\": \"^19.1.8\",\n    \"@types/react-dom\": \"^19.1.6\",\n    \"msw\": \"^2.10.4\",\n    \"react\": \"^19.1.0\",\n    \"react-dom\": \"^19.1.0\",\n    \"react-scripts\": \"5.0.1\",\n    \"typescript\": \"^4.9.5\",\n    \"web-vitals\": \"^2.1.4\"\n  },\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\",\n    \"test\": \"react-scripts test\",\n    \"eject\": \"react-scripts eject\"\n  },\n  \"eslintConfig\": {\n    \"extends\": [\n      \"react-app\",\n      \"react-app/jest\"\n    ]\n  },\n  \"browserslist\": {\n    \"production\": [\n      \"&gt;0.2%\",\n      \"not dead\",\n      \"not op_mini all\"\n    ],\n    \"development\": [\n      \"last 1 chrome version\",\n      \"last 1 firefox version\",\n      \"last 1 safari version\"\n    ]\n  },\n  \"msw\": {\n    \"workerDirectory\": [\n      \"public\"\n    ]\n  }\n}",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Mocking APIs with MSW</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html",
+    "href": "TestingReactApps.html",
+    "title": "Testing Strategies for React Applications",
+    "section": "",
+    "text": "1. The Stack: Vitest & React Testing Library\nTesting isn’t just about finding bugs—it’s about confidence. It allows you to refactor legacy code, upgrade dependencies, and ship features without the constant fear of breaking something.\nIn the React ecosystem, we follow the “Testing Trophy” philosophy: Write tests. Not too many. Mostly integration.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#the-stack-vitest-react-testing-library",
+    "href": "TestingReactApps.html#the-stack-vitest-react-testing-library",
+    "title": "Testing Strategies for React Applications",
+    "section": "",
+    "text": "Vitest: A blazing fast unit test runner (compatible with Jest) powered by Vite.\nReact Testing Library (RTL): Utilities to test React components in a way that resembles how users interact with them.\n\nnpm install -D vitest jsdom @testing-library/react @testing-library/user-event",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#writing-your-first-test",
+    "href": "TestingReactApps.html#writing-your-first-test",
+    "title": "Testing Strategies for React Applications",
+    "section": "2. Writing Your First Test",
+    "text": "2. Writing Your First Test\nLet’s test a simple Counter component.\nComponent:\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  return (\n    &lt;div&gt;\n      &lt;p&gt;Count: {count}&lt;/p&gt;\n      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;Increment&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\nTest:\nimport { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport Counter from './Counter';\n\ntest('increments count when button is clicked', async () =&gt; {\n  render(&lt;Counter /&gt;);\n\n  const button = screen.getByRole('button', { name: /increment/i });\n  const countText = screen.getByText(/count: 0/i);\n\n  expect(countText).toBeInTheDocument();\n\n  // Simulate user click\n  await userEvent.click(button);\n\n  // Assert expectation\n  expect(screen.getByText(/count: 1/i)).toBeInTheDocument();\n});\n\nKey Principle: Query by Role\nAvoid testing implementation details (like class names or internal state). Instead, query by what the user sees: - getByRole('button', ...) - getByLabelText(...) - getByText(...)",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#mocking-api-calls",
+    "href": "TestingReactApps.html#mocking-api-calls",
+    "title": "Testing Strategies for React Applications",
+    "section": "3. Mocking API Calls",
+    "text": "3. Mocking API Calls\nDon’t make real network requests in tests! Use MSW (Mock Service Worker) to intercept them.\n// test-setup.ts\nimport { setupServer } from 'msw/node';\nimport { http, HttpResponse } from 'msw';\n\nexport const server = setupServer(\n  http.get('/api/user', () =&gt; {\n    return HttpResponse.json({ name: 'John Doe' });\n  })\n);\n\nbeforeAll(() =&gt; server.listen());\nafterEach(() =&gt; server.resetHandlers());\nafterAll(() =&gt; server.close());",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#integration-vs.-unit-tests",
+    "href": "TestingReactApps.html#integration-vs.-unit-tests",
+    "title": "Testing Strategies for React Applications",
+    "section": "4. Integration vs. Unit Tests",
+    "text": "4. Integration vs. Unit Tests\n\nUnit Tests: Test a single function or hook in isolation. Good for complex logic.\nIntegration Tests: Render a whole page or feature (e.g., a form wizard) and test the flow. This provides the most value for the least effort.\n\n\nSnapshot Testing?\nSnapshots are brittle. Use them sparingly, mainly for ensuring static UI (like strict legal text) doesn’t change accidentally.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#conclusion",
+    "href": "TestingReactApps.html#conclusion",
+    "title": "Testing Strategies for React Applications",
+    "section": "Conclusion",
+    "text": "Conclusion\nTesting is an investment. By focusing on user interactions rather than implementation details, your tests become resilient to refactoring and provide long-term value.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html",
+    "href": "MonorepoArchitecture.html",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "",
+    "text": "The “Apps vs. Packages” Pattern\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to “dependency hell” and code duplication.\nThe solution? A Monorepo.\nIn this chapter, we’ll explore how to structure a modern React monorepo using npm/pnpm workspaces, inspired by the architecture of high-performance tools like ai-studio-template.\nState-of-the-art monorepos typically follow this directory structure:",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "href": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "",
+    "text": "graph TD\n    Root[Root /] --&gt; Apps[apps /]\n    Root --&gt; Pkgs[packages /]\n    \n    Apps --&gt; Desktop[desktop / (Tauri + Rust)]\n    Apps --&gt; Web[web / (Next.js or Vite)]\n    Apps --&gt; Sidecar[sidecar / (Python AI)]\n    \n    Pkgs --&gt; Shared[shared / (Types & Config)]\n    Pkgs --&gt; UI[ui-kit / (React Components)]\n    \n    Desktop -.-&gt; Shared\n    Web -.-&gt; Shared\n    Web -.-&gt; UI\n\napps/: Deployable applications. They consume packages but are rarely consumed themselves.\npackages/: Shared libraries. Hosted internally and imported by apps.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#setting-up-workspaces",
+    "href": "MonorepoArchitecture.html#setting-up-workspaces",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Setting Up Workspaces",
+    "text": "Setting Up Workspaces\nYou don’t need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.\npackage.json (Root):\n{\n  \"name\": \"my-ai-studio\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}\nNow, any folder inside apps or packages with its own package.json is treated as a workspace.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "href": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "3. The Power of packages/shared",
+    "text": "3. The Power of packages/shared\nImagine you have a TypeScript interface Project that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).\nInstead of copying types.ts into every folder, you create a shared package.\npackages/shared/package.json:\n{\n  \"name\": \"@my-studio/shared\",\n  \"version\": \"1.0.0\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\"\n}\nUsage in React App:\nnpm install @my-studio/shared\nimport { Project } from '@my-studio/shared';\n\nexport function ProjectCard({ project }: { project: Project }) {\n  return &lt;div&gt;{project.name}&lt;/div&gt;;\n}\nNow, when you update the type definition in one place, every app gets the update instantly (and TypeScript will scream at you if you broke something).",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#why-this-approach",
+    "href": "MonorepoArchitecture.html#why-this-approach",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Why This approach?",
+    "text": "Why This approach?\n\nSingle Source of Truth: Define types and utilities once.\nAtomic Commits: You can change the API and the UI in a single PR.\nUnified Tooling: Run npm install once at the root to install dependencies for ALL apps.\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "CrossPlatformDesktopApps.html",
+    "href": "CrossPlatformDesktopApps.html",
+    "title": "Cross-Platform Desktop Apps: React on the Desktop",
+    "section": "",
+    "text": "Architecture: The Rust Sandwich\nFor years, Electron was the king of building desktop apps with web technologies. But it had a heavy cost: it bundled an entire Chrome browser and Node.js runtime with every single app.\nEnter Tauri.\nTauri allows you to build tiny, blazing-fast binaries for macOS, Windows, and Linux by using the OS’s native webview (WebKit on macOS, WebView2 on Windows) and a Rust backend.\nAnd the best part? The UI is just a standard React app.\nThink of a Tauri app as a sandwich:",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
+    ]
+  },
+  {
+    "objectID": "CrossPlatformDesktopApps.html#architecture-the-rust-sandwich",
+    "href": "CrossPlatformDesktopApps.html#architecture-the-rust-sandwich",
+    "title": "Cross-Platform Desktop Apps: React on the Desktop",
+    "section": "",
+    "text": "Top Bun (Frontend): Your React + Vite app (ui/). It talks to the system via an “IPC Bridge”.\nMeat (Backend): The Rust Core (src-tauri/). It handles file system access, window management, and heavy computation.\nBottom Bun (OS): The native operating system.\n\nsequenceDiagram\n    participant React as React UI (WebView)\n    participant IPC as Tauri IPC\n    participant Rust as Rust Backend\n    \n    React-&gt;&gt;IPC: invoke('save_file', { content })\n    IPC-&gt;&gt;Rust: Execute Command\n    Rust--&gt;&gt;IPC: Result (Success/Error)\n    IPC--&gt;&gt;React: Promise Resolve",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
+    ]
+  },
+  {
+    "objectID": "CrossPlatformDesktopApps.html#setting-up-react-in-tauri",
+    "href": "CrossPlatformDesktopApps.html#setting-up-react-in-tauri",
+    "title": "Cross-Platform Desktop Apps: React on the Desktop",
+    "section": "Setting up React in Tauri",
+    "text": "Setting up React in Tauri\nIf you followed our Monorepo architecture, your apps/desktop folder looks like this:\napps/desktop/\n├── src-tauri/      &lt;-- The Rust \"Shell\"\n│   ├── src/main.rs\n│   └── tauri.conf.json\n└── ui/             &lt;-- Your React App (standard Vite)\n    ├── src/\n    └── vite.config.ts\ntauri.conf.json tells Tauri where to look for your React app:\n{\n  \"build\": {\n    \"beforeDevCommand\": \"npm run dev\",\n    \"beforeBuildCommand\": \"npm run build\",\n    \"devPath\": \"http://localhost:1420\",\n    \"distDir\": \"../ui/dist\"\n  }\n}",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
+    ]
+  },
+  {
+    "objectID": "CrossPlatformDesktopApps.html#calling-rust-from-react",
+    "href": "CrossPlatformDesktopApps.html#calling-rust-from-react",
+    "title": "Cross-Platform Desktop Apps: React on the Desktop",
+    "section": "Calling Rust from React",
+    "text": "Calling Rust from React\nThis is where the magic happens. You expose a Rust function as a “Command”, and call it from React like an async function.\n1. Rust Side (main.rs):\n#[tauri::command]\nfn greet(name: &str) -&gt; String {\n    format!(\"Hello, {}! You've been greeted from Rust!\", name)\n}\n\nfn main() {\n    tauri::Builder::default()\n        .invoke_handler(tauri::generate_handler![greet])\n        .run(tauri::generate_context!())\n        .expect(\"error while running tauri application\");\n}\n2. React Side (App.tsx):\nimport { invoke } from '@tauri-apps/api/tauri';\nimport { useState } from 'react';\n\nfunction App() {\n  const [msg, setMsg] = useState(\"\");\n\n  async function callRust() {\n    // This looks like an API call, but it goes directly to the Rust binary!\n    const response = await invoke('greet', { name: 'React Developer' });\n    setMsg(response as string);\n  }\n\n  return (\n    &lt;button onClick={callRust}&gt;Call Native Backend&lt;/button&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
+    ]
+  },
+  {
+    "objectID": "CrossPlatformDesktopApps.html#why-react-developers-love-tauri",
+    "href": "CrossPlatformDesktopApps.html#why-react-developers-love-tauri",
+    "title": "Cross-Platform Desktop Apps: React on the Desktop",
+    "section": "Why React Developers Love Tauri",
+    "text": "Why React Developers Love Tauri\n\nTiny Bundle Size: A Hello World app is ~3MB (vs 100MB+ for Electron).\nSecurity: No Node.js in the UI thread. The UI is sandboxed.\nPerformance: Offload heavy logic (image processing, encryption) to Rust, keep the UI thread buttery smooth.\n\nYou are no longer “just” a web developer. With React + Tauri, you are a Native App Developer.",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
+    ]
+  },
+  {
+    "objectID": "TheAISidecarPattern.html",
+    "href": "TheAISidecarPattern.html",
+    "title": "The AI Sidecar Pattern: Python for Intelligence, React for Beauty",
+    "section": "",
+    "text": "What is a Sidecar?\nReact is amazing for UIs. But let’s be honest: JavaScript isn’t the best language for heavy AI workloads. Python is the undisputed king of AI (PyTorch, TensorFlow, Pandas).\nSo, how do you build a desktop app that has the interactivity of React but the intelligence of Python?\nYou use the Sidecar Pattern.\nIn our architecture, the main application (Tauri/Electron) spawns a separate, invisible child process—the Sidecar. In this case, it’s a Python server (FastAPI or Flask).",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>The AI Sidecar Pattern: Python for Intelligence, React for Beauty</span>"
+    ]
+  },
+  {
+    "objectID": "TheAISidecarPattern.html#what-is-a-sidecar",
+    "href": "TheAISidecarPattern.html#what-is-a-sidecar",
+    "title": "The AI Sidecar Pattern: Python for Intelligence, React for Beauty",
+    "section": "",
+    "text": "Main App Creates Child Process: On startup, Tauri launches server.py.\nHealth Check: The main app pings localhost:8000/health until the Python server is ready.\nCommunication: The React UI calls the Python API via standard HTTP requests (or WebSockets).\nShutdown: When the main window closes, Tauri kills the Python process.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>The AI Sidecar Pattern: Python for Intelligence, React for Beauty</span>"
+    ]
+  },
+  {
+    "objectID": "TheAISidecarPattern.html#setting-up-the-python-sidecar",
+    "href": "TheAISidecarPattern.html#setting-up-the-python-sidecar",
+    "title": "The AI Sidecar Pattern: Python for Intelligence, React for Beauty",
+    "section": "2. Setting Up the Python Sidecar",
+    "text": "2. Setting Up the Python Sidecar\nIn apps/sidecar/server.py:\nfrom fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass InferenceRequest(BaseModel):\n    prompt: str\n\n@app.post(\"/infer\")\nasync def infer(req: InferenceRequest):\n    # This is where you load PyTorch / Llama / Stable Diffusion\n    result = perform_heavy_computation(req.prompt)\n    return {\"result\": result}\nThis server runs independently. You can dev it, test it, and debug it without even touching the UI.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>The AI Sidecar Pattern: Python for Intelligence, React for Beauty</span>"
+    ]
+  },
+  {
+    "objectID": "TheAISidecarPattern.html#the-react-client",
+    "href": "TheAISidecarPattern.html#the-react-client",
+    "title": "The AI Sidecar Pattern: Python for Intelligence, React for Beauty",
+    "section": "3. The React Client",
+    "text": "3. The React Client\nFrom the perspective of React, this is just another REST API.\n// Using React Query for sidecar calls\nconst { mutate } = useMutation({\n    mutationFn: async (prompt: string) =&gt; {\n        const res = await fetch('http://localhost:8000/infer', {\n            method: 'POST',\n            headers: { 'Content-Type': 'application/json' },\n            body: JSON.stringify({ prompt })\n        });\n        return res.json();\n    }\n});",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>The AI Sidecar Pattern: Python for Intelligence, React for Beauty</span>"
+    ]
+  },
+  {
+    "objectID": "TheAISidecarPattern.html#why-this-architecture-wins",
+    "href": "TheAISidecarPattern.html#why-this-architecture-wins",
+    "title": "The AI Sidecar Pattern: Python for Intelligence, React for Beauty",
+    "section": "4. Why This Architecture Wins",
+    "text": "4. Why This Architecture Wins\n\nDecoupling: The UI team can iterate on React components while the AI team iterates on the Python model. The API contract is the only touchpoint.\nStability: If the Python process crashes (OOM), the UI doesn’t freeze. React can show a “Service Restarting…” message and relaunch the sidecar.\nEcosystem: You get access to npm packages for UI and pip packages for AI.\n\nIn the next chapter, we’ll discuss how to render the complex visual outputs of these AI models using a High-Performance Canvas.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>The AI Sidecar Pattern: Python for Intelligence, React for Beauty</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html",
+    "href": "HighPerformanceCanvas.html",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "",
+    "text": "The Hybrid Approach\nReact makes building UIs easy because it abstracts the DOM. But the DOM is heavy. Each &lt;div&gt; is an object with hundreds of properties, event listeners, and layout constraints.\nWhen you’re building a tool like ai-studio-template—visualizing complex AI agents, knowledge graphs with thousands of nodes, or real-time data streams—React components will start to lag.\nThe solution is to drop down to the Canvas API.\nWe don’t abandon React. We use React for the “chroma” (buttons, sidebars, modals) and Canvas for the “stage” (the main visualization area).",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#the-hybrid-approach",
+    "href": "HighPerformanceCanvas.html#the-hybrid-approach",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "",
+    "text": "1. The Rendering Loop\nIn React, updates happen when props change. In Canvas, updates happen in a requestAnimationFrame loop (60fps).\nWe need a bridge.\nimport { useRef, useEffect } from 'react';\n\nfunction CanvasStage({ nodes }) {\n  const canvasRef = useRef&lt;HTMLCanvasElement&gt;(null);\n\n  useEffect(() =&gt; {\n    const canvas = canvasRef.current;\n    if (!canvas) return;\n    const ctx = canvas.getContext('2d');\n\n    let animationId: number;\n\n    const render = () =&gt; {\n      // 1. Clear Screen\n      ctx.clearRect(0, 0, canvas.width, canvas.height);\n\n      // 2. Draw Nodes (Pure Math, no DOM overhead!)\n      nodes.forEach(node =&gt; {\n        ctx.fillStyle = node.color;\n        ctx.beginPath();\n        ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // Draw Label\n        ctx.fillStyle = 'white';\n        ctx.fillText(node.label, node.x, node.y);\n      });\n\n      // 3. Loop\n      animationId = requestAnimationFrame(render);\n    };\n\n    render();\n\n    return () =&gt; cancelAnimationFrame(animationId);\n  }, [nodes]); // Re-start loop if nodes reference changes (or use a ref for nodes to avoid restart)\n\n  return &lt;canvas ref={canvasRef} width={800} height={600} /&gt;;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#hittesting-interacting-with-pixels",
+    "href": "HighPerformanceCanvas.html#hittesting-interacting-with-pixels",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "2. Hittesting: Interacting with Pixels",
+    "text": "2. Hittesting: Interacting with Pixels\nSince we don’t have DOM elements, we don’t have onClick. We have coordinates.\nconst handleClick = (e: React.MouseEvent) =&gt; {\n  const rect = canvasRef.current.getBoundingClientRect();\n  const x = e.clientX - rect.left;\n  const y = e.clientY - rect.top;\n\n  // Find the node under the mouse\n  const clickedNode = nodes.find(node =&gt; {\n    const dist = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);\n    return dist &lt; 20; // 20 is the radius\n  });\n\n  if (clickedNode) {\n    console.log(\"Clicked:\", clickedNode.label);\n    setSelectedNode(clickedNode);\n  }\n};",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#webgpu-the-next-frontier",
+    "href": "HighPerformanceCanvas.html#webgpu-the-next-frontier",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "3. WebGPU: The Next Frontier",
+    "text": "3. WebGPU: The Next Frontier\nWhile Canvas 2D is fast, WebGPU gives you direct access to the graphics card. It’s complex, but libraries like PixiJS or Three.js abstract it away nicely.\nFor 99% of “Pro Tools” (like Figma, VS Code’s minimap, Miro), Canvas 2D is sufficient. But for 3D or millions of particles, reach for WebGPU.\nBy separating your Data Model (Zustand store) from your View Layer (Canvas), you can render the same data in a list (React) or a graph (Canvas) simultaneously.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html",
+    "href": "CommandSystems.html",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "",
+    "text": "1. The Command Pattern\nIn a typical web app, you navigate by clicking buttons. In a Pro Tool, you navigate by thinking.\nApps like VS Code, Linear, and Notion have trained users to expect a global “Command Palette” (Cmd+K or Ctrl+K). This chapter shows you how to build one in React.\nThe “Command Pattern” separates the intent from the execution.\nInstead of burying logic in a button’s onClick, you register commands in a central registry.",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#the-command-pattern",
+    "href": "CommandSystems.html#the-command-pattern",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "",
+    "text": "type Command = {\n  id: string;\n  label: string;\n  icon?: React.ReactNode;\n  perform: () =&gt; void;\n};",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#using-cmdk",
+    "href": "CommandSystems.html#using-cmdk",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "2. Using cmdk",
+    "text": "2. Using cmdk\nDon’t build the UI from scratch. The library cmdk (by Pace) is the gold standard. It handles the accessible dialog, filtering, and keyboard navigation.\nnpm install cmdk\nimport { Command } from 'cmdk';\nimport { useEffect, useState } from 'react';\n\nexport function CommandPalette() {\n  const [open, setOpen] = useState(false);\n\n  // Toggle with Cmd+K\n  useEffect(() =&gt; {\n    const down = (e: KeyboardEvent) =&gt; {\n      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {\n        e.preventDefault();\n        setOpen((open) =&gt; !open);\n      }\n    };\n    document.addEventListener('keydown', down);\n    return () =&gt; document.removeEventListener('keydown', down);\n  }, []);\n\n  return (\n    &lt;Command.Dialog open={open} onOpenChange={setOpen}&gt;\n      &lt;Command.Input placeholder=\"Type a command or search...\" /&gt;\n\n      &lt;Command.List&gt;\n        &lt;Command.Empty&gt;No results found.&lt;/Command.Empty&gt;\n\n        &lt;Command.Group heading=\"Projects\"&gt;\n          &lt;Command.Item onSelect={() =&gt; console.log('Create Project')}&gt;\n            Create New Project\n          &lt;/Command.Item&gt;\n          &lt;Command.Item onSelect={() =&gt; console.log('Search Projects')}&gt;\n            Search Projects...\n          &lt;/Command.Item&gt;\n        &lt;/Command.Group&gt;\n\n        &lt;Command.Group heading=\"Settings\"&gt;\n          &lt;Command.Item onSelect={() =&gt; console.log('Toggle Theme')}&gt;\n            Toggle Dark Mode\n          &lt;/Command.Item&gt;\n        &lt;/Command.Group&gt;\n      &lt;/Command.List&gt;\n    &lt;/Command.Dialog&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#global-shortcuts",
+    "href": "CommandSystems.html#global-shortcuts",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "3. Global Shortcuts",
+    "text": "3. Global Shortcuts\nCmd+K is just the entry point. You also want shortcuts like Cmd+S (Save) or Cmd+B (Toggle Sidebar).\nUse a custom hook useKeyboardShortcut:\nimport { useEffect } from 'react';\n\nfunction useKeyboardShortcut(key: string, callback: () =&gt; void, meta = false) {\n  useEffect(() =&gt; {\n    const handler = (event: KeyboardEvent) =&gt; {\n      if (event.key === key && event.metaKey === meta) {\n        event.preventDefault();\n        callback();\n      }\n    };\n    window.addEventListener('keydown', handler);\n    return () =&gt; window.removeEventListener('keydown', handler);\n  }, [key, callback, meta]);\n}\n\n// Usage\nfunction App() {\n  useKeyboardShortcut('s', () =&gt; saveProject(), true); // Cmd+S\n  return &lt;div&gt;App&lt;/div&gt;;\n}\nBy decoupling input (Keyboard/Mouse) from actions (Commands), you make your app scriptable, testable, and incredibly fast to use.",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html",
+    "href": "SharedTypesAndSchemas.html",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "",
+    "text": "1. Zod: Runtime Validation + Static Types\nIn a full-stack project (like our React + Rust + Python monorepo), the biggest source of bugs is Protocol Mismatch.\nTo fix this, we need a Single Source of Truth for our data schemas.\nTypeScript types disappear at runtime. Zod schemas stay. They are perfect for validation and type generation.\nIn packages/shared/src/schemas.ts:",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#zod-runtime-validation-static-types",
+    "href": "SharedTypesAndSchemas.html#zod-runtime-validation-static-types",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "",
+    "text": "import { z } from 'zod';\n\nexport const ProjectSchema = z.object({\n  id: z.string().uuid(),\n  name: z.string().min(1),\n  createdAt: z.string().datetime(),\n  settings: z.object({\n    theme: z.enum(['light', 'dark']),\n    notifications: z.boolean(),\n  }),\n});\n\n// Auto-derive the TypeScript type!\nexport type Project = z.infer&lt;typeof ProjectSchema&gt;;",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#consuming-in-react-ui",
+    "href": "SharedTypesAndSchemas.html#consuming-in-react-ui",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "2. Consuming in React (UI)",
+    "text": "2. Consuming in React (UI)\nNow, your UI components are type-safe.\nimport { Project, ProjectSchema } from '@my-studio/shared';\n\nfunction ProjectSettings({ project }: { project: Project }) {\n  // Validate incoming data (e.g. from API)\n  const result = ProjectSchema.safeParse(project);\n\n  if (!result.success) {\n    console.error(\"Invalid project data!\", result.error);\n    return &lt;div&gt;Error loading project&lt;/div&gt;;\n  }\n  \n  return &lt;h1&gt;{project.name}&lt;/h1&gt;;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#consuming-in-python-sidecar",
+    "href": "SharedTypesAndSchemas.html#consuming-in-python-sidecar",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "3. Consuming in Python (Sidecar)",
+    "text": "3. Consuming in Python (Sidecar)\nWait, Python can’t read TypeScript files!\nCorrect. But we can generate Python Pydantic models from our Zod/JSON schemas, or simply ensure they match.\nA common pattern is to export the JSON Schema from Zod:\nimport { zodToJsonSchema } from 'zod-to-json-schema';\n\nconst jsonSchema = zodToJsonSchema(ProjectSchema, 'Project');\nconsole.log(JSON.stringify(jsonSchema, null, 2));\nYou can then use tools like datamodel-code-generator in Python to convert this JSON Schema into a Pydantic class automatically during your build process.\nResult: You change a field in packages/shared, run a script, and both your React UI and Python Backend types are updated. Sync nirvana.",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html",
+    "href": "ProductionDeployment.html",
+    "title": "Production Deployment: CI/CD & Binaries",
+    "section": "",
+    "text": "1. GitHub Actions: The Automation Engine\nBuilding a cool app on localhost is fun. Delivering it to millions of users is engineering.\nIn this final chapter, we discuss how to automate the build and release process for your Monorepo Desktop App.\nWe use GitHub Actions to build our React site and Tauri binaries automatically whenever we push to main.\n.github/workflows/release.yml:\nThis single file will: 1. Spin up VMs for Mac, Windows, and Linux. 2. Install Rust and Node. 3. Build your React frontend (npm run build). 4. Compile the Rust backend (tauri build). 5. Bundle the Python sidecar. 6. Upload the artifacts (.dmg, .exe, .deb) to the GitHub Releases page.",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#github-actions-the-automation-engine",
+    "href": "ProductionDeployment.html#github-actions-the-automation-engine",
+    "title": "Production Deployment: CI/CD & Binaries",
+    "section": "",
+    "text": "name: Release\non:\n  push:\n    tags:\n      - 'v*'\n\njobs:\n  release:\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [macos-latest, ubuntu-20.04, windows-latest]\n    \n    runs-on: ${{ matrix.platform }}\n    steps:\n      - uses: actions/checkout@v3\n      - name: Setup Node\n        uses: actions/setup-node@v3\n        with:\n          node-version: 18\n          \n      - name: Install Rust (Stable)\n        uses: dtolnay/rust-toolchain@stable\n        \n      - name: Install dependencies (Ubuntu only)\n        if: matrix.platform == 'ubuntu-20.04'\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev\n          \n      - name: Install JS Deps\n        run: npm install\n        \n      - name: Build React & Tauri\n        uses: tauri-apps/tauri-action@v0\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n        with:\n          tagName: ${{ github.ref_name }}\n          releaseName: \"App v__VERSION__\"\n          releaseBody: \"See the assets to download this version and install.\"\n          releaseDraft: true\n          prerelease: false",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#code-signing-the-painful-part",
+    "href": "ProductionDeployment.html#code-signing-the-painful-part",
+    "title": "Production Deployment: CI/CD & Binaries",
+    "section": "2. Code Signing (The Painful Part)",
+    "text": "2. Code Signing (The Painful Part)\nTo avoid the “Unverified Developer” warning on macOS and Windows, you must sign your code.\n\nmacOS: You need an Apple Developer ID ($99/year). Export your certificate and add it to GitHub Secrets (APPLE_CERTIFICATE, APPLE_PASSWORD).\nWindows: You need a code signing certificate (e.g., from Sectigo/DigiCert).\n\nTauri’s action handles the signing automatically if the environment variables are present.",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#auto-updater",
+    "href": "ProductionDeployment.html#auto-updater",
+    "title": "Production Deployment: CI/CD & Binaries",
+    "section": "3. Auto-Updater",
+    "text": "3. Auto-Updater\nTauri has a built-in auto-updater! You don’t need to write custom logic.\nIn tauri.conf.json:\n\"updater\": {\n  \"active\": true,\n  \"endpoints\": [\n    \"https://github.com/my-user/my-app/releases/latest/download/latest.json\"\n  ],\n  \"dialog\": true\n}\nWhen you publish a new release to GitHub, users will get a popup: “A new version is available. Install now?”.",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#conclusion",
+    "href": "ProductionDeployment.html#conclusion",
+    "title": "Production Deployment: CI/CD & Binaries",
+    "section": "Conclusion",
+    "text": "Conclusion\nYou started this book learning useEffect. You are leaving it knowing how to architect a cross-platform, AI-powered desktop application with automated CI/CD.\nGo build something amazing.",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+    ]
+  }
+]

@@ -85,7 +85,7 @@ format:
     toc: true
     css: styles.css
     number-sections: false
-    self-contained: true
+    self-contained: false
   epub:
     cover-image: cover.png
     toc: true
