@@ -1,0 +1,214 @@
+# Animations & Micro-interactions: Delighting Users
+
+Static UIs feel dead. A tasteful animation can transform a "functional" app into a **delightful** experience.
+
+This chapter covers CSS transitions, **Framer Motion**, and patterns for meaningful motion.
+
+---
+
+## Why Animation Matters
+
+- **Feedback**: Buttons that "press" confirm the click registered
+- **Continuity**: Page transitions maintain spatial context
+- **Attention**: Highlight important changes (toasts, badges)
+- **Personality**: Make your app memorable
+
+::: {.callout-tip}
+**The 60fps Rule**: Animations should run at 60 frames per second. Stick to animating `transform` and `opacity`—they can be GPU-accelerated. Avoid animating `width`, `height`, or `top`.
+:::
+
+---
+
+## CSS Transitions in React
+
+For simple hover effects and state changes, CSS is enough:
+
+```css
+/* styles.css */
+.button {
+  background: #3b82f6;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+```
+
+```tsx
+function Button({ children, onClick }) {
+  return <button className="button" onClick={onClick}>{children}</button>;
+}
+```
+
+---
+
+## Framer Motion: The React Animation Library
+
+For complex, physics-based, or orchestrated animations, **Framer Motion** is the gold standard.
+
+```bash
+npm install framer-motion
+```
+
+### Basic Animation
+
+```tsx
+import { motion } from 'framer-motion';
+
+function FadeInCard() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
+      <h2>Hello, Animation!</h2>
+    </motion.div>
+  );
+}
+```
+
+### Hover & Tap
+
+```tsx
+<motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+>
+  Click Me
+</motion.button>
+```
+
+---
+
+## Page Transitions
+
+Animate between routes using `AnimatePresence`:
+
+```tsx
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLocation, Routes, Route } from 'react-router-dom';
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+function PageWrapper({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
+---
+
+## Loading States
+
+Skeleton loaders and spinners keep users engaged:
+
+```tsx
+function Skeleton({ width, height }) {
+  return (
+    <motion.div
+      style={{ width, height, background: '#e5e7eb', borderRadius: 8 }}
+      animate={{ opacity: [0.5, 1, 0.5] }}
+      transition={{ duration: 1.5, repeat: Infinity }}
+    />
+  );
+}
+
+function ProfileCard({ user, isLoading }) {
+  if (isLoading) {
+    return (
+      <div className="profile-card">
+        <Skeleton width={80} height={80} />
+        <Skeleton width={200} height={24} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-card">
+      <img src={user.avatar} alt={user.name} />
+      <h2>{user.name}</h2>
+    </div>
+  );
+}
+```
+
+---
+
+## List Animations
+
+Animate items entering/leaving a list:
+
+```tsx
+import { motion, AnimatePresence } from 'framer-motion';
+
+function TodoList({ items, onRemove }) {
+  return (
+    <ul>
+      <AnimatePresence>
+        {items.map(item => (
+          <motion.li
+            key={item.id}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {item.text}
+            <button onClick={() => onRemove(item.id)}>×</button>
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    </ul>
+  );
+}
+```
+
+---
+
+## Animation Best Practices
+
+| Do | Don't |
+|----|-------|
+| Keep durations short (150-400ms) | Animate everything |
+| Use easing curves (`ease-out`, `spring`) | Use linear timing |
+| Animate `transform` and `opacity` | Animate layout properties |
+| Provide reduced-motion fallbacks | Ignore accessibility |
+
+```css
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+Motion is a superpower. Use it wisely.

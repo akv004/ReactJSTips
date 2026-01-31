@@ -1,0 +1,213 @@
+# Accessibility (a11y): Building for Everyone
+
+Over 1 billion people worldwide have some form of disability. Building accessible apps isn't just ethical—it's often **legally required** and **improves UX for everyone**.
+
+This chapter covers semantic HTML, ARIA, keyboard navigation, and testing strategies.
+
+---
+
+## Why Accessibility Matters
+
+- **Legal**: WCAG compliance is required in many jurisdictions (ADA, EAA)
+- **Business**: 15% of the world's population has a disability
+- **SEO**: Screen readers and search engines parse content similarly
+- **UX**: Accessibility improvements benefit all users (captions, contrast, keyboard nav)
+
+---
+
+## Semantic HTML: Your First Line of Defense
+
+React lets you render anything as a `<div>`. Don't.
+
+```tsx
+// ❌ Bad: Div soup
+<div onClick={handleClick}>Click me</div>
+
+// ✅ Good: Semantic button
+<button onClick={handleClick}>Click me</button>
+```
+
+**Semantic elements provide:**
+- Keyboard support (Enter/Space to activate)
+- Screen reader announcements
+- Focus management
+- Native browser behaviors
+
+### Common Semantic Elements
+
+| Element | Use For |
+|---------|---------|
+| `<button>` | Clickable actions |
+| `<a href="...">` | Navigation |
+| `<nav>` | Navigation regions |
+| `<main>` | Primary content |
+| `<header>`, `<footer>` | Page regions |
+| `<article>` | Self-contained content |
+| `<ul>`, `<ol>` | Lists of items |
+
+---
+
+## ARIA: When HTML Isn't Enough
+
+**ARIA** (Accessible Rich Internet Applications) adds semantic meaning when native HTML can't express it.
+
+::: {.callout-warning}
+**First Rule of ARIA**: Don't use ARIA if you can use native HTML. Native elements have built-in accessibility.
+:::
+
+### Common ARIA Patterns
+
+```tsx
+// Live regions - announce dynamic content
+<div aria-live="polite" aria-atomic="true">
+  {notificationMessage}
+</div>
+
+// Labels for icon buttons
+<button aria-label="Close dialog">
+  <CloseIcon />
+</button>
+
+// Describing relationships
+<input aria-describedby="password-hint" type="password" />
+<p id="password-hint">Must be at least 8 characters</p>
+
+// Modal dialog
+<div role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Confirm Action</h2>
+</div>
+```
+
+---
+
+## Keyboard Navigation
+
+Users who can't use a mouse rely on keyboard navigation:
+
+- **Tab**: Move between focusable elements
+- **Enter/Space**: Activate buttons/links
+- **Arrow keys**: Navigate within components
+- **Escape**: Close modals/menus
+
+### Focus Management
+
+```tsx
+import { useRef, useEffect } from 'react';
+
+function Modal({ isOpen, onClose, children }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Focus the close button when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      closeButtonRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  // Trap focus within modal
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div role="dialog" aria-modal="true" onKeyDown={handleKeyDown}>
+      <button ref={closeButtonRef} onClick={onClose}>
+        Close
+      </button>
+      {children}
+    </div>
+  );
+}
+```
+
+### Skip Links
+
+Allow keyboard users to skip repetitive navigation:
+
+```tsx
+function SkipLink() {
+  return (
+    <a href="#main-content" className="skip-link">
+      Skip to main content
+    </a>
+  );
+}
+
+// CSS
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+}
+```
+
+---
+
+## Color and Contrast
+
+- **Minimum contrast ratio**: 4.5:1 for normal text, 3:1 for large text
+- **Don't rely on color alone**: Add icons, patterns, or text labels
+- **Test in grayscale**: Does your UI still make sense?
+
+```css
+/* Ensure focus is visible */
+:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Never do this without a visible alternative */
+:focus {
+  outline: none; /* ❌ */
+}
+```
+
+---
+
+## Testing Accessibility
+
+### Automated Tools
+
+```bash
+npm install -D @axe-core/react
+```
+
+```tsx
+// In development only
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+if (process.env.NODE_ENV === 'development') {
+  import('@axe-core/react').then(axe => {
+    axe.default(React, ReactDOM, 1000);
+  });
+}
+```
+
+### Manual Testing Checklist
+
+- [ ] Navigate entire app using only keyboard
+- [ ] Test with screen reader (VoiceOver, NVDA)
+- [ ] Check color contrast with browser DevTools
+- [ ] Disable CSS and verify content order
+- [ ] Test with 200% browser zoom
+
+---
+
+## Quick Wins
+
+1. **Add alt text to all images**: `<img alt="Team photo from 2024 retreat" />`
+2. **Use `htmlFor` on labels**: `<label htmlFor="email">Email</label>`
+3. **Provide visible focus states**: Never hide focus outlines
+4. **Use heading hierarchy**: Don't skip from `<h1>` to `<h4>`
+5. **Test with keyboard**: If you can't Tab to it, neither can your users
+
+Accessibility isn't an afterthought—it's a feature.

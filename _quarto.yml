@@ -29,6 +29,14 @@ book:
     - CommandSystems.qmd
     - SharedTypesAndSchemas.qmd
     - ProductionDeployment.qmd
+    - FormHandling.qmd
+    - AuthenticationPatterns.qmd
+    - AnimationsAndMicrointeractions.qmd
+    - DataFetchingStrategies.qmd
+    - Accessibility.qmd
+    - Internationalization.qmd
+    - RealtimeFeatures.qmd
+    - EnterprisePatterns.qmd
 
 
 website:
@@ -42,25 +50,39 @@ website:
         href: index.qmd
       - text: "Intro"
         href: intro.qmd
-      - text: "Setup"
-        href: SetupReactAppLocallyInSeconds.qmd
-      - text: "Node"
-        href: WhatNodeJSDoes.qmd
-      - text: "Hooks"
-        href: ReactHooksDeepDive.qmd
-      - text: "State"
-        href: StateManagementPatterns.qmd
-      - text: "Styling"
-        href: Styling.qmd
-      - text: "Perf"
-        href: PerformanceOptimization.qmd
-      - text: "Errors"
-        href: ErrorBoundary.qmd
-      - text: "Mocking"
-        href: MockOrInterceptAPI.qmd
-      - text: "Testing"
-        href: TestingReactApps.qmd
-      - text: "App Arch"
+      - text: "Fundamentals"
+        menu:
+          - text: "Setup"
+            href: SetupReactAppLocallyInSeconds.qmd
+          - text: "Node.js"
+            href: WhatNodeJSDoes.qmd
+          - text: "Hooks"
+            href: ReactHooksDeepDive.qmd
+          - text: "State"
+            href: StateManagementPatterns.qmd
+          - text: "Styling"
+            href: Styling.qmd
+          - text: "Performance"
+            href: PerformanceOptimization.qmd
+          - text: "Errors"
+            href: ErrorBoundary.qmd
+      - text: "Patterns"
+        menu:
+          - text: "Forms"
+            href: FormHandling.qmd
+          - text: "Authentication"
+            href: AuthenticationPatterns.qmd
+          - text: "Animations"
+            href: AnimationsAndMicrointeractions.qmd
+          - text: "Data Fetching"
+            href: DataFetchingStrategies.qmd
+          - text: "Accessibility"
+            href: Accessibility.qmd
+          - text: "i18n"
+            href: Internationalization.qmd
+          - text: "Real-time"
+            href: RealtimeFeatures.qmd
+      - text: "Architecture"
         menu:
           - text: "Monorepos"
             href: MonorepoArchitecture.qmd
@@ -76,6 +98,14 @@ website:
             href: SharedTypesAndSchemas.qmd
           - text: "Deployment"
             href: ProductionDeployment.qmd
+          - text: "Enterprise"
+            href: EnterprisePatterns.qmd
+      - text: "Testing"
+        menu:
+          - text: "Mocking APIs"
+            href: MockOrInterceptAPI.qmd
+          - text: "Testing"
+            href: TestingReactApps.qmd
 
 
 

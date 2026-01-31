@@ -838,5 +838,665 @@
     "crumbs": [
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
     ]
+  },
+  {
+    "objectID": "FormHandling.html",
+    "href": "FormHandling.html",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "",
+    "text": "The Problem with Native Forms\nForms are the backbone of interactive applications. In React, handling forms well means balancing developer experience, user experience, and data integrity.\nThis chapter covers modern form patterns using React Hook Form and Zod for type-safe validation.\nReact’s controlled inputs require you to manage state for every field:\nEvery keystroke triggers a re-render. Validation logic gets scattered. Error handling becomes a mess.",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "FormHandling.html#the-problem-with-native-forms",
+    "href": "FormHandling.html#the-problem-with-native-forms",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "",
+    "text": "// 😰 This gets painful fast with 10+ fields\nconst [email, setEmail] = useState('');\nconst [password, setPassword] = useState('');\nconst [confirmPassword, setConfirmPassword] = useState('');\n// ... and so on",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "FormHandling.html#react-hook-form-the-modern-solution",
+    "href": "FormHandling.html#react-hook-form-the-modern-solution",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "React Hook Form: The Modern Solution",
+    "text": "React Hook Form: The Modern Solution\nReact Hook Form uses uncontrolled inputs with refs, minimizing re-renders while giving you full control.\nnpm install react-hook-form zod @hookform/resolvers\n\nBasic Example\nimport { useForm } from 'react-hook-form';\n\ntype FormData = {\n  email: string;\n  password: string;\n};\n\nfunction LoginForm() {\n  const { register, handleSubmit, formState: { errors } } = useForm&lt;FormData&gt;();\n\n  const onSubmit = (data: FormData) =&gt; {\n    console.log(data); // { email: '...', password: '...' }\n  };\n\n  return (\n    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;\n      &lt;input {...register('email', { required: 'Email is required' })} /&gt;\n      {errors.email && &lt;span&gt;{errors.email.message}&lt;/span&gt;}\n\n      &lt;input \n        type=\"password\" \n        {...register('password', { minLength: { value: 8, message: 'Min 8 chars' } })} \n      /&gt;\n      {errors.password && &lt;span&gt;{errors.password.message}&lt;/span&gt;}\n\n      &lt;button type=\"submit\"&gt;Login&lt;/button&gt;\n    &lt;/form&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "FormHandling.html#zod-schema-first-validation",
+    "href": "FormHandling.html#zod-schema-first-validation",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "Zod: Schema-First Validation",
+    "text": "Zod: Schema-First Validation\nInstead of inline validation rules, define a schema that describes your data. This schema can be reused for API validation, type generation, and form validation.\nimport { z } from 'zod';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { useForm } from 'react-hook-form';\n\n// 1. Define the schema\nconst loginSchema = z.object({\n  email: z.string().email('Invalid email format'),\n  password: z.string().min(8, 'Password must be at least 8 characters'),\n});\n\n// 2. Infer the type from the schema\ntype LoginFormData = z.infer&lt;typeof loginSchema&gt;;\n\n// 3. Use it in your form\nfunction LoginForm() {\n  const { register, handleSubmit, formState: { errors } } = useForm&lt;LoginFormData&gt;({\n    resolver: zodResolver(loginSchema),\n  });\n\n  // ... same as before\n}",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "FormHandling.html#handling-complex-forms",
+    "href": "FormHandling.html#handling-complex-forms",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "Handling Complex Forms",
+    "text": "Handling Complex Forms\n\nNested Objects\nconst profileSchema = z.object({\n  user: z.object({\n    firstName: z.string().min(1),\n    lastName: z.string().min(1),\n  }),\n  address: z.object({\n    street: z.string(),\n    city: z.string(),\n    zip: z.string().regex(/^\\d{5}$/, 'Invalid ZIP'),\n  }),\n});\n\n// In your form:\n&lt;input {...register('user.firstName')} /&gt;\n&lt;input {...register('address.zip')} /&gt;\n\n\nDynamic Fields (Arrays)\nimport { useFieldArray } from 'react-hook-form';\n\nfunction TeamForm() {\n  const { control, register } = useForm({\n    defaultValues: { members: [{ name: '' }] },\n  });\n\n  const { fields, append, remove } = useFieldArray({ control, name: 'members' });\n\n  return (\n    &lt;&gt;\n      {fields.map((field, index) =&gt; (\n        &lt;div key={field.id}&gt;\n          &lt;input {...register(`members.${index}.name`)} /&gt;\n          &lt;button type=\"button\" onClick={() =&gt; remove(index)}&gt;Remove&lt;/button&gt;\n        &lt;/div&gt;\n      ))}\n      &lt;button type=\"button\" onClick={() =&gt; append({ name: '' })}&gt;Add Member&lt;/button&gt;\n    &lt;/&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "FormHandling.html#error-display-patterns",
+    "href": "FormHandling.html#error-display-patterns",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "Error Display Patterns",
+    "text": "Error Display Patterns\n\nInline Errors\n&lt;input {...register('email')} className={errors.email ? 'input-error' : ''} /&gt;\n{errors.email && &lt;p className=\"error-text\"&gt;{errors.email.message}&lt;/p&gt;}\n\n\nToast on Submit Failure\nconst onSubmit = async (data) =&gt; {\n  try {\n    await api.login(data);\n  } catch (err) {\n    toast.error('Login failed. Please check your credentials.');\n  }\n};",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "FormHandling.html#key-takeaways",
+    "href": "FormHandling.html#key-takeaways",
+    "title": "Form Handling & Validation: Taming User Input",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\n\n\nPattern\nWhen to Use\n\n\n\n\nControlled Inputs\nSimple forms, &lt;5 fields\n\n\nReact Hook Form\nAny form with validation\n\n\nZod Schemas\nType-safe, reusable validation\n\n\nuseFieldArray\nDynamic lists of inputs\n\n\n\nForms are the most common source of bugs in web apps. Investing in a solid form architecture pays dividends in maintainability.",
+    "crumbs": [
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Form Handling & Validation: Taming User Input</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html",
+    "href": "AuthenticationPatterns.html",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "",
+    "text": "The Authentication Flow\nAuthentication is the gateway to your application. Get it wrong, and you expose user data. Get it right, and your users trust you.\nThis chapter covers JWT-based authentication, protected routes, and OAuth integration.",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#the-authentication-flow",
+    "href": "AuthenticationPatterns.html#the-authentication-flow",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "",
+    "text": "sequenceDiagram\n    participant User\n    participant React as React App\n    participant API as Backend API\n    participant DB as Database\n\n    User-&gt;&gt;React: Enter credentials\n    React-&gt;&gt;API: POST /auth/login\n    API-&gt;&gt;DB: Validate credentials\n    DB--&gt;&gt;API: User data\n    API--&gt;&gt;React: JWT Token + Refresh Token\n    React-&gt;&gt;React: Store tokens (httpOnly cookie or memory)\n    React-&gt;&gt;API: GET /api/profile (Bearer token)\n    API--&gt;&gt;React: Protected data",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#jwt-basics",
+    "href": "AuthenticationPatterns.html#jwt-basics",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "JWT Basics",
+    "text": "JWT Basics\nA JSON Web Token has three parts: 1. Header: Algorithm & token type 2. Payload: User data (claims) 3. Signature: Verification hash\neyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.  // Header\neyJ1c2VySWQiOjEsInJvbGUiOiJhZG1pbiJ9.  // Payload\nSflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c  // Signature\n\n\n\n\n\n\nWarning\n\n\n\nNever store JWTs in localStorage! It’s vulnerable to XSS attacks. Use httpOnly cookies or in-memory storage with refresh tokens.",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#building-an-auth-context",
+    "href": "AuthenticationPatterns.html#building-an-auth-context",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "Building an Auth Context",
+    "text": "Building an Auth Context\nCreate a central authentication state that’s accessible throughout your app:\nimport { createContext, useContext, useState, useEffect } from 'react';\n\ntype User = { id: string; email: string; role: string } | null;\n\ntype AuthContextType = {\n  user: User;\n  login: (email: string, password: string) =&gt; Promise&lt;void&gt;;\n  logout: () =&gt; void;\n  isLoading: boolean;\n};\n\nconst AuthContext = createContext&lt;AuthContextType | undefined&gt;(undefined);\n\nexport function AuthProvider({ children }: { children: React.ReactNode }) {\n  const [user, setUser] = useState&lt;User&gt;(null);\n  const [isLoading, setIsLoading] = useState(true);\n\n  // Check for existing session on mount\n  useEffect(() =&gt; {\n    checkAuth();\n  }, []);\n\n  async function checkAuth() {\n    try {\n      const res = await fetch('/api/auth/me', { credentials: 'include' });\n      if (res.ok) {\n        setUser(await res.json());\n      }\n    } finally {\n      setIsLoading(false);\n    }\n  }\n\n  async function login(email: string, password: string) {\n    const res = await fetch('/api/auth/login', {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ email, password }),\n      credentials: 'include', // Important for cookies!\n    });\n\n    if (!res.ok) throw new Error('Invalid credentials');\n    setUser(await res.json());\n  }\n\n  function logout() {\n    fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });\n    setUser(null);\n  }\n\n  return (\n    &lt;AuthContext.Provider value={{ user, login, logout, isLoading }}&gt;\n      {children}\n    &lt;/AuthContext.Provider&gt;\n  );\n}\n\nexport function useAuth() {\n  const context = useContext(AuthContext);\n  if (!context) throw new Error('useAuth must be used within AuthProvider');\n  return context;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#protected-routes",
+    "href": "AuthenticationPatterns.html#protected-routes",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "Protected Routes",
+    "text": "Protected Routes\nWrap routes that require authentication:\nimport { Navigate, Outlet } from 'react-router-dom';\nimport { useAuth } from './AuthContext';\n\nfunction ProtectedRoute() {\n  const { user, isLoading } = useAuth();\n\n  if (isLoading) {\n    return &lt;div&gt;Loading...&lt;/div&gt;; // Or a spinner\n  }\n\n  if (!user) {\n    return &lt;Navigate to=\"/login\" replace /&gt;;\n  }\n\n  return &lt;Outlet /&gt;;\n}\n\n// Usage in router:\n&lt;Routes&gt;\n  &lt;Route path=\"/login\" element={&lt;LoginPage /&gt;} /&gt;\n  \n  &lt;Route element={&lt;ProtectedRoute /&gt;}&gt;\n    &lt;Route path=\"/dashboard\" element={&lt;Dashboard /&gt;} /&gt;\n    &lt;Route path=\"/settings\" element={&lt;Settings /&gt;} /&gt;\n  &lt;/Route&gt;\n&lt;/Routes&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#role-based-access-control-rbac",
+    "href": "AuthenticationPatterns.html#role-based-access-control-rbac",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "Role-Based Access Control (RBAC)",
+    "text": "Role-Based Access Control (RBAC)\nExtend the protected route pattern to check roles:\nfunction RequireRole({ allowedRoles, children }: { \n  allowedRoles: string[]; \n  children: React.ReactNode \n}) {\n  const { user } = useAuth();\n\n  if (!user || !allowedRoles.includes(user.role)) {\n    return &lt;Navigate to=\"/unauthorized\" replace /&gt;;\n  }\n\n  return &lt;&gt;{children}&lt;/&gt;;\n}\n\n// Usage:\n&lt;RequireRole allowedRoles={['admin', 'moderator']}&gt;\n  &lt;AdminPanel /&gt;\n&lt;/RequireRole&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#oauth-social-login",
+    "href": "AuthenticationPatterns.html#oauth-social-login",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "OAuth / Social Login",
+    "text": "OAuth / Social Login\nFor Google, GitHub, etc., the flow is:\n\nUser clicks “Login with Google”\nRedirect to Google’s OAuth page\nGoogle redirects back with an authorization code\nYour backend exchanges the code for tokens\nBackend creates/finds user, returns your JWT\n\nfunction SocialLoginButtons() {\n  const handleGoogleLogin = () =&gt; {\n    // Redirect to your backend's OAuth initiation endpoint\n    window.location.href = '/api/auth/google';\n  };\n\n  return (\n    &lt;button onClick={handleGoogleLogin}&gt;\n      &lt;GoogleIcon /&gt; Continue with Google\n    &lt;/button&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AuthenticationPatterns.html#security-checklist",
+    "href": "AuthenticationPatterns.html#security-checklist",
+    "title": "Authentication Patterns: Securing Your React App",
+    "section": "Security Checklist",
+    "text": "Security Checklist\n\nUse httpOnly cookies for token storage\nImplement refresh token rotation\nSet short expiration times for access tokens (15-30 min)\nValidate tokens on the server, not just the client\nUse HTTPS everywhere\nImplement rate limiting on auth endpoints\nLog authentication events for auditing\n\nAuthentication is not just a feature—it’s a responsibility.",
+    "crumbs": [
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html",
+    "href": "AnimationsAndMicrointeractions.html",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "",
+    "text": "Why Animation Matters\nStatic UIs feel dead. A tasteful animation can transform a “functional” app into a delightful experience.\nThis chapter covers CSS transitions, Framer Motion, and patterns for meaningful motion.",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#why-animation-matters",
+    "href": "AnimationsAndMicrointeractions.html#why-animation-matters",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "",
+    "text": "Feedback: Buttons that “press” confirm the click registered\nContinuity: Page transitions maintain spatial context\nAttention: Highlight important changes (toasts, badges)\nPersonality: Make your app memorable\n\n\n\n\n\n\n\nTip\n\n\n\nThe 60fps Rule: Animations should run at 60 frames per second. Stick to animating transform and opacity—they can be GPU-accelerated. Avoid animating width, height, or top.",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#css-transitions-in-react",
+    "href": "AnimationsAndMicrointeractions.html#css-transitions-in-react",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "CSS Transitions in React",
+    "text": "CSS Transitions in React\nFor simple hover effects and state changes, CSS is enough:\n/* styles.css */\n.button {\n  background: #3b82f6;\n  transition: transform 150ms ease, box-shadow 150ms ease;\n}\n\n.button:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n}\n\n.button:active {\n  transform: translateY(0);\n}\nfunction Button({ children, onClick }) {\n  return &lt;button className=\"button\" onClick={onClick}&gt;{children}&lt;/button&gt;;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#framer-motion-the-react-animation-library",
+    "href": "AnimationsAndMicrointeractions.html#framer-motion-the-react-animation-library",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "Framer Motion: The React Animation Library",
+    "text": "Framer Motion: The React Animation Library\nFor complex, physics-based, or orchestrated animations, Framer Motion is the gold standard.\nnpm install framer-motion\n\nBasic Animation\nimport { motion } from 'framer-motion';\n\nfunction FadeInCard() {\n  return (\n    &lt;motion.div\n      initial={{ opacity: 0, y: 20 }}\n      animate={{ opacity: 1, y: 0 }}\n      transition={{ duration: 0.4, ease: 'easeOut' }}\n    &gt;\n      &lt;h2&gt;Hello, Animation!&lt;/h2&gt;\n    &lt;/motion.div&gt;\n  );\n}\n\n\nHover & Tap\n&lt;motion.button\n  whileHover={{ scale: 1.05 }}\n  whileTap={{ scale: 0.95 }}\n  transition={{ type: 'spring', stiffness: 400, damping: 17 }}\n&gt;\n  Click Me\n&lt;/motion.button&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#page-transitions",
+    "href": "AnimationsAndMicrointeractions.html#page-transitions",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "Page Transitions",
+    "text": "Page Transitions\nAnimate between routes using AnimatePresence:\nimport { AnimatePresence, motion } from 'framer-motion';\nimport { useLocation, Routes, Route } from 'react-router-dom';\n\nfunction AnimatedRoutes() {\n  const location = useLocation();\n\n  return (\n    &lt;AnimatePresence mode=\"wait\"&gt;\n      &lt;Routes location={location} key={location.pathname}&gt;\n        &lt;Route path=\"/\" element={&lt;PageWrapper&gt;&lt;Home /&gt;&lt;/PageWrapper&gt;} /&gt;\n        &lt;Route path=\"/about\" element={&lt;PageWrapper&gt;&lt;About /&gt;&lt;/PageWrapper&gt;} /&gt;\n      &lt;/Routes&gt;\n    &lt;/AnimatePresence&gt;\n  );\n}\n\nfunction PageWrapper({ children }) {\n  return (\n    &lt;motion.div\n      initial={{ opacity: 0, x: 20 }}\n      animate={{ opacity: 1, x: 0 }}\n      exit={{ opacity: 0, x: -20 }}\n      transition={{ duration: 0.3 }}\n    &gt;\n      {children}\n    &lt;/motion.div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#loading-states",
+    "href": "AnimationsAndMicrointeractions.html#loading-states",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "Loading States",
+    "text": "Loading States\nSkeleton loaders and spinners keep users engaged:\nfunction Skeleton({ width, height }) {\n  return (\n    &lt;motion.div\n      style={{ width, height, background: '#e5e7eb', borderRadius: 8 }}\n      animate={{ opacity: [0.5, 1, 0.5] }}\n      transition={{ duration: 1.5, repeat: Infinity }}\n    /&gt;\n  );\n}\n\nfunction ProfileCard({ user, isLoading }) {\n  if (isLoading) {\n    return (\n      &lt;div className=\"profile-card\"&gt;\n        &lt;Skeleton width={80} height={80} /&gt;\n        &lt;Skeleton width={200} height={24} /&gt;\n      &lt;/div&gt;\n    );\n  }\n\n  return (\n    &lt;div className=\"profile-card\"&gt;\n      &lt;img src={user.avatar} alt={user.name} /&gt;\n      &lt;h2&gt;{user.name}&lt;/h2&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#list-animations",
+    "href": "AnimationsAndMicrointeractions.html#list-animations",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "List Animations",
+    "text": "List Animations\nAnimate items entering/leaving a list:\nimport { motion, AnimatePresence } from 'framer-motion';\n\nfunction TodoList({ items, onRemove }) {\n  return (\n    &lt;ul&gt;\n      &lt;AnimatePresence&gt;\n        {items.map(item =&gt; (\n          &lt;motion.li\n            key={item.id}\n            initial={{ opacity: 0, height: 0 }}\n            animate={{ opacity: 1, height: 'auto' }}\n            exit={{ opacity: 0, height: 0 }}\n            transition={{ duration: 0.2 }}\n          &gt;\n            {item.text}\n            &lt;button onClick={() =&gt; onRemove(item.id)}&gt;×&lt;/button&gt;\n          &lt;/motion.li&gt;\n        ))}\n      &lt;/AnimatePresence&gt;\n    &lt;/ul&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "AnimationsAndMicrointeractions.html#animation-best-practices",
+    "href": "AnimationsAndMicrointeractions.html#animation-best-practices",
+    "title": "Animations & Micro-interactions: Delighting Users",
+    "section": "Animation Best Practices",
+    "text": "Animation Best Practices\n\n\n\nDo\nDon’t\n\n\n\n\nKeep durations short (150-400ms)\nAnimate everything\n\n\nUse easing curves (ease-out, spring)\nUse linear timing\n\n\nAnimate transform and opacity\nAnimate layout properties\n\n\nProvide reduced-motion fallbacks\nIgnore accessibility\n\n\n\n/* Respect user preferences */\n@media (prefers-reduced-motion: reduce) {\n  *, *::before, *::after {\n    animation-duration: 0.01ms !important;\n    transition-duration: 0.01ms !important;\n  }\n}\nMotion is a superpower. Use it wisely.",
+    "crumbs": [
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Animations & Micro-interactions: Delighting Users</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html",
+    "href": "DataFetchingStrategies.html",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "",
+    "text": "The Problem with Naive Fetching\nEvery React app needs data. But how you fetch it determines your app’s perceived performance, reliability, and code maintainability.\nThis chapter explores SWR, TanStack Query, and advanced patterns like optimistic updates and infinite scroll.\nProblems: - No caching (refetches on every mount) - No background updates - Race conditions possible - Duplicated boilerplate everywhere",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#the-problem-with-naive-fetching",
+    "href": "DataFetchingStrategies.html#the-problem-with-naive-fetching",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "",
+    "text": "// 😰 Classic useEffect fetch\nfunction UserProfile({ userId }) {\n  const [user, setUser] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n\n  useEffect(() =&gt; {\n    setLoading(true);\n    fetch(`/api/users/${userId}`)\n      .then(res =&gt; res.json())\n      .then(data =&gt; { setUser(data); setLoading(false); })\n      .catch(err =&gt; { setError(err); setLoading(false); });\n  }, [userId]);\n\n  // ... render states\n}",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#tanstack-query-the-solution",
+    "href": "DataFetchingStrategies.html#tanstack-query-the-solution",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "TanStack Query: The Solution",
+    "text": "TanStack Query: The Solution\nTanStack Query (formerly React Query) handles caching, deduplication, background refetching, and more.\nnpm install @tanstack/react-query\n\nSetup\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\n\nconst queryClient = new QueryClient();\n\nfunction App() {\n  return (\n    &lt;QueryClientProvider client={queryClient}&gt;\n      &lt;YourApp /&gt;\n    &lt;/QueryClientProvider&gt;\n  );\n}\n\n\nBasic Usage\nimport { useQuery } from '@tanstack/react-query';\n\nfunction UserProfile({ userId }) {\n  const { data: user, isLoading, error } = useQuery({\n    queryKey: ['user', userId],\n    queryFn: () =&gt; fetch(`/api/users/${userId}`).then(res =&gt; res.json()),\n  });\n\n  if (isLoading) return &lt;Skeleton /&gt;;\n  if (error) return &lt;Error message={error.message} /&gt;;\n\n  return &lt;Profile user={user} /&gt;;\n}\nBenefits: - ✅ Automatic caching - ✅ Background refetching on window focus - ✅ Request deduplication - ✅ Stale-while-revalidate pattern",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#mutations-updating-data",
+    "href": "DataFetchingStrategies.html#mutations-updating-data",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "Mutations: Updating Data",
+    "text": "Mutations: Updating Data\nimport { useMutation, useQueryClient } from '@tanstack/react-query';\n\nfunction UpdateProfileForm({ user }) {\n  const queryClient = useQueryClient();\n\n  const mutation = useMutation({\n    mutationFn: (newData) =&gt; \n      fetch(`/api/users/${user.id}`, {\n        method: 'PATCH',\n        body: JSON.stringify(newData),\n      }).then(res =&gt; res.json()),\n\n    onSuccess: () =&gt; {\n      // Invalidate and refetch\n      queryClient.invalidateQueries({ queryKey: ['user', user.id] });\n    },\n  });\n\n  const handleSubmit = (formData) =&gt; {\n    mutation.mutate(formData);\n  };\n\n  return (\n    &lt;form onSubmit={handleSubmit}&gt;\n      {/* ... form fields */}\n      &lt;button disabled={mutation.isPending}&gt;\n        {mutation.isPending ? 'Saving...' : 'Save'}\n      &lt;/button&gt;\n    &lt;/form&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#optimistic-updates",
+    "href": "DataFetchingStrategies.html#optimistic-updates",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "Optimistic Updates",
+    "text": "Optimistic Updates\nUpdate the UI before the server confirms, then roll back if it fails:\nconst mutation = useMutation({\n  mutationFn: updateTodo,\n  onMutate: async (newTodo) =&gt; {\n    // Cancel outgoing refetches\n    await queryClient.cancelQueries({ queryKey: ['todos'] });\n\n    // Snapshot previous value\n    const previousTodos = queryClient.getQueryData(['todos']);\n\n    // Optimistically update\n    queryClient.setQueryData(['todos'], old =&gt; \n      old.map(t =&gt; t.id === newTodo.id ? newTodo : t)\n    );\n\n    return { previousTodos };\n  },\n  onError: (err, newTodo, context) =&gt; {\n    // Roll back on error\n    queryClient.setQueryData(['todos'], context.previousTodos);\n  },\n  onSettled: () =&gt; {\n    queryClient.invalidateQueries({ queryKey: ['todos'] });\n  },\n});",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#infinite-scroll",
+    "href": "DataFetchingStrategies.html#infinite-scroll",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "Infinite Scroll",
+    "text": "Infinite Scroll\nimport { useInfiniteQuery } from '@tanstack/react-query';\nimport { useInView } from 'react-intersection-observer';\n\nfunction InfiniteFeed() {\n  const { ref, inView } = useInView();\n\n  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({\n    queryKey: ['posts'],\n    queryFn: ({ pageParam = 1 }) =&gt; \n      fetch(`/api/posts?page=${pageParam}`).then(res =&gt; res.json()),\n    getNextPageParam: (lastPage) =&gt; lastPage.nextPage,\n  });\n\n  // Fetch next page when sentinel is visible\n  useEffect(() =&gt; {\n    if (inView && hasNextPage) {\n      fetchNextPage();\n    }\n  }, [inView, hasNextPage, fetchNextPage]);\n\n  return (\n    &lt;&gt;\n      {data?.pages.map(page =&gt; \n        page.posts.map(post =&gt; &lt;PostCard key={post.id} post={post} /&gt;)\n      )}\n      &lt;div ref={ref}&gt;\n        {isFetchingNextPage && &lt;Spinner /&gt;}\n      &lt;/div&gt;\n    &lt;/&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#swr-vs-tanstack-query",
+    "href": "DataFetchingStrategies.html#swr-vs-tanstack-query",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "SWR vs TanStack Query",
+    "text": "SWR vs TanStack Query\n\n\n\nFeature\nSWR\nTanStack Query\n\n\n\n\nBundle Size\nSmaller\nLarger\n\n\nDevTools\nBasic\nExcellent\n\n\nMutations\nManual\nBuilt-in\n\n\nInfinite Queries\nSupported\nExcellent\n\n\nLearning Curve\nLower\nModerate\n\n\n\nRecommendation: Use TanStack Query for complex apps, SWR for simpler needs.",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#key-patterns",
+    "href": "DataFetchingStrategies.html#key-patterns",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "Key Patterns",
+    "text": "Key Patterns\n\nStale-While-Revalidate: Show cached data immediately, update in background\nPrefetching: Load data before the user navigates\nPolling: Refresh data on an interval for near-real-time updates\nDependent Queries: Fetch B only after A completes\n\nData fetching is the nervous system of your app. Invest in a robust solution.",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html",
+    "href": "Accessibility.html",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "",
+    "text": "Why Accessibility Matters\nOver 1 billion people worldwide have some form of disability. Building accessible apps isn’t just ethical—it’s often legally required and improves UX for everyone.\nThis chapter covers semantic HTML, ARIA, keyboard navigation, and testing strategies.",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#why-accessibility-matters",
+    "href": "Accessibility.html#why-accessibility-matters",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "",
+    "text": "Legal: WCAG compliance is required in many jurisdictions (ADA, EAA)\nBusiness: 15% of the world’s population has a disability\nSEO: Screen readers and search engines parse content similarly\nUX: Accessibility improvements benefit all users (captions, contrast, keyboard nav)",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#semantic-html-your-first-line-of-defense",
+    "href": "Accessibility.html#semantic-html-your-first-line-of-defense",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "Semantic HTML: Your First Line of Defense",
+    "text": "Semantic HTML: Your First Line of Defense\nReact lets you render anything as a &lt;div&gt;. Don’t.\n// ❌ Bad: Div soup\n&lt;div onClick={handleClick}&gt;Click me&lt;/div&gt;\n\n// ✅ Good: Semantic button\n&lt;button onClick={handleClick}&gt;Click me&lt;/button&gt;\nSemantic elements provide: - Keyboard support (Enter/Space to activate) - Screen reader announcements - Focus management - Native browser behaviors\n\nCommon Semantic Elements\n\n\n\nElement\nUse For\n\n\n\n\n&lt;button&gt;\nClickable actions\n\n\n&lt;a href=\"...\"&gt;\nNavigation\n\n\n&lt;nav&gt;\nNavigation regions\n\n\n&lt;main&gt;\nPrimary content\n\n\n&lt;header&gt;, &lt;footer&gt;\nPage regions\n\n\n&lt;article&gt;\nSelf-contained content\n\n\n&lt;ul&gt;, &lt;ol&gt;\nLists of items",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#aria-when-html-isnt-enough",
+    "href": "Accessibility.html#aria-when-html-isnt-enough",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "ARIA: When HTML Isn’t Enough",
+    "text": "ARIA: When HTML Isn’t Enough\nARIA (Accessible Rich Internet Applications) adds semantic meaning when native HTML can’t express it.\n\n\n\n\n\n\nWarning\n\n\n\nFirst Rule of ARIA: Don’t use ARIA if you can use native HTML. Native elements have built-in accessibility.\n\n\n\nCommon ARIA Patterns\n// Live regions - announce dynamic content\n&lt;div aria-live=\"polite\" aria-atomic=\"true\"&gt;\n  {notificationMessage}\n&lt;/div&gt;\n\n// Labels for icon buttons\n&lt;button aria-label=\"Close dialog\"&gt;\n  &lt;CloseIcon /&gt;\n&lt;/button&gt;\n\n// Describing relationships\n&lt;input aria-describedby=\"password-hint\" type=\"password\" /&gt;\n&lt;p id=\"password-hint\"&gt;Must be at least 8 characters&lt;/p&gt;\n\n// Modal dialog\n&lt;div role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"dialog-title\"&gt;\n  &lt;h2 id=\"dialog-title\"&gt;Confirm Action&lt;/h2&gt;\n&lt;/div&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#keyboard-navigation",
+    "href": "Accessibility.html#keyboard-navigation",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "Keyboard Navigation",
+    "text": "Keyboard Navigation\nUsers who can’t use a mouse rely on keyboard navigation:\n\nTab: Move between focusable elements\nEnter/Space: Activate buttons/links\nArrow keys: Navigate within components\nEscape: Close modals/menus\n\n\nFocus Management\nimport { useRef, useEffect } from 'react';\n\nfunction Modal({ isOpen, onClose, children }) {\n  const closeButtonRef = useRef&lt;HTMLButtonElement&gt;(null);\n\n  // Focus the close button when modal opens\n  useEffect(() =&gt; {\n    if (isOpen) {\n      closeButtonRef.current?.focus();\n    }\n  }, [isOpen]);\n\n  // Trap focus within modal\n  const handleKeyDown = (e: React.KeyboardEvent) =&gt; {\n    if (e.key === 'Escape') {\n      onClose();\n    }\n  };\n\n  if (!isOpen) return null;\n\n  return (\n    &lt;div role=\"dialog\" aria-modal=\"true\" onKeyDown={handleKeyDown}&gt;\n      &lt;button ref={closeButtonRef} onClick={onClose}&gt;\n        Close\n      &lt;/button&gt;\n      {children}\n    &lt;/div&gt;\n  );\n}\n\n\nSkip Links\nAllow keyboard users to skip repetitive navigation:\nfunction SkipLink() {\n  return (\n    &lt;a href=\"#main-content\" className=\"skip-link\"&gt;\n      Skip to main content\n    &lt;/a&gt;\n  );\n}\n\n// CSS\n.skip-link {\n  position: absolute;\n  left: -9999px;\n}\n.skip-link:focus {\n  left: 10px;\n  top: 10px;\n  z-index: 1000;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#color-and-contrast",
+    "href": "Accessibility.html#color-and-contrast",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "Color and Contrast",
+    "text": "Color and Contrast\n\nMinimum contrast ratio: 4.5:1 for normal text, 3:1 for large text\nDon’t rely on color alone: Add icons, patterns, or text labels\nTest in grayscale: Does your UI still make sense?\n\n/* Ensure focus is visible */\n:focus {\n  outline: 2px solid #3b82f6;\n  outline-offset: 2px;\n}\n\n/* Never do this without a visible alternative */\n:focus {\n  outline: none; /* ❌ */\n}",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#testing-accessibility",
+    "href": "Accessibility.html#testing-accessibility",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "Testing Accessibility",
+    "text": "Testing Accessibility\n\nAutomated Tools\nnpm install -D @axe-core/react\n// In development only\nimport React from 'react';\nimport ReactDOM from 'react-dom/client';\n\nif (process.env.NODE_ENV === 'development') {\n  import('@axe-core/react').then(axe =&gt; {\n    axe.default(React, ReactDOM, 1000);\n  });\n}\n\n\nManual Testing Checklist\n\nNavigate entire app using only keyboard\nTest with screen reader (VoiceOver, NVDA)\nCheck color contrast with browser DevTools\nDisable CSS and verify content order\nTest with 200% browser zoom",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Accessibility.html#quick-wins",
+    "href": "Accessibility.html#quick-wins",
+    "title": "Accessibility (a11y): Building for Everyone",
+    "section": "Quick Wins",
+    "text": "Quick Wins\n\nAdd alt text to all images: &lt;img alt=\"Team photo from 2024 retreat\" /&gt;\nUse htmlFor on labels: &lt;label htmlFor=\"email\"&gt;Email&lt;/label&gt;\nProvide visible focus states: Never hide focus outlines\nUse heading hierarchy: Don’t skip from &lt;h1&gt; to &lt;h4&gt;\nTest with keyboard: If you can’t Tab to it, neither can your users\n\nAccessibility isn’t an afterthought—it’s a feature.",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Accessibility (a11y): Building for Everyone</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html",
+    "href": "Internationalization.html",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "",
+    "text": "i18n vs l10n\nIf your app is only in English, you’re missing 75% of the internet. Internationalization (i18n) prepares your app for multiple languages and locales.\nThis chapter covers react-i18next, date/number formatting, and right-to-left (RTL) support.\nThink of i18n as building the plumbing; l10n is the water you run through it.",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#i18n-vs-l10n",
+    "href": "Internationalization.html#i18n-vs-l10n",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "",
+    "text": "Internationalization (i18n): Architecture that supports multiple languages\nLocalization (l10n): Actual translation and adaptation for a specific locale",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#setting-up-react-i18next",
+    "href": "Internationalization.html#setting-up-react-i18next",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Setting Up react-i18next",
+    "text": "Setting Up react-i18next\nnpm install i18next react-i18next i18next-browser-languagedetector\n\nConfiguration\n// src/i18n/config.ts\nimport i18n from 'i18next';\nimport { initReactI18next } from 'react-i18next';\nimport LanguageDetector from 'i18next-browser-languagedetector';\n\nimport en from './locales/en.json';\nimport es from './locales/es.json';\nimport ar from './locales/ar.json';\n\ni18n\n  .use(LanguageDetector)\n  .use(initReactI18next)\n  .init({\n    resources: {\n      en: { translation: en },\n      es: { translation: es },\n      ar: { translation: ar },\n    },\n    fallbackLng: 'en',\n    interpolation: {\n      escapeValue: false, // React already escapes\n    },\n  });\n\nexport default i18n;\n\n\nTranslation Files\n// src/i18n/locales/en.json\n{\n  \"welcome\": \"Welcome, {{name}}!\",\n  \"nav\": {\n    \"home\": \"Home\",\n    \"settings\": \"Settings\"\n  },\n  \"items\": {\n    \"one\": \"{{count}} item\",\n    \"other\": \"{{count}} items\"\n  }\n}\n// src/i18n/locales/es.json\n{\n  \"welcome\": \"¡Bienvenido, {{name}}!\",\n  \"nav\": {\n    \"home\": \"Inicio\",\n    \"settings\": \"Configuración\"\n  },\n  \"items\": {\n    \"one\": \"{{count}} artículo\",\n    \"other\": \"{{count}} artículos\"\n  }\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#using-translations",
+    "href": "Internationalization.html#using-translations",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Using Translations",
+    "text": "Using Translations\nimport { useTranslation } from 'react-i18next';\n\nfunction Header({ user }) {\n  const { t } = useTranslation();\n\n  return (\n    &lt;header&gt;\n      &lt;h1&gt;{t('welcome', { name: user.name })}&lt;/h1&gt;\n      &lt;nav&gt;\n        &lt;a href=\"/\"&gt;{t('nav.home')}&lt;/a&gt;\n        &lt;a href=\"/settings\"&gt;{t('nav.settings')}&lt;/a&gt;\n      &lt;/nav&gt;\n    &lt;/header&gt;\n  );\n}\n\nPluralization\nfunction CartSummary({ itemCount }) {\n  const { t } = useTranslation();\n  \n  return &lt;p&gt;{t('items', { count: itemCount })}&lt;/p&gt;;\n  // 1 item -&gt; \"1 item\"\n  // 5 items -&gt; \"5 items\"\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#language-switcher",
+    "href": "Internationalization.html#language-switcher",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Language Switcher",
+    "text": "Language Switcher\nfunction LanguageSwitcher() {\n  const { i18n } = useTranslation();\n\n  const languages = [\n    { code: 'en', label: 'English' },\n    { code: 'es', label: 'Español' },\n    { code: 'ar', label: 'العربية' },\n  ];\n\n  return (\n    &lt;select \n      value={i18n.language} \n      onChange={(e) =&gt; i18n.changeLanguage(e.target.value)}\n    &gt;\n      {languages.map(lang =&gt; (\n        &lt;option key={lang.code} value={lang.code}&gt;\n          {lang.label}\n        &lt;/option&gt;\n      ))}\n    &lt;/select&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#date-and-number-formatting",
+    "href": "Internationalization.html#date-and-number-formatting",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Date and Number Formatting",
+    "text": "Date and Number Formatting\nUse the Intl API for locale-aware formatting:\nfunction FormattedDate({ date, locale }) {\n  const formatted = new Intl.DateTimeFormat(locale, {\n    year: 'numeric',\n    month: 'long',\n    day: 'numeric',\n  }).format(date);\n\n  return &lt;time dateTime={date.toISOString()}&gt;{formatted}&lt;/time&gt;;\n}\n\nfunction FormattedPrice({ amount, currency, locale }) {\n  const formatted = new Intl.NumberFormat(locale, {\n    style: 'currency',\n    currency,\n  }).format(amount);\n\n  return &lt;span&gt;{formatted}&lt;/span&gt;;\n}\n\n// Usage\n&lt;FormattedDate date={new Date()} locale=\"es-ES\" /&gt;  // \"30 de enero de 2026\"\n&lt;FormattedPrice amount={1234.56} currency=\"EUR\" locale=\"de-DE\" /&gt;  // \"1.234,56 €\"",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#right-to-left-rtl-support",
+    "href": "Internationalization.html#right-to-left-rtl-support",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Right-to-Left (RTL) Support",
+    "text": "Right-to-Left (RTL) Support\nLanguages like Arabic and Hebrew read right-to-left:\nfunction App() {\n  const { i18n } = useTranslation();\n  const dir = i18n.language === 'ar' || i18n.language === 'he' ? 'rtl' : 'ltr';\n\n  return (\n    &lt;div dir={dir}&gt;\n      &lt;YourApp /&gt;\n    &lt;/div&gt;\n  );\n}\n\nRTL-Aware CSS\n/* Use logical properties instead of physical */\n.card {\n  margin-inline-start: 1rem;  /* Instead of margin-left */\n  padding-inline-end: 1rem;   /* Instead of padding-right */\n  text-align: start;          /* Instead of text-align: left */\n}\n\n/* Flip icons */\n[dir=\"rtl\"] .arrow-icon {\n  transform: scaleX(-1);\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#best-practices",
+    "href": "Internationalization.html#best-practices",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nNever hardcode strings: Always use translation keys\nAvoid string concatenation: t('greeting', { name }) not t('hello') + ' ' + name\nConsider text expansion: German text is ~30% longer than English\nExternalize translations: Let translators work on JSON files, not code\nUse ICU format: For complex pluralization and gender rules",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "Internationalization.html#translation-workflow",
+    "href": "Internationalization.html#translation-workflow",
+    "title": "Internationalization (i18n): Building Global-Ready Apps",
+    "section": "Translation Workflow",
+    "text": "Translation Workflow\ngraph LR\n    A[Developer] --&gt;|Extract keys| B[JSON files]\n    B --&gt;|Upload| C[Translation Platform]\n    C --&gt;|Translate| D[Translators]\n    D --&gt;|Export| B\n    B --&gt;|Build| E[App]\nPopular platforms: Crowdin, Lokalise, Phrase\nYour app speaks one language. Your users speak many.",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html",
+    "href": "RealtimeFeatures.html",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "",
+    "text": "Real-time Architecture Options\nModern apps feel alive. Chat messages appear instantly. Dashboards update in real-time. Notifications pop up without refreshing.\nThis chapter covers WebSockets, Server-Sent Events (SSE), and patterns for building real-time React applications.",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#real-time-architecture-options",
+    "href": "RealtimeFeatures.html#real-time-architecture-options",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "",
+    "text": "Technology\nDirection\nUse Case\n\n\n\n\nPolling\nClient → Server\nSimple, works everywhere\n\n\nLong Polling\nClient → Server\nBetter than polling\n\n\nSSE\nServer → Client\nOne-way streaming\n\n\nWebSockets\nBidirectional\nFull duplex communication",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#websockets-full-duplex-communication",
+    "href": "RealtimeFeatures.html#websockets-full-duplex-communication",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "WebSockets: Full Duplex Communication",
+    "text": "WebSockets: Full Duplex Communication\nWebSockets maintain a persistent connection for bidirectional messaging.\n\nSetting Up a WebSocket Hook\nimport { useState, useEffect, useRef, useCallback } from 'react';\n\ntype WebSocketStatus = 'connecting' | 'open' | 'closed' | 'error';\n\nfunction useWebSocket(url: string) {\n  const [status, setStatus] = useState&lt;WebSocketStatus&gt;('connecting');\n  const [messages, setMessages] = useState&lt;any[]&gt;([]);\n  const wsRef = useRef&lt;WebSocket | null&gt;(null);\n\n  useEffect(() =&gt; {\n    const ws = new WebSocket(url);\n    wsRef.current = ws;\n\n    ws.onopen = () =&gt; setStatus('open');\n    ws.onclose = () =&gt; setStatus('closed');\n    ws.onerror = () =&gt; setStatus('error');\n    \n    ws.onmessage = (event) =&gt; {\n      const data = JSON.parse(event.data);\n      setMessages(prev =&gt; [...prev, data]);\n    };\n\n    return () =&gt; {\n      ws.close();\n    };\n  }, [url]);\n\n  const send = useCallback((data: any) =&gt; {\n    if (wsRef.current?.readyState === WebSocket.OPEN) {\n      wsRef.current.send(JSON.stringify(data));\n    }\n  }, []);\n\n  return { status, messages, send };\n}\n\n\nUsage: Chat Application\nfunction ChatRoom({ roomId }) {\n  const { status, messages, send } = useWebSocket(`wss://api.example.com/chat/${roomId}`);\n  const [input, setInput] = useState('');\n\n  const handleSend = () =&gt; {\n    if (input.trim()) {\n      send({ type: 'message', content: input });\n      setInput('');\n    }\n  };\n\n  return (\n    &lt;div className=\"chat-room\"&gt;\n      &lt;div className=\"status\"&gt;\n        {status === 'open' ? '🟢 Connected' : '🔴 Disconnected'}\n      &lt;/div&gt;\n\n      &lt;div className=\"messages\"&gt;\n        {messages.map((msg, i) =&gt; (\n          &lt;div key={i} className=\"message\"&gt;\n            &lt;strong&gt;{msg.user}:&lt;/strong&gt; {msg.content}\n          &lt;/div&gt;\n        ))}\n      &lt;/div&gt;\n\n      &lt;input \n        value={input} \n        onChange={e =&gt; setInput(e.target.value)}\n        onKeyPress={e =&gt; e.key === 'Enter' && handleSend()}\n      /&gt;\n      &lt;button onClick={handleSend}&gt;Send&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#server-sent-events-simple-one-way-streaming",
+    "href": "RealtimeFeatures.html#server-sent-events-simple-one-way-streaming",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "Server-Sent Events: Simple One-Way Streaming",
+    "text": "Server-Sent Events: Simple One-Way Streaming\nSSE is perfect when you only need server-to-client updates (dashboards, notifications):\nfunction useServerEvents(url: string) {\n  const [data, setData] = useState&lt;any&gt;(null);\n  const [error, setError] = useState&lt;Error | null&gt;(null);\n\n  useEffect(() =&gt; {\n    const eventSource = new EventSource(url);\n\n    eventSource.onmessage = (event) =&gt; {\n      setData(JSON.parse(event.data));\n    };\n\n    eventSource.onerror = () =&gt; {\n      setError(new Error('Connection lost'));\n      eventSource.close();\n    };\n\n    return () =&gt; {\n      eventSource.close();\n    };\n  }, [url]);\n\n  return { data, error };\n}\n\n// Usage: Live Dashboard\nfunction StockTicker() {\n  const { data: stock, error } = useServerEvents('/api/stocks/AAPL');\n\n  if (error) return &lt;div&gt;Connection lost&lt;/div&gt;;\n  if (!stock) return &lt;div&gt;Loading...&lt;/div&gt;;\n\n  return (\n    &lt;div className=\"ticker\"&gt;\n      &lt;span className=\"symbol\"&gt;{stock.symbol}&lt;/span&gt;\n      &lt;span className={stock.change &gt; 0 ? 'up' : 'down'}&gt;\n        ${stock.price} ({stock.change}%)\n      &lt;/span&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#optimistic-ui-updates",
+    "href": "RealtimeFeatures.html#optimistic-ui-updates",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "Optimistic UI Updates",
+    "text": "Optimistic UI Updates\nUpdate the UI immediately, then reconcile with the server response:\nfunction TodoList() {\n  const [todos, setTodos] = useState&lt;Todo[]&gt;([]);\n  const { send } = useWebSocket('wss://api.example.com/todos');\n\n  const addTodo = (text: string) =&gt; {\n    // Create optimistic todo with temp ID\n    const optimisticTodo = {\n      id: `temp-${Date.now()}`,\n      text,\n      completed: false,\n      isPending: true,\n    };\n\n    // Add to UI immediately\n    setTodos(prev =&gt; [...prev, optimisticTodo]);\n\n    // Send to server\n    send({ type: 'add', text });\n  };\n\n  // Handle server confirmation\n  useEffect(() =&gt; {\n    // When server confirms, replace temp ID with real ID\n    // Handle in WebSocket onmessage handler\n  }, []);\n\n  return (\n    &lt;ul&gt;\n      {todos.map(todo =&gt; (\n        &lt;li key={todo.id} className={todo.isPending ? 'pending' : ''}&gt;\n          {todo.text}\n        &lt;/li&gt;\n      ))}\n    &lt;/ul&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#reconnection-strategy",
+    "href": "RealtimeFeatures.html#reconnection-strategy",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "Reconnection Strategy",
+    "text": "Reconnection Strategy\nReal-world connections drop. Implement exponential backoff:\nfunction useReconnectingWebSocket(url: string) {\n  const [status, setStatus] = useState('connecting');\n  const reconnectDelay = useRef(1000);\n\n  useEffect(() =&gt; {\n    let ws: WebSocket;\n    let reconnectTimer: NodeJS.Timeout;\n\n    function connect() {\n      ws = new WebSocket(url);\n\n      ws.onopen = () =&gt; {\n        setStatus('open');\n        reconnectDelay.current = 1000; // Reset delay on success\n      };\n\n      ws.onclose = () =&gt; {\n        setStatus('reconnecting');\n        // Exponential backoff: 1s, 2s, 4s, 8s... max 30s\n        reconnectTimer = setTimeout(() =&gt; {\n          reconnectDelay.current = Math.min(reconnectDelay.current * 2, 30000);\n          connect();\n        }, reconnectDelay.current);\n      };\n    }\n\n    connect();\n\n    return () =&gt; {\n      clearTimeout(reconnectTimer);\n      ws?.close();\n    };\n  }, [url]);\n\n  return status;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#when-to-use-what",
+    "href": "RealtimeFeatures.html#when-to-use-what",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "When to Use What",
+    "text": "When to Use What\n\n\n\nScenario\nTechnology\n\n\n\n\nChat, multiplayer games\nWebSockets\n\n\nLive dashboards, logs\nSSE\n\n\nInfrequent updates\nPolling\n\n\nAlready have GraphQL\nSubscriptions",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "RealtimeFeatures.html#libraries-to-consider",
+    "href": "RealtimeFeatures.html#libraries-to-consider",
+    "title": "Real-time Features: Live Updates Without Refresh",
+    "section": "Libraries to Consider",
+    "text": "Libraries to Consider\n\nSocket.IO: WebSocket abstraction with fallbacks\nAbly / Pusher: Managed real-time services\nSupabase Realtime: Built into Supabase\nTanStack Query: Has built-in polling and refetch-on-focus\n\nReal-time isn’t just a feature—it’s an expectation.",
+    "crumbs": [
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html",
+    "href": "EnterprisePatterns.html",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "",
+    "text": "The Challenges of Scale\nBuilding a side project is different from building a product that 50 engineers work on. Enterprise patterns help teams move fast without breaking things.\nThis chapter covers feature flags, microfrontends, module federation, and conventions for large codebases.",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#the-challenges-of-scale",
+    "href": "EnterprisePatterns.html#the-challenges-of-scale",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "",
+    "text": "Team coordination: How do 10 teams ship to the same codebase?\nBuild times: CI takes 45 minutes. Developers are blocked.\nFeature rollout: How to test in production without breaking users?\nCode ownership: Who owns what? How to prevent regressions?",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#feature-flags-deploy-release",
+    "href": "EnterprisePatterns.html#feature-flags-deploy-release",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Feature Flags: Deploy != Release",
+    "text": "Feature Flags: Deploy != Release\nFeature flags decouple deployment (code goes to production) from release (users see it).\n\nSimple Implementation\n// featureFlags.ts\ntype FeatureFlags = {\n  newCheckout: boolean;\n  darkMode: boolean;\n  aiAssistant: boolean;\n};\n\nconst flags: FeatureFlags = {\n  newCheckout: process.env.ENABLE_NEW_CHECKOUT === 'true',\n  darkMode: true,\n  aiAssistant: false,\n};\n\nexport function useFeatureFlag&lt;K extends keyof FeatureFlags&gt;(key: K): boolean {\n  return flags[key];\n}\n\n\nUsage\nfunction CheckoutPage() {\n  const useNewCheckout = useFeatureFlag('newCheckout');\n\n  return useNewCheckout ? &lt;NewCheckout /&gt; : &lt;LegacyCheckout /&gt;;\n}\n\n\nProduction-Grade Solutions\nFor real-world apps, use a flag service:\n\nLaunchDarkly: Industry leader, supports targeting\nUnleash: Open-source alternative\nFlagsmith: Full-featured OSS option\nPostHog: Flags + Analytics\n\n// With LaunchDarkly\nimport { useFlags } from 'launchdarkly-react-client-sdk';\n\nfunction Dashboard() {\n  const { newDashboard } = useFlags();\n  \n  return newDashboard ? &lt;NewDashboard /&gt; : &lt;OldDashboard /&gt;;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#microfrontends-independent-deployments",
+    "href": "EnterprisePatterns.html#microfrontends-independent-deployments",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Microfrontends: Independent Deployments",
+    "text": "Microfrontends: Independent Deployments\nWhen your monolith becomes too big, split it into independently deployable frontends.\ngraph TD\n    Shell[App Shell] --&gt; Header[Header MFE]\n    Shell --&gt; Sidebar[Sidebar MFE]\n    Shell --&gt; Main[Main Content]\n    Main --&gt; ProductTeam[Product Pages MFE]\n    Main --&gt; CartTeam[Cart MFE]\n    Main --&gt; CheckoutTeam[Checkout MFE]\n\nModule Federation (Webpack 5)\nShare code between builds at runtime:\n// shell/webpack.config.js\nconst ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');\n\nmodule.exports = {\n  plugins: [\n    new ModuleFederationPlugin({\n      name: 'shell',\n      remotes: {\n        cart: 'cart@https://cart.example.com/remoteEntry.js',\n        checkout: 'checkout@https://checkout.example.com/remoteEntry.js',\n      },\n      shared: ['react', 'react-dom'],\n    }),\n  ],\n};\n// shell/src/App.tsx\nconst Cart = React.lazy(() =&gt; import('cart/CartWidget'));\nconst Checkout = React.lazy(() =&gt; import('checkout/CheckoutFlow'));\n\nfunction App() {\n  return (\n    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;\n      &lt;Cart /&gt;\n      &lt;Checkout /&gt;\n    &lt;/Suspense&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#code-ownership-codeowners",
+    "href": "EnterprisePatterns.html#code-ownership-codeowners",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Code Ownership & CODEOWNERS",
+    "text": "Code Ownership & CODEOWNERS\nDefine who owns what in your repository:\n# .github/CODEOWNERS\n/src/features/checkout/   @checkout-team\n/src/features/products/   @catalog-team\n/src/shared/              @platform-team\n/src/design-system/       @design-team\nNow PRs require approval from the owning team.",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#monorepo-structure",
+    "href": "EnterprisePatterns.html#monorepo-structure",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Monorepo Structure",
+    "text": "Monorepo Structure\nFor large orgs, a monorepo with clear boundaries works well:\nmy-company/\n├── apps/\n│   ├── web-app/           # Main React app\n│   ├── admin-portal/      # Internal tools\n│   └── mobile-app/        # React Native\n├── packages/\n│   ├── design-system/     # Shared components\n│   ├── api-client/        # API abstraction\n│   ├── analytics/         # Tracking utils\n│   └── feature-flags/     # Flag utilities\n├── tools/\n│   ├── eslint-config/     # Shared ESLint rules\n│   └── tsconfig/          # Shared TypeScript config\n└── package.json\nUse Turborepo or Nx to manage builds and caching.",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#architectural-decision-records-adrs",
+    "href": "EnterprisePatterns.html#architectural-decision-records-adrs",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Architectural Decision Records (ADRs)",
+    "text": "Architectural Decision Records (ADRs)\nDocument important decisions so future developers understand why:\n# ADR-007: Use Zustand over Redux for new features\n\n## Status\nAccepted\n\n## Context\nRedux requires significant boilerplate. New team members struggle.\n\n## Decision\nUse Zustand for all new feature state. Existing Redux remains.\n\n## Consequences\n- Easier onboarding\n- Two state libraries in codebase (temporary)\nStore in /docs/adr/ and link from your README.",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#cicd-best-practices",
+    "href": "EnterprisePatterns.html#cicd-best-practices",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "CI/CD Best Practices",
+    "text": "CI/CD Best Practices\n\nParallelize tests: Run unit, integration, and e2e in parallel\nCache dependencies: Save minutes on every build\nPreview deployments: Every PR gets a preview URL\nCanary releases: Roll out to 1% of users first\nAutomated rollback: Detect errors, revert automatically\n\n# Example: Preview deployment\n- name: Deploy Preview\n  if: github.event_name == 'pull_request'\n  run: |\n    vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#team-conventions",
+    "href": "EnterprisePatterns.html#team-conventions",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Team Conventions",
+    "text": "Team Conventions\n\n\n\n\n\n\n\nArea\nConvention\n\n\n\n\nFile naming\nPascalCase.tsx for components, camelCase.ts for utils\n\n\nFolder structure\nFeature-based (/features/checkout/) not type-based (/components/)\n\n\nImports\nAbsolute imports with path aliases (@/features/checkout)\n\n\nState\nZustand for global, React state for local\n\n\nTesting\nCo-locate tests with source (Button.test.tsx next to Button.tsx)\n\n\n\nDocument conventions and enforce with ESLint.",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
+  },
+  {
+    "objectID": "EnterprisePatterns.html#scaling-checklist",
+    "href": "EnterprisePatterns.html#scaling-checklist",
+    "title": "Enterprise React Patterns: Scaling to Large Teams",
+    "section": "Scaling Checklist",
+    "text": "Scaling Checklist\n\nFeature flags for safe rollouts\nCODEOWNERS for accountability\nADRs for decision history\nMonorepo tooling (Nx/Turborepo)\nPreview deployments on every PR\nShared design system package\nConsistent coding conventions (enforced)\n\nEnterprise React isn’t about complexity—it’s about sustainable velocity.",
+    "crumbs": [
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+    ]
   }
 ]

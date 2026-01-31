@@ -1,0 +1,218 @@
+# Data Fetching Strategies: Beyond Basic Fetch
+
+Every React app needs data. But how you fetch it determines your app's **perceived performance**, **reliability**, and **code maintainability**.
+
+This chapter explores **SWR**, **TanStack Query**, and advanced patterns like optimistic updates and infinite scroll.
+
+---
+
+## The Problem with Naive Fetching
+
+```tsx
+// 😰 Classic useEffect fetch
+function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/users/${userId}`)
+      .then(res => res.json())
+      .then(data => { setUser(data); setLoading(false); })
+      .catch(err => { setError(err); setLoading(false); });
+  }, [userId]);
+
+  // ... render states
+}
+```
+
+**Problems:**
+- No caching (refetches on every mount)
+- No background updates
+- Race conditions possible
+- Duplicated boilerplate everywhere
+
+---
+
+## TanStack Query: The Solution
+
+**TanStack Query** (formerly React Query) handles caching, deduplication, background refetching, and more.
+
+```bash
+npm install @tanstack/react-query
+```
+
+### Setup
+
+```tsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <YourApp />
+    </QueryClientProvider>
+  );
+}
+```
+
+### Basic Usage
+
+```tsx
+import { useQuery } from '@tanstack/react-query';
+
+function UserProfile({ userId }) {
+  const { data: user, isLoading, error } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => fetch(`/api/users/${userId}`).then(res => res.json()),
+  });
+
+  if (isLoading) return <Skeleton />;
+  if (error) return <Error message={error.message} />;
+
+  return <Profile user={user} />;
+}
+```
+
+**Benefits:**
+- ✅ Automatic caching
+- ✅ Background refetching on window focus
+- ✅ Request deduplication
+- ✅ Stale-while-revalidate pattern
+
+---
+
+## Mutations: Updating Data
+
+```tsx
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+function UpdateProfileForm({ user }) {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (newData) => 
+      fetch(`/api/users/${user.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(newData),
+      }).then(res => res.json()),
+
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['user', user.id] });
+    },
+  });
+
+  const handleSubmit = (formData) => {
+    mutation.mutate(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* ... form fields */}
+      <button disabled={mutation.isPending}>
+        {mutation.isPending ? 'Saving...' : 'Save'}
+      </button>
+    </form>
+  );
+}
+```
+
+---
+
+## Optimistic Updates
+
+Update the UI **before** the server confirms, then roll back if it fails:
+
+```tsx
+const mutation = useMutation({
+  mutationFn: updateTodo,
+  onMutate: async (newTodo) => {
+    // Cancel outgoing refetches
+    await queryClient.cancelQueries({ queryKey: ['todos'] });
+
+    // Snapshot previous value
+    const previousTodos = queryClient.getQueryData(['todos']);
+
+    // Optimistically update
+    queryClient.setQueryData(['todos'], old => 
+      old.map(t => t.id === newTodo.id ? newTodo : t)
+    );
+
+    return { previousTodos };
+  },
+  onError: (err, newTodo, context) => {
+    // Roll back on error
+    queryClient.setQueryData(['todos'], context.previousTodos);
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['todos'] });
+  },
+});
+```
+
+---
+
+## Infinite Scroll
+
+```tsx
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+
+function InfiniteFeed() {
+  const { ref, inView } = useInView();
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ['posts'],
+    queryFn: ({ pageParam = 1 }) => 
+      fetch(`/api/posts?page=${pageParam}`).then(res => res.json()),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+  });
+
+  // Fetch next page when sentinel is visible
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  return (
+    <>
+      {data?.pages.map(page => 
+        page.posts.map(post => <PostCard key={post.id} post={post} />)
+      )}
+      <div ref={ref}>
+        {isFetchingNextPage && <Spinner />}
+      </div>
+    </>
+  );
+}
+```
+
+---
+
+## SWR vs TanStack Query
+
+| Feature | SWR | TanStack Query |
+|---------|-----|----------------|
+| Bundle Size | Smaller | Larger |
+| DevTools | Basic | Excellent |
+| Mutations | Manual | Built-in |
+| Infinite Queries | Supported | Excellent |
+| Learning Curve | Lower | Moderate |
+
+**Recommendation**: Use **TanStack Query** for complex apps, **SWR** for simpler needs.
+
+---
+
+## Key Patterns
+
+1. **Stale-While-Revalidate**: Show cached data immediately, update in background
+2. **Prefetching**: Load data before the user navigates
+3. **Polling**: Refresh data on an interval for near-real-time updates
+4. **Dependent Queries**: Fetch B only after A completes
+
+Data fetching is the nervous system of your app. Invest in a robust solution.

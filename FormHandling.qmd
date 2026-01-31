@@ -1,0 +1,181 @@
+# Form Handling & Validation: Taming User Input
+
+Forms are the backbone of interactive applications. In React, handling forms well means balancing **developer experience**, **user experience**, and **data integrity**.
+
+This chapter covers modern form patterns using **React Hook Form** and **Zod** for type-safe validation.
+
+---
+
+## The Problem with Native Forms
+
+React's controlled inputs require you to manage state for every field:
+
+```jsx
+// 😰 This gets painful fast with 10+ fields
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [confirmPassword, setConfirmPassword] = useState('');
+// ... and so on
+```
+
+Every keystroke triggers a re-render. Validation logic gets scattered. Error handling becomes a mess.
+
+---
+
+## React Hook Form: The Modern Solution
+
+**React Hook Form** uses uncontrolled inputs with refs, minimizing re-renders while giving you full control.
+
+```bash
+npm install react-hook-form zod @hookform/resolvers
+```
+
+### Basic Example
+
+```tsx
+import { useForm } from 'react-hook-form';
+
+type FormData = {
+  email: string;
+  password: string;
+};
+
+function LoginForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => {
+    console.log(data); // { email: '...', password: '...' }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('email', { required: 'Email is required' })} />
+      {errors.email && <span>{errors.email.message}</span>}
+
+      <input 
+        type="password" 
+        {...register('password', { minLength: { value: 8, message: 'Min 8 chars' } })} 
+      />
+      {errors.password && <span>{errors.password.message}</span>}
+
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+```
+
+---
+
+## Zod: Schema-First Validation
+
+Instead of inline validation rules, define a **schema** that describes your data. This schema can be reused for API validation, type generation, and form validation.
+
+```tsx
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+// 1. Define the schema
+const loginSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+});
+
+// 2. Infer the type from the schema
+type LoginFormData = z.infer<typeof loginSchema>;
+
+// 3. Use it in your form
+function LoginForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  // ... same as before
+}
+```
+
+---
+
+## Handling Complex Forms
+
+### Nested Objects
+
+```tsx
+const profileSchema = z.object({
+  user: z.object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+  }),
+  address: z.object({
+    street: z.string(),
+    city: z.string(),
+    zip: z.string().regex(/^\d{5}$/, 'Invalid ZIP'),
+  }),
+});
+
+// In your form:
+<input {...register('user.firstName')} />
+<input {...register('address.zip')} />
+```
+
+### Dynamic Fields (Arrays)
+
+```tsx
+import { useFieldArray } from 'react-hook-form';
+
+function TeamForm() {
+  const { control, register } = useForm({
+    defaultValues: { members: [{ name: '' }] },
+  });
+
+  const { fields, append, remove } = useFieldArray({ control, name: 'members' });
+
+  return (
+    <>
+      {fields.map((field, index) => (
+        <div key={field.id}>
+          <input {...register(`members.${index}.name`)} />
+          <button type="button" onClick={() => remove(index)}>Remove</button>
+        </div>
+      ))}
+      <button type="button" onClick={() => append({ name: '' })}>Add Member</button>
+    </>
+  );
+}
+```
+
+---
+
+## Error Display Patterns
+
+### Inline Errors
+
+```tsx
+<input {...register('email')} className={errors.email ? 'input-error' : ''} />
+{errors.email && <p className="error-text">{errors.email.message}</p>}
+```
+
+### Toast on Submit Failure
+
+```tsx
+const onSubmit = async (data) => {
+  try {
+    await api.login(data);
+  } catch (err) {
+    toast.error('Login failed. Please check your credentials.');
+  }
+};
+```
+
+---
+
+## Key Takeaways
+
+| Pattern | When to Use |
+|---------|-------------|
+| **Controlled Inputs** | Simple forms, <5 fields |
+| **React Hook Form** | Any form with validation |
+| **Zod Schemas** | Type-safe, reusable validation |
+| **useFieldArray** | Dynamic lists of inputs |
+
+Forms are the most common source of bugs in web apps. Investing in a solid form architecture pays dividends in maintainability.
