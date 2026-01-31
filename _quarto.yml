@@ -116,6 +116,8 @@ format:
     css: styles.css
     number-sections: false
     self-contained: false
+    mermaid:
+      theme: default
   epub:
     cover-image: cover.png
     toc: true

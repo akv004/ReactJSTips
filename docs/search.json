@@ -1,5 +1,55 @@
 [
   {
+    "objectID": "MonorepoArchitecture.html",
+    "href": "MonorepoArchitecture.html",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "",
+    "text": "The “Apps vs. Packages” Pattern\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to “dependency hell” and code duplication.\nThe solution? A Monorepo.\nIn this chapter, we’ll explore how to structure a modern React monorepo using npm/pnpm workspaces, inspired by the architecture of high-performance tools like ai-studio-template.\nState-of-the-art monorepos typically follow this directory structure:",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "href": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "",
+    "text": "graph TD\n    Root[Root /] --&gt; Apps[apps /]\n    Root --&gt; Pkgs[packages /]\n    \n    Apps --&gt; Desktop[desktop / (Tauri + Rust)]\n    Apps --&gt; Web[web / (Next.js or Vite)]\n    Apps --&gt; Sidecar[sidecar / (Python AI)]\n    \n    Pkgs --&gt; Shared[shared / (Types & Config)]\n    Pkgs --&gt; UI[ui-kit / (React Components)]\n    \n    Desktop -.-&gt; Shared\n    Web -.-&gt; Shared\n    Web -.-&gt; UI\n\napps/: Deployable applications. They consume packages but are rarely consumed themselves.\npackages/: Shared libraries. Hosted internally and imported by apps.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#setting-up-workspaces",
+    "href": "MonorepoArchitecture.html#setting-up-workspaces",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Setting Up Workspaces",
+    "text": "Setting Up Workspaces\nYou don’t need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.\npackage.json (Root):\n{\n  \"name\": \"my-ai-studio\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}\nNow, any folder inside apps or packages with its own package.json is treated as a workspace.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "href": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "3. The Power of packages/shared",
+    "text": "3. The Power of packages/shared\nImagine you have a TypeScript interface Project that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).\nInstead of copying types.ts into every folder, you create a shared package.\npackages/shared/package.json:\n{\n  \"name\": \"@my-studio/shared\",\n  \"version\": \"1.0.0\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\"\n}\nUsage in React App:\nnpm install @my-studio/shared\nimport { Project } from '@my-studio/shared';\n\nexport function ProjectCard({ project }: { project: Project }) {\n  return &lt;div&gt;{project.name}&lt;/div&gt;;\n}\nNow, when you update the type definition in one place, every app gets the update instantly (and TypeScript will scream at you if you broke something).",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#why-this-approach",
+    "href": "MonorepoArchitecture.html#why-this-approach",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Why This approach?",
+    "text": "Why This approach?\n\nSingle Source of Truth: Define types and utilities once.\nAtomic Commits: You can change the API and the UI in a single PR.\nUnified Tooling: Run npm install once at the root to install dependencies for ALL apps.\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "The React Blueprint",
@@ -517,56 +567,6 @@
     "text": "Conclusion\nTesting is an investment. By focusing on user interactions rather than implementation details, your tests become resilient to refactoring and provide long-term value.",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html",
-    "href": "MonorepoArchitecture.html",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "",
-    "text": "The “Apps vs. Packages” Pattern\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to “dependency hell” and code duplication.\nThe solution? A Monorepo.\nIn this chapter, we’ll explore how to structure a modern React monorepo using npm/pnpm workspaces, inspired by the architecture of high-performance tools like ai-studio-template.\nState-of-the-art monorepos typically follow this directory structure:",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
-    "href": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "",
-    "text": "graph TD\n    Root[Root /] --&gt; Apps[apps /]\n    Root --&gt; Pkgs[packages /]\n    \n    Apps --&gt; Desktop[desktop / (Tauri + Rust)]\n    Apps --&gt; Web[web / (Next.js or Vite)]\n    Apps --&gt; Sidecar[sidecar / (Python AI)]\n    \n    Pkgs --&gt; Shared[shared / (Types & Config)]\n    Pkgs --&gt; UI[ui-kit / (React Components)]\n    \n    Desktop -.-&gt; Shared\n    Web -.-&gt; Shared\n    Web -.-&gt; UI\n\napps/: Deployable applications. They consume packages but are rarely consumed themselves.\npackages/: Shared libraries. Hosted internally and imported by apps.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#setting-up-workspaces",
-    "href": "MonorepoArchitecture.html#setting-up-workspaces",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "Setting Up Workspaces",
-    "text": "Setting Up Workspaces\nYou don’t need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.\npackage.json (Root):\n{\n  \"name\": \"my-ai-studio\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}\nNow, any folder inside apps or packages with its own package.json is treated as a workspace.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#the-power-of-packagesshared",
-    "href": "MonorepoArchitecture.html#the-power-of-packagesshared",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "3. The Power of packages/shared",
-    "text": "3. The Power of packages/shared\nImagine you have a TypeScript interface Project that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).\nInstead of copying types.ts into every folder, you create a shared package.\npackages/shared/package.json:\n{\n  \"name\": \"@my-studio/shared\",\n  \"version\": \"1.0.0\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\"\n}\nUsage in React App:\nnpm install @my-studio/shared\nimport { Project } from '@my-studio/shared';\n\nexport function ProjectCard({ project }: { project: Project }) {\n  return &lt;div&gt;{project.name}&lt;/div&gt;;\n}\nNow, when you update the type definition in one place, every app gets the update instantly (and TypeScript will scream at you if you broke something).",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#why-this-approach",
-    "href": "MonorepoArchitecture.html#why-this-approach",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "Why This approach?",
-    "text": "Why This approach?\n\nSingle Source of Truth: Define types and utilities once.\nAtomic Commits: You can change the API and the UI in a single PR.\nUnified Tooling: Run npm install once at the root to install dependencies for ALL apps.\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
     ]
   },
   {
