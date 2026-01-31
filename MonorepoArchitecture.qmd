@@ -1,48 +1,127 @@
 # Monorepo Architecture: Scaling Beyond a Single App
 
-As your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to "dependency hell" and code duplication.
+As your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories leads to **dependency hell** and endless synchronization issues.
 
 The solution? **A Monorepo**.
 
-In this chapter, we'll explore how to structure a modern React monorepo using **npm/pnpm workspaces**, inspired by the architecture of high-performance tools like `ai-studio-template`.
+```{mermaid}
+flowchart TD
+    subgraph Monorepo["📦 Monorepo Root"]
+        subgraph Apps["apps/"]
+            Web["🌐 web"]
+            Desktop["🖥️ desktop"]
+            Mobile["📱 mobile"]
+            Sidecar["🐍 sidecar"]
+        end
+        
+        subgraph Packages["packages/"]
+            UI["🎨 ui"]
+            Shared["📋 shared"]
+            Config["⚙️ config"]
+        end
+    end
+    
+    Web --> UI
+    Web --> Shared
+    Desktop --> UI
+    Desktop --> Shared
+    Mobile --> UI
+    Mobile --> Shared
+    Sidecar -.-> Shared
+    
+    style UI fill:#61dafb
+    style Shared fill:#3178c6
+```
 
 ---
 
-## The "Apps vs. Packages" Pattern
+## Why Monorepo?
 
-State-of-the-art monorepos typically follow this directory structure:
+| Challenge | Multi-Repo | Monorepo |
+|-----------|------------|----------|
+| **Shared code** | Publish to npm, version dance | Just import it |
+| **Type safety** | Hope types match | Guaranteed by TypeScript |
+| **Atomic changes** | Multiple PRs, coordination | Single PR, single review |
+| **CI/CD** | N pipelines to maintain | One pipeline, smart caching |
+| **Onboarding** | Clone N repos, configure each | Clone once, run once |
 
-```{mermaid}
-graph TD
-    Root[Root /] --> Apps[apps /]
-    Root --> Pkgs[packages /]
-    
-    Apps --> Desktop[desktop / (Tauri + Rust)]
-    Apps --> Web[web / (Next.js or Vite)]
-    Apps --> Sidecar[sidecar / (Python AI)]
-    
-    Pkgs --> Shared[shared / (Types & Config)]
-    Pkgs --> UI[ui-kit / (React Components)]
-    
-    Desktop -.-> Shared
-    Web -.-> Shared
-    Web -.-> UI
+---
+
+## Project Structure
+
 ```
-
-- **apps/**: Deployable applications. They consume packages but are rarely consumed themselves.
-- **packages/**: Shared libraries. Hosted internally and imported by apps.
+my-project/
+├── apps/
+│   ├── web/                    # Next.js or Vite
+│   │   ├── src/
+│   │   ├── package.json
+│   │   └── vite.config.ts
+│   ├── desktop/                # Tauri + React
+│   │   ├── src/
+│   │   ├── src-tauri/
+│   │   └── package.json
+│   └── sidecar/                # Python AI backend
+│       ├── server.py
+│       ├── requirements.txt
+│       └── pyproject.toml
+├── packages/
+│   ├── ui/                     # Shared React components
+│   │   ├── src/
+│   │   │   ├── Button/
+│   │   │   ├── Input/
+│   │   │   └── index.ts
+│   │   └── package.json
+│   ├── shared/                 # Types, schemas, utilities
+│   │   ├── src/
+│   │   │   ├── schemas/
+│   │   │   ├── utils/
+│   │   │   └── index.ts
+│   │   └── package.json
+│   └── config/                 # Shared configs
+│       ├── eslint/
+│       ├── tsconfig/
+│       └── package.json
+├── package.json                # Root workspace config
+├── pnpm-workspace.yaml         # Workspace definition
+└── turbo.json                  # Build orchestration
+```
 
 ---
 
 ## Setting Up Workspaces
 
-You don't need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.
+### pnpm (Recommended)
 
-**`package.json` (Root)**:
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+```
 
 ```json
+// package.json (root)
 {
-  "name": "my-ai-studio",
+  "name": "my-project",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  }
+}
+```
+
+### npm/yarn Workspaces
+
+```json
+// package.json (root)
+{
+  "name": "my-project",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -51,48 +130,328 @@ You don't need complex tools like Nx or Turborepo to get started. Node.js unders
 }
 ```
 
-Now, any folder inside `apps` or `packages` with its own `package.json` is treated as a workspace.
-
 ---
 
-## 3. The Power of `packages/shared`
+## Creating a Shared Package
 
-Imagine you have a TypeScript interface `Project` that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).
+### Package Structure
 
-Instead of copying `types.ts` into every folder, you create a shared package.
+```
+packages/shared/
+├── src/
+│   ├── schemas/
+│   │   ├── user.ts
+│   │   └── project.ts
+│   ├── utils/
+│   │   ├── formatting.ts
+│   │   └── validation.ts
+│   └── index.ts
+├── package.json
+└── tsconfig.json
+```
 
-**`packages/shared/package.json`**:
+### Package Configuration
+
 ```json
+// packages/shared/package.json
 {
-  "name": "@my-studio/shared",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts"
+  "name": "@myproject/shared",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
 }
 ```
 
-**Usage in React App**:
+```ts
+// packages/shared/src/index.ts
+export * from './schemas/user';
+export * from './schemas/project';
+export * from './utils/formatting';
+export * from './utils/validation';
+```
 
-```bash
-npm install @my-studio/shared
+### Consuming in an App
+
+```json
+// apps/web/package.json
+{
+  "name": "@myproject/web",
+  "dependencies": {
+    "@myproject/shared": "workspace:*",
+    "@myproject/ui": "workspace:*"
+  }
+}
 ```
 
 ```tsx
-import { Project } from '@my-studio/shared';
+// apps/web/src/components/UserCard.tsx
+import { UserSchema, formatDate } from '@myproject/shared';
+import { Button, Card } from '@myproject/ui';
 
-export function ProjectCard({ project }: { project: Project }) {
-  return <div>{project.name}</div>;
+export function UserCard({ user }: { user: User }) {
+  // Types come from shared package!
+  const validated = UserSchema.parse(user);
+  
+  return (
+    <Card>
+      <h2>{validated.name}</h2>
+      <p>Joined {formatDate(validated.createdAt)}</p>
+      <Button>View Profile</Button>
+    </Card>
+  );
 }
 ```
 
-Now, when you update the type definition in one place, **every** app gets the update instantly (and TypeScript will scream at you if you broke something).
+---
+
+## Turborepo: Smart Build Orchestration
+
+Turborepo understands your dependency graph and:
+- Only rebuilds what changed
+- Caches build outputs
+- Runs tasks in parallel
+
+```json
+// turbo.json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    }
+  }
+}
+```
+
+### Filtering
+
+```bash
+# Run dev for web app only
+pnpm turbo dev --filter=@myproject/web
+
+# Run build for everything web depends on
+pnpm turbo build --filter=@myproject/web...
+
+# Run tests for changed packages only
+pnpm turbo test --filter=[HEAD^1]
+```
 
 ---
 
-## Why This approach?
+## Shared Configuration
 
-1.  **Single Source of Truth**: Define types and utilities once.
-2.  **Atomic Commits**: You can change the API and the UI in a single PR.
-3.  **Unified Tooling**: Run `npm install` once at the root to install dependencies for ALL apps.
+### TypeScript Config
 
-In the next chapter, we'll see how to wrap one of these apps in a native shell using Tauri.
+```json
+// packages/config/tsconfig/base.json
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  }
+}
+```
+
+```json
+// packages/config/tsconfig/react.json
+{
+  "extends": "./base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+  }
+}
+```
+
+```json
+// apps/web/tsconfig.json
+{
+  "extends": "@myproject/config/tsconfig/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+### ESLint Config
+
+```js
+// packages/config/eslint/react.js
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+  ],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'react-hooks/exhaustive-deps': 'error',
+  },
+};
+```
+
+```js
+// apps/web/.eslintrc.js
+module.exports = {
+  root: true,
+  extends: ['@myproject/config/eslint/react'],
+};
+```
+
+---
+
+## CI/CD with Caching
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # For turbo diff detection
+      
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Turbo Cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+      
+      - name: Build
+        run: pnpm build
+      
+      - name: Lint
+        run: pnpm lint
+      
+      - name: Test
+        run: pnpm test
+```
+
+---
+
+## Common Patterns
+
+### Internal Package Versioning
+
+For private monorepos, use `workspace:*` instead of version numbers:
+
+```json
+{
+  "dependencies": {
+    "@myproject/shared": "workspace:*"
+  }
+}
+```
+
+This means "use whatever version is in the workspace."
+
+### Path Aliases
+
+Configure bundlers to resolve workspace packages:
+
+```ts
+// apps/web/vite.config.ts
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@myproject/ui': path.resolve(__dirname, '../../packages/ui/src'),
+      '@myproject/shared': path.resolve(__dirname, '../../packages/shared/src'),
+    },
+  },
+});
+```
+
+### Development Workflow
+
+```bash
+# Install all dependencies
+pnpm install
+
+# Start everything in dev mode
+pnpm dev
+
+# Or start specific apps
+pnpm --filter @myproject/web dev
+pnpm --filter @myproject/desktop dev
+```
+
+---
+
+## Monorepo Benefits Recap
+
+::: {.callout-tip}
+## Why This Approach Wins
+
+1. **Single Source of Truth** — Define types and utilities once
+2. **Atomic Commits** — Change API and UI in a single PR
+3. **Unified Tooling** — One `pnpm install` for everything
+4. **Smart Caching** — Turborepo only rebuilds what changed
+5. **Consistent Standards** — Shared ESLint, TypeScript, Prettier configs
+:::
+
+In the next chapter, we'll see how to wrap one of these apps in a native shell using Tauri and create cross-platform desktop applications.

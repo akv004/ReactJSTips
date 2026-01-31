@@ -6,72 +6,355 @@ In a full-stack project (like our React + Rust + Python monorepo), the biggest s
 - The React UI sends `{ "text": "string" }`.
 - 💥 Crash.
 
-To fix this, we need a Single Source of Truth for our data schemas.
+To fix this, we need a **Single Source of Truth** for our data schemas.
 
----
-
-## 1. Zod: Runtime Validation + Static Types
-
-TypeScript types disappear at runtime. **Zod** schemas stay. They are perfect for validation *and* type generation.
-
-In `packages/shared/src/schemas.ts`:
-
-```ts
-import { z } from 'zod';
-
-export const ProjectSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  createdAt: z.string().datetime(),
-  settings: z.object({
-    theme: z.enum(['light', 'dark']),
-    notifications: z.boolean(),
-  }),
-});
-
-// Auto-derive the TypeScript type!
-export type Project = z.infer<typeof ProjectSchema>;
+```{mermaid}
+flowchart LR
+    subgraph Source["Single Source of Truth"]
+        Z["Zod Schemas"]
+    end
+    
+    Z --> TS["TypeScript Types"]
+    Z --> JSON["JSON Schema"]
+    JSON --> PY["Pydantic Models"]
+    JSON --> RS["Rust Structs"]
+    
+    style Z fill:#3178c6
+    style TS fill:#3178c6
+    style PY fill:#3776ab
+    style RS fill:#dea584
 ```
 
 ---
 
-## 2. Consuming in React (UI)
+## The Problem: Type Drift
 
-Now, your UI components are type-safe.
+Without shared schemas, types drift apart over time:
+
+| Layer | Definition | Reality |
+|-------|------------|---------|
+| **Frontend** | `interface User { id: string }` | Gets `id` as number from API |
+| **Backend** | `class User { id: int }` | Sends `id` as integer |
+| **Python ML** | `user_id: str` | Expects string, crashes on int |
+
+**Result**: Runtime errors, silent data corruption, and hours of debugging.
+
+---
+
+## Zod: Runtime Validation + Static Types
+
+TypeScript types disappear at runtime. **Zod** schemas stay. They are perfect for validation *and* type generation.
+
+### Defining Schemas
+
+```ts
+// packages/shared/src/schemas/user.ts
+import { z } from 'zod';
+
+export const UserSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  name: z.string().min(1).max(100),
+  role: z.enum(['admin', 'editor', 'viewer']),
+  createdAt: z.string().datetime(),
+  preferences: z.object({
+    theme: z.enum(['light', 'dark', 'system']),
+    notifications: z.boolean(),
+    language: z.string().length(2),
+  }),
+});
+
+// Auto-derive the TypeScript type!
+export type User = z.infer<typeof UserSchema>;
+```
+
+### Schema Composition
+
+Build complex schemas from simple ones:
+
+```ts
+// packages/shared/src/schemas/project.ts
+import { z } from 'zod';
+import { UserSchema } from './user';
+
+export const ProjectSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1).max(200),
+  description: z.string().optional(),
+  owner: UserSchema.pick({ id: true, name: true, email: true }),
+  collaborators: z.array(UserSchema.pick({ id: true, name: true })),
+  settings: z.object({
+    isPublic: z.boolean(),
+    allowComments: z.boolean(),
+  }),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+export type Project = z.infer<typeof ProjectSchema>;
+
+// Partial schemas for updates
+export const ProjectUpdateSchema = ProjectSchema.partial().omit({
+  id: true,
+  createdAt: true,
+  owner: true,
+});
+
+export type ProjectUpdate = z.infer<typeof ProjectUpdateSchema>;
+```
+
+---
+
+## API Contract Schemas
+
+Define your API requests and responses:
+
+```ts
+// packages/shared/src/schemas/api.ts
+import { z } from 'zod';
+import { ProjectSchema } from './project';
+
+// Request schemas
+export const CreateProjectRequest = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  isPublic: z.boolean().default(false),
+});
+
+// Response schemas
+export const ApiResponse = <T extends z.ZodType>(dataSchema: T) =>
+  z.object({
+    success: z.boolean(),
+    data: dataSchema.optional(),
+    error: z.object({
+      code: z.string(),
+      message: z.string(),
+    }).optional(),
+    meta: z.object({
+      requestId: z.string(),
+      timestamp: z.string().datetime(),
+    }),
+  });
+
+export const ProjectListResponse = ApiResponse(z.array(ProjectSchema));
+export const ProjectResponse = ApiResponse(ProjectSchema);
+
+// Inference types
+export type CreateProjectRequest = z.infer<typeof CreateProjectRequest>;
+export type ProjectListResponse = z.infer<typeof ProjectListResponse>;
+```
+
+---
+
+## Consuming in React
+
+### Form Validation with React Hook Form
 
 ```tsx
-import { Project, ProjectSchema } from '@my-studio/shared';
+// apps/web/src/components/CreateProjectForm.tsx
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateProjectRequest } from '@my-studio/shared';
 
-function ProjectSettings({ project }: { project: Project }) {
-  // Validate incoming data (e.g. from API)
-  const result = ProjectSchema.safeParse(project);
+export function CreateProjectForm() {
+  const form = useForm<CreateProjectRequest>({
+    resolver: zodResolver(CreateProjectRequest),
+    defaultValues: {
+      name: '',
+      isPublic: false,
+    },
+  });
 
-  if (!result.success) {
-    console.error("Invalid project data!", result.error);
-    return <div>Error loading project</div>;
-  }
-  
-  return <h1>{project.name}</h1>;
+  const onSubmit = async (data: CreateProjectRequest) => {
+    // data is guaranteed to be valid!
+    await createProject(data);
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <input {...form.register('name')} />
+      {form.formState.errors.name && (
+        <span className="error">{form.formState.errors.name.message}</span>
+      )}
+      <button type="submit">Create</button>
+    </form>
+  );
+}
+```
+
+### API Response Validation
+
+```tsx
+// apps/web/src/hooks/useProjects.ts
+import { useQuery } from '@tanstack/react-query';
+import { ProjectListResponse, ProjectSchema } from '@my-studio/shared';
+import { z } from 'zod';
+
+export function useProjects() {
+  return useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
+      const res = await fetch('/api/projects');
+      const json = await res.json();
+      
+      // Validate response matches expected schema
+      const parsed = ProjectListResponse.safeParse(json);
+      
+      if (!parsed.success) {
+        console.error('API response validation failed:', parsed.error);
+        throw new Error('Invalid API response');
+      }
+      
+      return parsed.data.data ?? [];
+    },
+  });
 }
 ```
 
 ---
 
-## 3. Consuming in Python (Sidecar)
+## Generating Python Pydantic Models
 
-Wait, Python can't read TypeScript files!
+Python can't read TypeScript files directly. But we can generate Python models from our schemas.
 
-Correct. But we can generate Python Pydantic models from our Zod/JSON schemas, or simply ensure they match.
-
-A common pattern is to export the JSON Schema from Zod:
+### Export JSON Schema
 
 ```ts
+// packages/shared/scripts/generate-schemas.ts
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import * as fs from 'fs';
+import { UserSchema, ProjectSchema } from '../src/schemas';
 
-const jsonSchema = zodToJsonSchema(ProjectSchema, 'Project');
-console.log(JSON.stringify(jsonSchema, null, 2));
+const schemas = {
+  User: zodToJsonSchema(UserSchema),
+  Project: zodToJsonSchema(ProjectSchema),
+};
+
+fs.writeFileSync(
+  './dist/schemas.json',
+  JSON.stringify(schemas, null, 2)
+);
+
+console.log('✅ JSON Schemas generated');
 ```
 
-You can then use tools like `datamodel-code-generator` in Python to convert this JSON Schema into a Pydantic class automatically during your build process.
+### Generate Pydantic Models
 
-**Result**: You change a field in `packages/shared`, run a script, and both your React UI and Python Backend types are updated. Sync nirvana.
+```bash
+# Install the generator
+pip install datamodel-code-generator
+
+# Generate Python models from JSON Schema
+datamodel-codegen \
+  --input packages/shared/dist/schemas.json \
+  --output apps/sidecar/models/generated.py \
+  --output-model-type pydantic_v2.BaseModel
+```
+
+### Generated Python Code
+
+```python
+# apps/sidecar/models/generated.py (auto-generated)
+from pydantic import BaseModel, EmailStr
+from typing import Literal, Optional
+from datetime import datetime
+
+class UserPreferences(BaseModel):
+    theme: Literal['light', 'dark', 'system']
+    notifications: bool
+    language: str
+
+class User(BaseModel):
+    id: str
+    email: EmailStr
+    name: str
+    role: Literal['admin', 'editor', 'viewer']
+    created_at: datetime
+    preferences: UserPreferences
+```
+
+---
+
+## Build Pipeline Integration
+
+Add schema generation to your CI/CD:
+
+```json
+// package.json
+{
+  "scripts": {
+    "schemas:build": "ts-node packages/shared/scripts/generate-schemas.ts",
+    "schemas:python": "datamodel-codegen --input packages/shared/dist/schemas.json --output apps/sidecar/models/generated.py",
+    "schemas:all": "npm run schemas:build && npm run schemas:python",
+    "prebuild": "npm run schemas:all"
+  }
+}
+```
+
+```yaml
+# .github/workflows/ci.yml
+- name: Generate schemas
+  run: npm run schemas:all
+  
+- name: Check for schema drift
+  run: git diff --exit-code apps/sidecar/models/generated.py
+```
+
+---
+
+## Error Messages That Help
+
+Zod provides detailed error messages:
+
+```ts
+const result = UserSchema.safeParse({
+  id: '123', // Not a UUID!
+  email: 'not-an-email',
+  name: '',
+});
+
+if (!result.success) {
+  console.log(result.error.format());
+  // {
+  //   id: { _errors: ['Invalid uuid'] },
+  //   email: { _errors: ['Invalid email'] },
+  //   name: { _errors: ['String must contain at least 1 character(s)'] },
+  // }
+}
+```
+
+### Custom Error Messages
+
+```ts
+const UserSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address' }),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain an uppercase letter')
+    .regex(/[0-9]/, 'Password must contain a number'),
+});
+```
+
+---
+
+## Best Practices
+
+::: {.callout-tip}
+## Schema Organization
+
+1. **One schema per domain concept** — User, Project, Comment
+2. **Compose, don't repeat** — Use `.pick()`, `.omit()`, `.extend()`
+3. **Version your schemas** — API v1, v2 can coexist
+4. **Generate, don't maintain** — Python/Rust types should be auto-generated
+:::
+
+| Practice | Why |
+|----------|-----|
+| **Schemas in shared package** | Single source of truth |
+| **Runtime validation at boundaries** | Catch errors early (API, forms) |
+| **CI checks for drift** | Prevent out-of-sync types |
+| **Descriptive error messages** | Better DX and UX |
+
+---
+
+**Result**: You change a field in `packages/shared`, run a script, and both your React UI and Python Backend types update automatically. Sync nirvana.

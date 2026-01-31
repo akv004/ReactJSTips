@@ -72,11 +72,131 @@
   {
     "objectID": "SetupReactAppLocallyInSeconds.html",
     "href": "SetupReactAppLocallyInSeconds.html",
-    "title": "🚀 Setup React App Locally in Seconds",
+    "title": "Setup React App Locally in Seconds",
     "section": "",
-    "text": "Before diving into code architecture and patterns, it’s useful to have a working React app scaffolded quickly — so you can focus immediately on building features.\nIn the past, create-react-app (CRA) was the go-to standard. However, the ecosystem has evolved. Today, Vite is the industry standard for starting new React projects. It offers significantly faster dev server startup, instant hot module replacement (HMR), and optimized production builds.\nIn this chapter, you’ll get a highly streamlined shell script that:\n\nPrompts you for the project name (with a handy default)\nSets up a new React app using Vite (the modern standard)\nInstalls dependencies\nLaunches the development server\n\nAll of this happens in just a few seconds, assuming Node.js is already installed. The script works on macOS, Linux, and Windows Subsystem for Linux (WSL).\n\n🧠 What You Need Pre-installed\n\nNode.js (v18 or higher recommended)\nnpm (comes with Node.js)\nnpx (comes with Node.js)\n\n\n\n🎯 Why Vite?\n\nInstant Server Start: Unlike CRA, which bundles your entire app before starting, Vite serves modules on demand.\nLightning Fast HMR: Changes appear instantly, regardless of app size.\nRich Plugin Ecosystem: First-class support for TypeScript, JSX, CSS modules, and more out of the box.\n\n\n\n\n🧪 What You’ll Learn\n\nAutomatically scaffolding a React project from scratch\nSetting up with either React+TypeScript or plain React\nHow to generalize the script for multiple environments or tooling preferences\n\n\n📌 Now, let’s look at the actual shell script for this automation:\n📄 run-react-app.sh\n#!/usr/bin/env bash\n\n# Prompt for project name, with a default value\nread -p \"Enter your React project name (default: my-react-app): \" APP_NAME\nAPP_NAME=${APP_NAME:-my-react-app}\n\n# Prompt for TypeScript option\nread -p \"Use TypeScript? (y/n, default y): \" USE_TS\nUSE_TS=${USE_TS:-y}\n\necho \"🚧 Creating project: $APP_NAME with Vite...\"\n\nif [ \"$USE_TS\" == \"y\" ]; then\n  npm create vite@latest \"$APP_NAME\" -- --template react-ts\nelse\n  npm create vite@latest \"$APP_NAME\" -- --template react\nfi\n\ncd \"$APP_NAME\"\n\necho \"📦 Installing dependencies...\"\nnpm install\n\necho \"🚀 Starting development server...\"\nnpm run dev\n📌 How to Use:\n\nSave the script as run-react-app.sh\nMake it executable:\n\nchmod +x run-react-app.sh\n\nRun it in a terminal:\n\n./run-react-app.sh\nYou’ll be prompted for a project name and TypeScript preference. Within seconds, you’ll have your React app running at localhost:5173.",
+    "text": "Vite vs Create React App\nBefore diving into code architecture and patterns, you need a working React app to experiment with. In the past, create-react-app (CRA) was the standard. Today, Vite has completely replaced it as the modern standard.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>🚀 Setup React App Locally in Seconds</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#vite-vs-create-react-app",
+    "href": "SetupReactAppLocallyInSeconds.html#vite-vs-create-react-app",
+    "title": "Setup React App Locally in Seconds",
+    "section": "",
+    "text": "Feature\nVite\nCreate React App\n\n\n\n\nDev server startup\n&lt; 300ms\n30-60 seconds\n\n\nHot Module Replacement\nInstant\nSlow\n\n\nBuild time\nFast (Rollup)\nSlow (Webpack)\n\n\nBundle size\nOptimized\nLarger\n\n\nTypeScript\nNative\nRequires setup\n\n\nMaintained\nActive\nDeprecated\n\n\n\n\n\n\n\n\n\nCRA is Dead\n\n\n\nCreate React App is no longer maintained. The React team officially recommends Vite or Next.js for new projects.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#prerequisites",
+    "href": "SetupReactAppLocallyInSeconds.html#prerequisites",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nBefore you start, ensure you have:\n\nNode.js v18 or higher\nnpm, pnpm, or yarn\n\n# Check your versions\nnode --version  # Should be 18+\nnpm --version",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#quick-start-one-command",
+    "href": "SetupReactAppLocallyInSeconds.html#quick-start-one-command",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Quick Start (One Command)",
+    "text": "Quick Start (One Command)\n# Create a new React + TypeScript project\nnpm create vite@latest my-app -- --template react-ts\ncd my-app\nnpm install\nnpm run dev\nThat’s it. Your app is running at http://localhost:5173.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#interactive-setup",
+    "href": "SetupReactAppLocallyInSeconds.html#interactive-setup",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Interactive Setup",
+    "text": "Interactive Setup\nFor more control, run without the template flag:\nnpm create vite@latest\nYou’ll be prompted:\n✔ Project name: my-app\n✔ Select a framework: › React\n✔ Select a variant: › TypeScript + SWC\nSWC is a Rust-based compiler that’s 20x faster than Babel.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#project-structure",
+    "href": "SetupReactAppLocallyInSeconds.html#project-structure",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Project Structure",
+    "text": "Project Structure\nmy-app/\n├── public/\n│   └── vite.svg\n├── src/\n│   ├── assets/\n│   │   └── react.svg\n│   ├── App.css\n│   ├── App.tsx\n│   ├── index.css\n│   ├── main.tsx\n│   └── vite-env.d.ts\n├── index.html\n├── package.json\n├── tsconfig.json\n├── tsconfig.node.json\n└── vite.config.ts\n\n\n\nFile\nPurpose\n\n\n\n\nindex.html\nEntry HTML file (Vite injects script)\n\n\nsrc/main.tsx\nReact entry point\n\n\nsrc/App.tsx\nRoot component\n\n\nvite.config.ts\nVite configuration\n\n\ntsconfig.json\nTypeScript configuration",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#essential-additions",
+    "href": "SetupReactAppLocallyInSeconds.html#essential-additions",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Essential Additions",
+    "text": "Essential Additions\nAfter scaffolding, add these immediately:\n\nPath Aliases\n// vite.config.ts\nimport { defineConfig } from 'vite';\nimport react from '@vitejs/plugin-react-swc';\nimport path from 'path';\n\nexport default defineConfig({\n  plugins: [react()],\n  resolve: {\n    alias: {\n      '@': path.resolve(__dirname, './src'),\n    },\n  },\n});\n// tsconfig.json - add to compilerOptions\n{\n  \"compilerOptions\": {\n    \"baseUrl\": \".\",\n    \"paths\": {\n      \"@/*\": [\"./src/*\"]\n    }\n  }\n}\nNow you can import like:\nimport { Button } from '@/components/Button';\n\n\nEnvironment Variables\n# .env\nVITE_API_URL=http://localhost:3000\nVITE_APP_NAME=My App\n// Access in code (must prefix with VITE_)\nconst apiUrl = import.meta.env.VITE_API_URL;",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#recommended-dev-dependencies",
+    "href": "SetupReactAppLocallyInSeconds.html#recommended-dev-dependencies",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Recommended Dev Dependencies",
+    "text": "Recommended Dev Dependencies\n# ESLint + Prettier\nnpm install -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react-hooks prettier eslint-config-prettier\n\n# Testing\nnpm install -D vitest @testing-library/react @testing-library/user-event jsdom\n\n# CSS\nnpm install -D sass  # If using SCSS",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#eslint-configuration",
+    "href": "SetupReactAppLocallyInSeconds.html#eslint-configuration",
+    "title": "Setup React App Locally in Seconds",
+    "section": "ESLint Configuration",
+    "text": "ESLint Configuration\n// .eslintrc.cjs\nmodule.exports = {\n  root: true,\n  env: { browser: true, es2020: true },\n  extends: [\n    'eslint:recommended',\n    'plugin:@typescript-eslint/recommended',\n    'plugin:react-hooks/recommended',\n    'prettier',\n  ],\n  ignorePatterns: ['dist', '.eslintrc.cjs'],\n  parser: '@typescript-eslint/parser',\n  plugins: ['react-refresh'],\n  rules: {\n    'react-refresh/only-export-components': [\n      'warn',\n      { allowConstantExport: true },\n    ],\n    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],\n  },\n};",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#scripts-reference",
+    "href": "SetupReactAppLocallyInSeconds.html#scripts-reference",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Scripts Reference",
+    "text": "Scripts Reference\n{\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"tsc && vite build\",\n    \"preview\": \"vite preview\",\n    \"lint\": \"eslint . --ext ts,tsx --report-unused-disable-directives\",\n    \"format\": \"prettier --write \\\"src/**/*.{ts,tsx,css}\\\"\",\n    \"test\": \"vitest\",\n    \"test:coverage\": \"vitest --coverage\"\n  }\n}\n\n\n\nScript\nWhat it does\n\n\n\n\nnpm run dev\nStart dev server with HMR\n\n\nnpm run build\nProduction build to dist/\n\n\nnpm run preview\nPreview production build locally\n\n\nnpm run lint\nCheck for code issues\n\n\nnpm run test\nRun tests in watch mode",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#shell-script-for-automation",
+    "href": "SetupReactAppLocallyInSeconds.html#shell-script-for-automation",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Shell Script for Automation",
+    "text": "Shell Script for Automation\nSave this as create-react.sh for quick project creation:\n#!/usr/bin/env bash\n\n# Prompt for project name\nread -p \"Enter project name (default: my-app): \" APP_NAME\nAPP_NAME=${APP_NAME:-my-app}\n\n# Prompt for TypeScript\nread -p \"Use TypeScript? (y/n, default: y): \" USE_TS\nUSE_TS=${USE_TS:-y}\n\necho \"🚧 Creating project: $APP_NAME\"\n\nif [ \"$USE_TS\" == \"y\" ]; then\n  npm create vite@latest \"$APP_NAME\" -- --template react-ts\nelse\n  npm create vite@latest \"$APP_NAME\" -- --template react\nfi\n\ncd \"$APP_NAME\"\n\necho \"📦 Installing dependencies...\"\nnpm install\n\necho \"🛠️ Adding dev tools...\"\nnpm install -D vitest @testing-library/react jsdom\n\necho \"🚀 Starting dev server...\"\nnpm run dev\n# Make executable and run\nchmod +x create-react.sh\n./create-react.sh",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#vs-code-extensions",
+    "href": "SetupReactAppLocallyInSeconds.html#vs-code-extensions",
+    "title": "Setup React App Locally in Seconds",
+    "section": "VS Code Extensions",
+    "text": "VS Code Extensions\nFor the best development experience:\n\nES7+ React/Redux/GraphQL snippets — Quick component scaffolding\nESLint — Inline linting\nPrettier — Auto-formatting\nTypeScript Vue Plugin (Volar) — Better TypeScript support\nAuto Rename Tag — Rename paired tags",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#whats-next",
+    "href": "SetupReactAppLocallyInSeconds.html#whats-next",
+    "title": "Setup React App Locally in Seconds",
+    "section": "What’s Next?",
+    "text": "What’s Next?\nWith your app running, you’re ready to:\n\nLearn React fundamentals — Components, props, state\nMaster hooks — useEffect, useCallback, custom hooks\nAdd routing — React Router for navigation\nManage state — Zustand, TanStack Query\nStyle your app — CSS Modules, Tailwind, or styled-components\n\nYour React journey starts now. Keep this app running as you work through the rest of this book—every concept can be practiced immediately.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
     ]
   },
   {
@@ -464,17 +584,27 @@
     "href": "TestingReactApps.html",
     "title": "Testing Strategies for React Applications",
     "section": "",
-    "text": "1. The Stack: Vitest & React Testing Library\nTesting isn’t just about finding bugs—it’s about confidence. It allows you to refactor legacy code, upgrade dependencies, and ship features without the constant fear of breaking something.\nIn the React ecosystem, we follow the “Testing Trophy” philosophy: Write tests. Not too many. Mostly integration.",
+    "text": "The Stack\nTesting isn’t just about finding bugs—it’s about confidence. It allows you to refactor legacy code, upgrade dependencies, and ship features without the constant fear of breaking something.\nIn the React ecosystem, we follow the “Testing Trophy” philosophy: Write tests. Not too many. Mostly integration.",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
     ]
   },
   {
-    "objectID": "TestingReactApps.html#the-stack-vitest-react-testing-library",
-    "href": "TestingReactApps.html#the-stack-vitest-react-testing-library",
+    "objectID": "TestingReactApps.html#the-stack",
+    "href": "TestingReactApps.html#the-stack",
     "title": "Testing Strategies for React Applications",
     "section": "",
-    "text": "Vitest: A blazing fast unit test runner (compatible with Jest) powered by Vite.\nReact Testing Library (RTL): Utilities to test React components in a way that resembles how users interact with them.\n\nnpm install -D vitest jsdom @testing-library/react @testing-library/user-event",
+    "text": "Tool\nPurpose\n\n\n\n\nVitest\nFast unit/integration test runner\n\n\nReact Testing Library\nTest components like users\n\n\nMSW\nMock API calls\n\n\nPlaywright\nE2E browser tests\n\n\nTypeScript\nStatic type checking\n\n\n\nnpm install -D vitest jsdom @testing-library/react @testing-library/user-event msw",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#configuration",
+    "href": "TestingReactApps.html#configuration",
+    "title": "Testing Strategies for React Applications",
+    "section": "Configuration",
+    "text": "Configuration\n\nVitest Setup\n// vitest.config.ts\nimport { defineConfig } from 'vitest/config';\nimport react from '@vitejs/plugin-react';\n\nexport default defineConfig({\n  plugins: [react()],\n  test: {\n    environment: 'jsdom',\n    globals: true,\n    setupFiles: ['./src/test/setup.ts'],\n    include: ['src/**/*.{test,spec}.{ts,tsx}'],\n    coverage: {\n      provider: 'v8',\n      reporter: ['text', 'html'],\n      exclude: ['node_modules', 'src/test'],\n    },\n  },\n});\n// src/test/setup.ts\nimport '@testing-library/jest-dom/vitest';\nimport { cleanup } from '@testing-library/react';\nimport { afterEach, beforeAll, afterAll } from 'vitest';\nimport { server } from './mocks/server';\n\n// MSW setup\nbeforeAll(() =&gt; server.listen({ onUnhandledRequest: 'error' }));\nafterEach(() =&gt; {\n  cleanup();\n  server.resetHandlers();\n});\nafterAll(() =&gt; server.close());",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
     ]
@@ -483,38 +613,78 @@
     "objectID": "TestingReactApps.html#writing-your-first-test",
     "href": "TestingReactApps.html#writing-your-first-test",
     "title": "Testing Strategies for React Applications",
-    "section": "2. Writing Your First Test",
-    "text": "2. Writing Your First Test\nLet’s test a simple Counter component.\nComponent:\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  return (\n    &lt;div&gt;\n      &lt;p&gt;Count: {count}&lt;/p&gt;\n      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;Increment&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\nTest:\nimport { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport Counter from './Counter';\n\ntest('increments count when button is clicked', async () =&gt; {\n  render(&lt;Counter /&gt;);\n\n  const button = screen.getByRole('button', { name: /increment/i });\n  const countText = screen.getByText(/count: 0/i);\n\n  expect(countText).toBeInTheDocument();\n\n  // Simulate user click\n  await userEvent.click(button);\n\n  // Assert expectation\n  expect(screen.getByText(/count: 1/i)).toBeInTheDocument();\n});\n\nKey Principle: Query by Role\nAvoid testing implementation details (like class names or internal state). Instead, query by what the user sees: - getByRole('button', ...) - getByLabelText(...) - getByText(...)",
+    "section": "Writing Your First Test",
+    "text": "Writing Your First Test\n\nThe Component\n// src/components/Counter.tsx\nimport { useState } from 'react';\n\nexport function Counter({ initialCount = 0 }: { initialCount?: number }) {\n  const [count, setCount] = useState(initialCount);\n\n  return (\n    &lt;div&gt;\n      &lt;p data-testid=\"count\"&gt;Count: {count}&lt;/p&gt;\n      &lt;button onClick={() =&gt; setCount((c) =&gt; c - 1)}&gt;Decrement&lt;/button&gt;\n      &lt;button onClick={() =&gt; setCount((c) =&gt; c + 1)}&gt;Increment&lt;/button&gt;\n      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\n\n\nThe Test\n// src/components/Counter.test.tsx\nimport { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { Counter } from './Counter';\n\ndescribe('Counter', () =&gt; {\n  it('renders initial count', () =&gt; {\n    render(&lt;Counter initialCount={5} /&gt;);\n    expect(screen.getByTestId('count')).toHaveTextContent('Count: 5');\n  });\n\n  it('increments when clicking increment button', async () =&gt; {\n    const user = userEvent.setup();\n    render(&lt;Counter /&gt;);\n\n    await user.click(screen.getByRole('button', { name: /increment/i }));\n    \n    expect(screen.getByTestId('count')).toHaveTextContent('Count: 1');\n  });\n\n  it('decrements when clicking decrement button', async () =&gt; {\n    const user = userEvent.setup();\n    render(&lt;Counter initialCount={5} /&gt;);\n\n    await user.click(screen.getByRole('button', { name: /decrement/i }));\n    \n    expect(screen.getByTestId('count')).toHaveTextContent('Count: 4');\n  });\n\n  it('resets to zero', async () =&gt; {\n    const user = userEvent.setup();\n    render(&lt;Counter initialCount={10} /&gt;);\n\n    await user.click(screen.getByRole('button', { name: /reset/i }));\n    \n    expect(screen.getByTestId('count')).toHaveTextContent('Count: 0');\n  });\n});",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
     ]
   },
   {
-    "objectID": "TestingReactApps.html#mocking-api-calls",
-    "href": "TestingReactApps.html#mocking-api-calls",
+    "objectID": "TestingReactApps.html#query-priority",
+    "href": "TestingReactApps.html#query-priority",
     "title": "Testing Strategies for React Applications",
-    "section": "3. Mocking API Calls",
-    "text": "3. Mocking API Calls\nDon’t make real network requests in tests! Use MSW (Mock Service Worker) to intercept them.\n// test-setup.ts\nimport { setupServer } from 'msw/node';\nimport { http, HttpResponse } from 'msw';\n\nexport const server = setupServer(\n  http.get('/api/user', () =&gt; {\n    return HttpResponse.json({ name: 'John Doe' });\n  })\n);\n\nbeforeAll(() =&gt; server.listen());\nafterEach(() =&gt; server.resetHandlers());\nafterAll(() =&gt; server.close());",
+    "section": "Query Priority",
+    "text": "Query Priority\nReact Testing Library encourages querying by accessibility:\n// ✅ Best: By role (most accessible)\nscreen.getByRole('button', { name: /submit/i });\nscreen.getByRole('textbox', { name: /email/i });\nscreen.getByRole('heading', { level: 1 });\n\n// ✅ Good: By label\nscreen.getByLabelText(/password/i);\nscreen.getByPlaceholderText(/search/i);\nscreen.getByText(/welcome/i);\n\n// ⚠️ Okay: By test ID (when no semantic option)\nscreen.getByTestId('loading-spinner');\n\n// ❌ Avoid: Implementation details\ndocument.querySelector('.btn-primary');\ncontainer.querySelector('#submit-btn');",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
     ]
   },
   {
-    "objectID": "TestingReactApps.html#integration-vs.-unit-tests",
-    "href": "TestingReactApps.html#integration-vs.-unit-tests",
+    "objectID": "TestingReactApps.html#testing-async-components",
+    "href": "TestingReactApps.html#testing-async-components",
     "title": "Testing Strategies for React Applications",
-    "section": "4. Integration vs. Unit Tests",
-    "text": "4. Integration vs. Unit Tests\n\nUnit Tests: Test a single function or hook in isolation. Good for complex logic.\nIntegration Tests: Render a whole page or feature (e.g., a form wizard) and test the flow. This provides the most value for the least effort.\n\n\nSnapshot Testing?\nSnapshots are brittle. Use them sparingly, mainly for ensuring static UI (like strict legal text) doesn’t change accidentally.",
+    "section": "Testing Async Components",
+    "text": "Testing Async Components\n// src/components/UserProfile.tsx\nimport { useQuery } from '@tanstack/react-query';\n\nexport function UserProfile({ userId }: { userId: string }) {\n  const { data: user, isLoading, error } = useQuery({\n    queryKey: ['user', userId],\n    queryFn: () =&gt; fetch(`/api/users/${userId}`).then((r) =&gt; r.json()),\n  });\n\n  if (isLoading) return &lt;div&gt;Loading...&lt;/div&gt;;\n  if (error) return &lt;div&gt;Error loading user&lt;/div&gt;;\n\n  return (\n    &lt;div&gt;\n      &lt;h1&gt;{user.name}&lt;/h1&gt;\n      &lt;p&gt;{user.email}&lt;/p&gt;\n    &lt;/div&gt;\n  );\n}\n// src/components/UserProfile.test.tsx\nimport { render, screen, waitFor } from '@testing-library/react';\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\nimport { UserProfile } from './UserProfile';\n\nconst createWrapper = () =&gt; {\n  const queryClient = new QueryClient({\n    defaultOptions: {\n      queries: { retry: false },\n    },\n  });\n  return ({ children }) =&gt; (\n    &lt;QueryClientProvider client={queryClient}&gt;{children}&lt;/QueryClientProvider&gt;\n  );\n};\n\ndescribe('UserProfile', () =&gt; {\n  it('shows loading state initially', () =&gt; {\n    render(&lt;UserProfile userId=\"1\" /&gt;, { wrapper: createWrapper() });\n    expect(screen.getByText(/loading/i)).toBeInTheDocument();\n  });\n\n  it('displays user data when loaded', async () =&gt; {\n    render(&lt;UserProfile userId=\"1\" /&gt;, { wrapper: createWrapper() });\n\n    await waitFor(() =&gt; {\n      expect(screen.getByRole('heading')).toHaveTextContent('John Doe');\n    });\n    expect(screen.getByText('john@example.com')).toBeInTheDocument();\n  });\n});",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
     ]
   },
   {
-    "objectID": "TestingReactApps.html#conclusion",
-    "href": "TestingReactApps.html#conclusion",
+    "objectID": "TestingReactApps.html#mocking-api-calls-with-msw",
+    "href": "TestingReactApps.html#mocking-api-calls-with-msw",
     "title": "Testing Strategies for React Applications",
-    "section": "Conclusion",
-    "text": "Conclusion\nTesting is an investment. By focusing on user interactions rather than implementation details, your tests become resilient to refactoring and provide long-term value.",
+    "section": "Mocking API Calls with MSW",
+    "text": "Mocking API Calls with MSW\n// src/test/mocks/handlers.ts\nimport { http, HttpResponse } from 'msw';\n\nexport const handlers = [\n  http.get('/api/users/:id', ({ params }) =&gt; {\n    return HttpResponse.json({\n      id: params.id,\n      name: 'John Doe',\n      email: 'john@example.com',\n    });\n  }),\n\n  http.post('/api/projects', async ({ request }) =&gt; {\n    const body = await request.json();\n    return HttpResponse.json(\n      { id: '123', ...body },\n      { status: 201 }\n    );\n  }),\n];\n// src/test/mocks/server.ts\nimport { setupServer } from 'msw/node';\nimport { handlers } from './handlers';\n\nexport const server = setupServer(...handlers);\n\nOverride Handlers in Tests\nimport { server } from '../test/mocks/server';\nimport { http, HttpResponse } from 'msw';\n\nit('shows error when API fails', async () =&gt; {\n  server.use(\n    http.get('/api/users/:id', () =&gt; {\n      return HttpResponse.json(\n        { message: 'User not found' },\n        { status: 404 }\n      );\n    })\n  );\n\n  render(&lt;UserProfile userId=\"999\" /&gt;, { wrapper: createWrapper() });\n\n  await waitFor(() =&gt; {\n    expect(screen.getByText(/error/i)).toBeInTheDocument();\n  });\n});",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#testing-custom-hooks",
+    "href": "TestingReactApps.html#testing-custom-hooks",
+    "title": "Testing Strategies for React Applications",
+    "section": "Testing Custom Hooks",
+    "text": "Testing Custom Hooks\n// src/hooks/useLocalStorage.ts\nimport { useState, useEffect } from 'react';\n\nexport function useLocalStorage&lt;T&gt;(key: string, initialValue: T) {\n  const [value, setValue] = useState&lt;T&gt;(() =&gt; {\n    const stored = localStorage.getItem(key);\n    return stored ? JSON.parse(stored) : initialValue;\n  });\n\n  useEffect(() =&gt; {\n    localStorage.setItem(key, JSON.stringify(value));\n  }, [key, value]);\n\n  return [value, setValue] as const;\n}\n// src/hooks/useLocalStorage.test.ts\nimport { renderHook, act } from '@testing-library/react';\nimport { useLocalStorage } from './useLocalStorage';\n\ndescribe('useLocalStorage', () =&gt; {\n  beforeEach(() =&gt; {\n    localStorage.clear();\n  });\n\n  it('returns initial value when no stored value exists', () =&gt; {\n    const { result } = renderHook(() =&gt; useLocalStorage('theme', 'light'));\n    expect(result.current[0]).toBe('light');\n  });\n\n  it('returns stored value when it exists', () =&gt; {\n    localStorage.setItem('theme', JSON.stringify('dark'));\n    const { result } = renderHook(() =&gt; useLocalStorage('theme', 'light'));\n    expect(result.current[0]).toBe('dark');\n  });\n\n  it('updates localStorage when value changes', () =&gt; {\n    const { result } = renderHook(() =&gt; useLocalStorage('theme', 'light'));\n\n    act(() =&gt; {\n      result.current[1]('dark');\n    });\n\n    expect(result.current[0]).toBe('dark');\n    expect(localStorage.getItem('theme')).toBe('\"dark\"');\n  });\n});",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#testing-forms",
+    "href": "TestingReactApps.html#testing-forms",
+    "title": "Testing Strategies for React Applications",
+    "section": "Testing Forms",
+    "text": "Testing Forms\nimport { render, screen, waitFor } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { LoginForm } from './LoginForm';\n\ndescribe('LoginForm', () =&gt; {\n  it('submits with valid data', async () =&gt; {\n    const onSubmit = vi.fn();\n    const user = userEvent.setup();\n\n    render(&lt;LoginForm onSubmit={onSubmit} /&gt;);\n\n    await user.type(screen.getByLabelText(/email/i), 'test@example.com');\n    await user.type(screen.getByLabelText(/password/i), 'password123');\n    await user.click(screen.getByRole('button', { name: /sign in/i }));\n\n    await waitFor(() =&gt; {\n      expect(onSubmit).toHaveBeenCalledWith({\n        email: 'test@example.com',\n        password: 'password123',\n      });\n    });\n  });\n\n  it('shows validation errors', async () =&gt; {\n    const user = userEvent.setup();\n\n    render(&lt;LoginForm onSubmit={vi.fn()} /&gt;);\n\n    await user.click(screen.getByRole('button', { name: /sign in/i }));\n\n    expect(await screen.findByText(/email is required/i)).toBeInTheDocument();\n    expect(await screen.findByText(/password is required/i)).toBeInTheDocument();\n  });\n});",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#test-organization",
+    "href": "TestingReactApps.html#test-organization",
+    "title": "Testing Strategies for React Applications",
+    "section": "Test Organization",
+    "text": "Test Organization\nsrc/\n├── components/\n│   ├── Button/\n│   │   ├── Button.tsx\n│   │   ├── Button.test.tsx\n│   │   └── index.ts\n├── hooks/\n│   ├── useAuth.ts\n│   └── useAuth.test.ts\n├── test/\n│   ├── mocks/\n│   │   ├── handlers.ts\n│   │   └── server.ts\n│   ├── setup.ts\n│   └── utils.tsx        # Custom render, providers",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
+    ]
+  },
+  {
+    "objectID": "TestingReactApps.html#coverage-goals",
+    "href": "TestingReactApps.html#coverage-goals",
+    "title": "Testing Strategies for React Applications",
+    "section": "Coverage Goals",
+    "text": "Coverage Goals\n\n\n\nCategory\nTarget\n\n\n\n\nCritical paths\n100%\n\n\nBusiness logic\n90%+\n\n\nUI components\n70-80%\n\n\nUtilities\n100%\n\n\n\n# Run tests with coverage\nnpm test -- --coverage\n\n\n\n\n\n\n\nTesting Philosophy\n\n\n\n\nTest behavior, not implementation — Query like a user\nPrefer integration tests — They catch more bugs per test\nMock at the network layer — MSW over mocking fetch\nKeep tests fast — Parallel, in-memory, no real API calls\nTest the error cases — Happy paths are obvious\n\n\n\nTesting is an investment. By focusing on user interactions rather than implementation details, your tests become resilient to refactoring and provide long-term value.",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Testing Strategies for React Applications</span>"
     ]
@@ -524,17 +694,27 @@
     "href": "MonorepoArchitecture.html",
     "title": "Monorepo Architecture: Scaling Beyond a Single App",
     "section": "",
-    "text": "The “Apps vs. Packages” Pattern\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to “dependency hell” and code duplication.\nThe solution? A Monorepo.\nIn this chapter, we’ll explore how to structure a modern React monorepo using npm/pnpm workspaces, inspired by the architecture of high-performance tools like ai-studio-template.\nState-of-the-art monorepos typically follow this directory structure:\ngraph TD\n    Root[Root /] --&gt; Apps[apps /]\n    Root --&gt; Pkgs[packages /]\n    \n    Apps --&gt; Desktop[desktop / (Tauri + Rust)]\n    Apps --&gt; Web[web / (Next.js or Vite)]\n    Apps --&gt; Sidecar[sidecar / (Python AI)]\n    \n    Pkgs --&gt; Shared[shared / (Types & Config)]\n    Pkgs --&gt; UI[ui-kit / (React Components)]\n    \n    Desktop -.-&gt; Shared\n    Web -.-&gt; Shared\n    Web -.-&gt; UI",
+    "text": "Why Monorepo?\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories leads to dependency hell and endless synchronization issues.\nThe solution? A Monorepo.",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
     ]
   },
   {
-    "objectID": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
-    "href": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "objectID": "MonorepoArchitecture.html#why-monorepo",
+    "href": "MonorepoArchitecture.html#why-monorepo",
     "title": "Monorepo Architecture: Scaling Beyond a Single App",
     "section": "",
-    "text": "apps/: Deployable applications. They consume packages but are rarely consumed themselves.\npackages/: Shared libraries. Hosted internally and imported by apps.",
+    "text": "Challenge\nMulti-Repo\nMonorepo\n\n\n\n\nShared code\nPublish to npm, version dance\nJust import it\n\n\nType safety\nHope types match\nGuaranteed by TypeScript\n\n\nAtomic changes\nMultiple PRs, coordination\nSingle PR, single review\n\n\nCI/CD\nN pipelines to maintain\nOne pipeline, smart caching\n\n\nOnboarding\nClone N repos, configure each\nClone once, run once",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#project-structure",
+    "href": "MonorepoArchitecture.html#project-structure",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Project Structure",
+    "text": "Project Structure\nmy-project/\n├── apps/\n│   ├── web/                    # Next.js or Vite\n│   │   ├── src/\n│   │   ├── package.json\n│   │   └── vite.config.ts\n│   ├── desktop/                # Tauri + React\n│   │   ├── src/\n│   │   ├── src-tauri/\n│   │   └── package.json\n│   └── sidecar/                # Python AI backend\n│       ├── server.py\n│       ├── requirements.txt\n│       └── pyproject.toml\n├── packages/\n│   ├── ui/                     # Shared React components\n│   │   ├── src/\n│   │   │   ├── Button/\n│   │   │   ├── Input/\n│   │   │   └── index.ts\n│   │   └── package.json\n│   ├── shared/                 # Types, schemas, utilities\n│   │   ├── src/\n│   │   │   ├── schemas/\n│   │   │   ├── utils/\n│   │   │   └── index.ts\n│   │   └── package.json\n│   └── config/                 # Shared configs\n│       ├── eslint/\n│       ├── tsconfig/\n│       └── package.json\n├── package.json                # Root workspace config\n├── pnpm-workspace.yaml         # Workspace definition\n└── turbo.json                  # Build orchestration",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
     ]
@@ -544,27 +724,67 @@
     "href": "MonorepoArchitecture.html#setting-up-workspaces",
     "title": "Monorepo Architecture: Scaling Beyond a Single App",
     "section": "Setting Up Workspaces",
-    "text": "Setting Up Workspaces\nYou don’t need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.\npackage.json (Root):\n{\n  \"name\": \"my-ai-studio\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}\nNow, any folder inside apps or packages with its own package.json is treated as a workspace.",
+    "text": "Setting Up Workspaces\n\npnpm (Recommended)\n# pnpm-workspace.yaml\npackages:\n  - 'apps/*'\n  - 'packages/*'\n// package.json (root)\n{\n  \"name\": \"my-project\",\n  \"private\": true,\n  \"scripts\": {\n    \"dev\": \"turbo run dev\",\n    \"build\": \"turbo run build\",\n    \"lint\": \"turbo run lint\",\n    \"test\": \"turbo run test\"\n  },\n  \"devDependencies\": {\n    \"turbo\": \"^2.0.0\"\n  }\n}\n\n\nnpm/yarn Workspaces\n// package.json (root)\n{\n  \"name\": \"my-project\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
     ]
   },
   {
-    "objectID": "MonorepoArchitecture.html#the-power-of-packagesshared",
-    "href": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "objectID": "MonorepoArchitecture.html#creating-a-shared-package",
+    "href": "MonorepoArchitecture.html#creating-a-shared-package",
     "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "3. The Power of packages/shared",
-    "text": "3. The Power of packages/shared\nImagine you have a TypeScript interface Project that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).\nInstead of copying types.ts into every folder, you create a shared package.\npackages/shared/package.json:\n{\n  \"name\": \"@my-studio/shared\",\n  \"version\": \"1.0.0\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\"\n}\nUsage in React App:\nnpm install @my-studio/shared\nimport { Project } from '@my-studio/shared';\n\nexport function ProjectCard({ project }: { project: Project }) {\n  return &lt;div&gt;{project.name}&lt;/div&gt;;\n}\nNow, when you update the type definition in one place, every app gets the update instantly (and TypeScript will scream at you if you broke something).",
+    "section": "Creating a Shared Package",
+    "text": "Creating a Shared Package\n\nPackage Structure\npackages/shared/\n├── src/\n│   ├── schemas/\n│   │   ├── user.ts\n│   │   └── project.ts\n│   ├── utils/\n│   │   ├── formatting.ts\n│   │   └── validation.ts\n│   └── index.ts\n├── package.json\n└── tsconfig.json\n\n\nPackage Configuration\n// packages/shared/package.json\n{\n  \"name\": \"@myproject/shared\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"main\": \"./src/index.ts\",\n  \"types\": \"./src/index.ts\",\n  \"scripts\": {\n    \"lint\": \"eslint src/\",\n    \"typecheck\": \"tsc --noEmit\"\n  },\n  \"dependencies\": {\n    \"zod\": \"^3.22.0\"\n  },\n  \"devDependencies\": {\n    \"typescript\": \"^5.0.0\"\n  }\n}\n// packages/shared/src/index.ts\nexport * from './schemas/user';\nexport * from './schemas/project';\nexport * from './utils/formatting';\nexport * from './utils/validation';\n\n\nConsuming in an App\n// apps/web/package.json\n{\n  \"name\": \"@myproject/web\",\n  \"dependencies\": {\n    \"@myproject/shared\": \"workspace:*\",\n    \"@myproject/ui\": \"workspace:*\"\n  }\n}\n// apps/web/src/components/UserCard.tsx\nimport { UserSchema, formatDate } from '@myproject/shared';\nimport { Button, Card } from '@myproject/ui';\n\nexport function UserCard({ user }: { user: User }) {\n  // Types come from shared package!\n  const validated = UserSchema.parse(user);\n  \n  return (\n    &lt;Card&gt;\n      &lt;h2&gt;{validated.name}&lt;/h2&gt;\n      &lt;p&gt;Joined {formatDate(validated.createdAt)}&lt;/p&gt;\n      &lt;Button&gt;View Profile&lt;/Button&gt;\n    &lt;/Card&gt;\n  );\n}",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
     ]
   },
   {
-    "objectID": "MonorepoArchitecture.html#why-this-approach",
-    "href": "MonorepoArchitecture.html#why-this-approach",
+    "objectID": "MonorepoArchitecture.html#turborepo-smart-build-orchestration",
+    "href": "MonorepoArchitecture.html#turborepo-smart-build-orchestration",
     "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "Why This approach?",
-    "text": "Why This approach?\n\nSingle Source of Truth: Define types and utilities once.\nAtomic Commits: You can change the API and the UI in a single PR.\nUnified Tooling: Run npm install once at the root to install dependencies for ALL apps.\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri.",
+    "section": "Turborepo: Smart Build Orchestration",
+    "text": "Turborepo: Smart Build Orchestration\nTurborepo understands your dependency graph and: - Only rebuilds what changed - Caches build outputs - Runs tasks in parallel\n// turbo.json\n{\n  \"$schema\": \"https://turbo.build/schema.json\",\n  \"pipeline\": {\n    \"build\": {\n      \"dependsOn\": [\"^build\"],\n      \"outputs\": [\"dist/**\", \".next/**\"]\n    },\n    \"dev\": {\n      \"cache\": false,\n      \"persistent\": true\n    },\n    \"lint\": {\n      \"outputs\": []\n    },\n    \"test\": {\n      \"dependsOn\": [\"build\"],\n      \"outputs\": [\"coverage/**\"]\n    },\n    \"typecheck\": {\n      \"dependsOn\": [\"^build\"],\n      \"outputs\": []\n    }\n  }\n}\n\nFiltering\n# Run dev for web app only\npnpm turbo dev --filter=@myproject/web\n\n# Run build for everything web depends on\npnpm turbo build --filter=@myproject/web...\n\n# Run tests for changed packages only\npnpm turbo test --filter=[HEAD^1]",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#shared-configuration",
+    "href": "MonorepoArchitecture.html#shared-configuration",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Shared Configuration",
+    "text": "Shared Configuration\n\nTypeScript Config\n// packages/config/tsconfig/base.json\n{\n  \"$schema\": \"https://json.schemastore.org/tsconfig\",\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"bundler\",\n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"sourceMap\": true\n  }\n}\n// packages/config/tsconfig/react.json\n{\n  \"extends\": \"./base.json\",\n  \"compilerOptions\": {\n    \"jsx\": \"react-jsx\",\n    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ES2022\"]\n  }\n}\n// apps/web/tsconfig.json\n{\n  \"extends\": \"@myproject/config/tsconfig/react.json\",\n  \"compilerOptions\": {\n    \"baseUrl\": \".\",\n    \"paths\": {\n      \"@/*\": [\"./src/*\"]\n    }\n  },\n  \"include\": [\"src\"]\n}\n\n\nESLint Config\n// packages/config/eslint/react.js\nmodule.exports = {\n  extends: [\n    'eslint:recommended',\n    'plugin:@typescript-eslint/recommended',\n    'plugin:react-hooks/recommended',\n    'prettier',\n  ],\n  rules: {\n    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],\n    'react-hooks/exhaustive-deps': 'error',\n  },\n};\n// apps/web/.eslintrc.js\nmodule.exports = {\n  root: true,\n  extends: ['@myproject/config/eslint/react'],\n};",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#cicd-with-caching",
+    "href": "MonorepoArchitecture.html#cicd-with-caching",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "CI/CD with Caching",
+    "text": "CI/CD with Caching\n# .github/workflows/ci.yml\nname: CI\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    \n    steps:\n      - uses: actions/checkout@v4\n        with:\n          fetch-depth: 2  # For turbo diff detection\n      \n      - uses: pnpm/action-setup@v2\n        with:\n          version: 8\n      \n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n          cache: 'pnpm'\n      \n      - name: Install dependencies\n        run: pnpm install --frozen-lockfile\n      \n      - name: Turbo Cache\n        uses: actions/cache@v4\n        with:\n          path: .turbo\n          key: turbo-${{ runner.os }}-${{ github.sha }}\n          restore-keys: |\n            turbo-${{ runner.os }}-\n      \n      - name: Build\n        run: pnpm build\n      \n      - name: Lint\n        run: pnpm lint\n      \n      - name: Test\n        run: pnpm test",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#common-patterns",
+    "href": "MonorepoArchitecture.html#common-patterns",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Common Patterns",
+    "text": "Common Patterns\n\nInternal Package Versioning\nFor private monorepos, use workspace:* instead of version numbers:\n{\n  \"dependencies\": {\n    \"@myproject/shared\": \"workspace:*\"\n  }\n}\nThis means “use whatever version is in the workspace.”\n\n\nPath Aliases\nConfigure bundlers to resolve workspace packages:\n// apps/web/vite.config.ts\nexport default defineConfig({\n  resolve: {\n    alias: {\n      '@myproject/ui': path.resolve(__dirname, '../../packages/ui/src'),\n      '@myproject/shared': path.resolve(__dirname, '../../packages/shared/src'),\n    },\n  },\n});\n\n\nDevelopment Workflow\n# Install all dependencies\npnpm install\n\n# Start everything in dev mode\npnpm dev\n\n# Or start specific apps\npnpm --filter @myproject/web dev\npnpm --filter @myproject/desktop dev",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#monorepo-benefits-recap",
+    "href": "MonorepoArchitecture.html#monorepo-benefits-recap",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Monorepo Benefits Recap",
+    "text": "Monorepo Benefits Recap\n\n\n\n\n\n\nWhy This Approach Wins\n\n\n\n\nSingle Source of Truth — Define types and utilities once\nAtomic Commits — Change API and UI in a single PR\nUnified Tooling — One pnpm install for everything\nSmart Caching — Turborepo only rebuilds what changed\nConsistent Standards — Shared ESLint, TypeScript, Prettier configs\n\n\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri and create cross-platform desktop applications.",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
     ]
@@ -724,7 +944,17 @@
     "href": "HighPerformanceCanvas.html",
     "title": "High-Performance Canvas: Breaking the DOM Limit",
     "section": "",
-    "text": "The Hybrid Approach\nReact makes building UIs easy because it abstracts the DOM. But the DOM is heavy. Each &lt;div&gt; is an object with hundreds of properties, event listeners, and layout constraints.\nWhen you’re building a tool like ai-studio-template—visualizing complex AI agents, knowledge graphs with thousands of nodes, or real-time data streams—React components will start to lag.\nThe solution is to drop down to the Canvas API.\nWe don’t abandon React. We use React for the “chroma” (buttons, sidebars, modals) and Canvas for the “stage” (the main visualization area).",
+    "text": "When to Use Canvas\nReact makes building UIs easy because it abstracts the DOM. But the DOM is heavy. Each &lt;div&gt; is an object with hundreds of properties, event listeners, and layout constraints.\nWhen you’re building a tool like a node-based editor, knowledge graph visualizer, or real-time data dashboard—React components will start to lag around 1,000+ elements.\nThe solution is to drop down to the Canvas API.",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#when-to-use-canvas",
+    "href": "HighPerformanceCanvas.html#when-to-use-canvas",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "",
+    "text": "Scenario\nDOM\nCanvas\n\n\n\n\nForms, buttons, text inputs\n✅\n❌\n\n\nLists with &lt; 500 items\n✅\n❌\n\n\nNode graphs (100+ nodes)\n❌\n✅\n\n\nReal-time charts\n⚠️\n✅\n\n\nParticle effects\n❌\n✅\n\n\nImage manipulation\n❌\n✅\n\n\nInfinite canvas (Figma-style)\n❌\n✅",
     "crumbs": [
       "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
     ]
@@ -733,28 +963,68 @@
     "objectID": "HighPerformanceCanvas.html#the-hybrid-approach",
     "href": "HighPerformanceCanvas.html#the-hybrid-approach",
     "title": "High-Performance Canvas: Breaking the DOM Limit",
-    "section": "",
-    "text": "1. The Rendering Loop\nIn React, updates happen when props change. In Canvas, updates happen in a requestAnimationFrame loop (60fps).\nWe need a bridge.\nimport { useRef, useEffect } from 'react';\n\nfunction CanvasStage({ nodes }) {\n  const canvasRef = useRef&lt;HTMLCanvasElement&gt;(null);\n\n  useEffect(() =&gt; {\n    const canvas = canvasRef.current;\n    if (!canvas) return;\n    const ctx = canvas.getContext('2d');\n\n    let animationId: number;\n\n    const render = () =&gt; {\n      // 1. Clear Screen\n      ctx.clearRect(0, 0, canvas.width, canvas.height);\n\n      // 2. Draw Nodes (Pure Math, no DOM overhead!)\n      nodes.forEach(node =&gt; {\n        ctx.fillStyle = node.color;\n        ctx.beginPath();\n        ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI);\n        ctx.fill();\n        \n        // Draw Label\n        ctx.fillStyle = 'white';\n        ctx.fillText(node.label, node.x, node.y);\n      });\n\n      // 3. Loop\n      animationId = requestAnimationFrame(render);\n    };\n\n    render();\n\n    return () =&gt; cancelAnimationFrame(animationId);\n  }, [nodes]); // Re-start loop if nodes reference changes (or use a ref for nodes to avoid restart)\n\n  return &lt;canvas ref={canvasRef} width={800} height={600} /&gt;;\n}",
+    "section": "The Hybrid Approach",
+    "text": "The Hybrid Approach\nWe don’t abandon React. We use React for the chrome (buttons, sidebars, modals) and Canvas for the stage (the main visualization area).\nfunction App() {\n  return (\n    &lt;div className=\"app\"&gt;\n      {/* React for UI chrome */}\n      &lt;Sidebar /&gt;\n      &lt;Toolbar /&gt;\n      \n      {/* Canvas for performance-critical visualization */}\n      &lt;CanvasStage nodes={nodes} edges={edges} /&gt;\n      \n      {/* React for overlays */}\n      &lt;ContextMenu /&gt;\n      &lt;NodeInspector /&gt;\n    &lt;/div&gt;\n  );\n}",
     "crumbs": [
       "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
     ]
   },
   {
-    "objectID": "HighPerformanceCanvas.html#hittesting-interacting-with-pixels",
-    "href": "HighPerformanceCanvas.html#hittesting-interacting-with-pixels",
+    "objectID": "HighPerformanceCanvas.html#the-rendering-loop",
+    "href": "HighPerformanceCanvas.html#the-rendering-loop",
     "title": "High-Performance Canvas: Breaking the DOM Limit",
-    "section": "2. Hittesting: Interacting with Pixels",
-    "text": "2. Hittesting: Interacting with Pixels\nSince we don’t have DOM elements, we don’t have onClick. We have coordinates.\nconst handleClick = (e: React.MouseEvent) =&gt; {\n  const rect = canvasRef.current.getBoundingClientRect();\n  const x = e.clientX - rect.left;\n  const y = e.clientY - rect.top;\n\n  // Find the node under the mouse\n  const clickedNode = nodes.find(node =&gt; {\n    const dist = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);\n    return dist &lt; 20; // 20 is the radius\n  });\n\n  if (clickedNode) {\n    console.log(\"Clicked:\", clickedNode.label);\n    setSelectedNode(clickedNode);\n  }\n};",
+    "section": "The Rendering Loop",
+    "text": "The Rendering Loop\nIn React, updates happen when props/state change. In Canvas, updates happen in a requestAnimationFrame loop (60fps). We need a bridge.\n\nBasic Canvas Component\nimport { useRef, useEffect, useCallback } from 'react';\n\ninterface Node {\n  id: string;\n  x: number;\n  y: number;\n  label: string;\n  color: string;\n}\n\ninterface CanvasStageProps {\n  nodes: Node[];\n  width?: number;\n  height?: number;\n}\n\nexport function CanvasStage({ nodes, width = 800, height = 600 }: CanvasStageProps) {\n  const canvasRef = useRef&lt;HTMLCanvasElement&gt;(null);\n  const nodesRef = useRef(nodes);\n  \n  // Keep ref in sync without restarting loop\n  useEffect(() =&gt; {\n    nodesRef.current = nodes;\n  }, [nodes]);\n\n  useEffect(() =&gt; {\n    const canvas = canvasRef.current;\n    if (!canvas) return;\n    \n    const ctx = canvas.getContext('2d')!;\n    let animationId: number;\n\n    const render = () =&gt; {\n      // 1. Clear screen\n      ctx.clearRect(0, 0, canvas.width, canvas.height);\n\n      // 2. Draw background grid\n      drawGrid(ctx, canvas.width, canvas.height);\n\n      // 3. Draw nodes (pure math, no DOM overhead!)\n      nodesRef.current.forEach(node =&gt; {\n        drawNode(ctx, node);\n      });\n\n      // 4. Continue loop\n      animationId = requestAnimationFrame(render);\n    };\n\n    render();\n\n    return () =&gt; cancelAnimationFrame(animationId);\n  }, []); // Empty deps = single loop instance\n\n  return (\n    &lt;canvas\n      ref={canvasRef}\n      width={width}\n      height={height}\n      style={{ border: '1px solid #333' }}\n    /&gt;\n  );\n}\n\nfunction drawGrid(ctx: CanvasRenderingContext2D, width: number, height: number) {\n  ctx.strokeStyle = '#2a2a2a';\n  ctx.lineWidth = 1;\n  \n  const gridSize = 20;\n  \n  for (let x = 0; x &lt;= width; x += gridSize) {\n    ctx.beginPath();\n    ctx.moveTo(x, 0);\n    ctx.lineTo(x, height);\n    ctx.stroke();\n  }\n  \n  for (let y = 0; y &lt;= height; y += gridSize) {\n    ctx.beginPath();\n    ctx.moveTo(0, y);\n    ctx.lineTo(width, y);\n    ctx.stroke();\n  }\n}\n\nfunction drawNode(ctx: CanvasRenderingContext2D, node: Node) {\n  const radius = 30;\n  \n  // Shadow\n  ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';\n  ctx.shadowBlur = 10;\n  ctx.shadowOffsetY = 4;\n  \n  // Circle\n  ctx.fillStyle = node.color;\n  ctx.beginPath();\n  ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);\n  ctx.fill();\n  \n  // Reset shadow\n  ctx.shadowColor = 'transparent';\n  \n  // Label\n  ctx.fillStyle = 'white';\n  ctx.font = '12px Inter, sans-serif';\n  ctx.textAlign = 'center';\n  ctx.textBaseline = 'middle';\n  ctx.fillText(node.label, node.x, node.y);\n}",
     "crumbs": [
       "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
     ]
   },
   {
-    "objectID": "HighPerformanceCanvas.html#webgpu-the-next-frontier",
-    "href": "HighPerformanceCanvas.html#webgpu-the-next-frontier",
+    "objectID": "HighPerformanceCanvas.html#hit-testing-interacting-with-pixels",
+    "href": "HighPerformanceCanvas.html#hit-testing-interacting-with-pixels",
     "title": "High-Performance Canvas: Breaking the DOM Limit",
-    "section": "3. WebGPU: The Next Frontier",
-    "text": "3. WebGPU: The Next Frontier\nWhile Canvas 2D is fast, WebGPU gives you direct access to the graphics card. It’s complex, but libraries like PixiJS or Three.js abstract it away nicely.\nFor 99% of “Pro Tools” (like Figma, VS Code’s minimap, Miro), Canvas 2D is sufficient. But for 3D or millions of particles, reach for WebGPU.\nBy separating your Data Model (Zustand store) from your View Layer (Canvas), you can render the same data in a list (React) or a graph (Canvas) simultaneously.",
+    "section": "Hit Testing: Interacting with Pixels",
+    "text": "Hit Testing: Interacting with Pixels\nSince we don’t have DOM elements, we don’t have onClick. We have coordinates.\ninterface CanvasStageProps {\n  nodes: Node[];\n  onNodeClick?: (node: Node) =&gt; void;\n  onNodeDrag?: (node: Node, x: number, y: number) =&gt; void;\n}\n\nexport function CanvasStage({ nodes, onNodeClick, onNodeDrag }: CanvasStageProps) {\n  const canvasRef = useRef&lt;HTMLCanvasElement&gt;(null);\n  const [selectedNode, setSelectedNode] = useState&lt;Node | null&gt;(null);\n  const [isDragging, setIsDragging] = useState(false);\n\n  const getMousePos = (e: React.MouseEvent) =&gt; {\n    const rect = canvasRef.current!.getBoundingClientRect();\n    return {\n      x: e.clientX - rect.left,\n      y: e.clientY - rect.top,\n    };\n  };\n\n  const findNodeAt = (x: number, y: number): Node | undefined =&gt; {\n    // Check in reverse order (top nodes first)\n    return [...nodes].reverse().find(node =&gt; {\n      const dist = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);\n      return dist &lt; 30; // 30 = node radius\n    });\n  };\n\n  const handleMouseDown = (e: React.MouseEvent) =&gt; {\n    const { x, y } = getMousePos(e);\n    const node = findNodeAt(x, y);\n    \n    if (node) {\n      setSelectedNode(node);\n      setIsDragging(true);\n      onNodeClick?.(node);\n    }\n  };\n\n  const handleMouseMove = (e: React.MouseEvent) =&gt; {\n    if (!isDragging || !selectedNode) return;\n    \n    const { x, y } = getMousePos(e);\n    onNodeDrag?.(selectedNode, x, y);\n  };\n\n  const handleMouseUp = () =&gt; {\n    setIsDragging(false);\n  };\n\n  return (\n    &lt;canvas\n      ref={canvasRef}\n      onMouseDown={handleMouseDown}\n      onMouseMove={handleMouseMove}\n      onMouseUp={handleMouseUp}\n      onMouseLeave={handleMouseUp}\n      style={{ cursor: isDragging ? 'grabbing' : 'default' }}\n    /&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#pan-zoom-infinite-canvas",
+    "href": "HighPerformanceCanvas.html#pan-zoom-infinite-canvas",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "Pan & Zoom: Infinite Canvas",
+    "text": "Pan & Zoom: Infinite Canvas\nFor Figma-style infinite canvases, we need to track camera position:\ninterface Camera {\n  x: number;\n  y: number;\n  zoom: number;\n}\n\nfunction useCamera() {\n  const [camera, setCamera] = useState&lt;Camera&gt;({ x: 0, y: 0, zoom: 1 });\n\n  const pan = useCallback((dx: number, dy: number) =&gt; {\n    setCamera(c =&gt; ({ ...c, x: c.x + dx, y: c.y + dy }));\n  }, []);\n\n  const zoomTo = useCallback((factor: number, centerX: number, centerY: number) =&gt; {\n    setCamera(c =&gt; {\n      const newZoom = Math.max(0.1, Math.min(5, c.zoom * factor));\n      \n      // Zoom towards mouse position\n      const zoomDelta = newZoom - c.zoom;\n      const offsetX = (centerX - c.x) * (zoomDelta / c.zoom);\n      const offsetY = (centerY - c.y) * (zoomDelta / c.zoom);\n      \n      return {\n        x: c.x - offsetX,\n        y: c.y - offsetY,\n        zoom: newZoom,\n      };\n    });\n  }, []);\n\n  return { camera, pan, zoomTo };\n}\n\nApplying Camera Transform\nuseEffect(() =&gt; {\n  const render = () =&gt; {\n    ctx.clearRect(0, 0, canvas.width, canvas.height);\n    \n    // Apply camera transform\n    ctx.save();\n    ctx.translate(camera.x, camera.y);\n    ctx.scale(camera.zoom, camera.zoom);\n    \n    // Draw everything in world space\n    drawGrid(ctx, 10000, 10000);\n    nodes.forEach(node =&gt; drawNode(ctx, node));\n    \n    ctx.restore();\n    \n    animationId = requestAnimationFrame(render);\n  };\n}, [camera]);",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#connecting-nodes-drawing-edges",
+    "href": "HighPerformanceCanvas.html#connecting-nodes-drawing-edges",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "Connecting Nodes: Drawing Edges",
+    "text": "Connecting Nodes: Drawing Edges\ninterface Edge {\n  id: string;\n  from: string;\n  to: string;\n}\n\nfunction drawEdges(\n  ctx: CanvasRenderingContext2D,\n  edges: Edge[],\n  nodes: Node[]\n) {\n  const nodeMap = new Map(nodes.map(n =&gt; [n.id, n]));\n  \n  edges.forEach(edge =&gt; {\n    const from = nodeMap.get(edge.from);\n    const to = nodeMap.get(edge.to);\n    if (!from || !to) return;\n    \n    // Bezier curve for smooth connections\n    const midX = (from.x + to.x) / 2;\n    \n    ctx.strokeStyle = '#666';\n    ctx.lineWidth = 2;\n    ctx.beginPath();\n    ctx.moveTo(from.x, from.y);\n    ctx.bezierCurveTo(\n      midX, from.y,  // Control point 1\n      midX, to.y,    // Control point 2\n      to.x, to.y     // End point\n    );\n    ctx.stroke();\n    \n    // Arrow head\n    drawArrowHead(ctx, midX, to.y, to.x, to.y);\n  });\n}\n\nfunction drawArrowHead(\n  ctx: CanvasRenderingContext2D,\n  fromX: number, fromY: number,\n  toX: number, toY: number\n) {\n  const angle = Math.atan2(toY - fromY, toX - fromX);\n  const size = 10;\n  \n  ctx.fillStyle = '#666';\n  ctx.beginPath();\n  ctx.moveTo(toX, toY);\n  ctx.lineTo(\n    toX - size * Math.cos(angle - Math.PI / 6),\n    toY - size * Math.sin(angle - Math.PI / 6)\n  );\n  ctx.lineTo(\n    toX - size * Math.cos(angle + Math.PI / 6),\n    toY - size * Math.sin(angle + Math.PI / 6)\n  );\n  ctx.closePath();\n  ctx.fill();\n}",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#performance-optimization",
+    "href": "HighPerformanceCanvas.html#performance-optimization",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "Performance Optimization",
+    "text": "Performance Optimization\n\nDirty Rectangles\nOnly redraw what changed:\nconst dirtyRegions = useRef&lt;Set&lt;string&gt;&gt;(new Set());\n\nfunction markDirty(nodeId: string) {\n  dirtyRegions.current.add(nodeId);\n}\n\nconst render = () =&gt; {\n  if (dirtyRegions.current.size === 0) {\n    animationId = requestAnimationFrame(render);\n    return; // Nothing to update\n  }\n  \n  // Only redraw dirty regions\n  dirtyRegions.current.forEach(nodeId =&gt; {\n    const node = nodes.find(n =&gt; n.id === nodeId);\n    if (node) {\n      // Clear just this node's area\n      ctx.clearRect(node.x - 40, node.y - 40, 80, 80);\n      drawNode(ctx, node);\n    }\n  });\n  \n  dirtyRegions.current.clear();\n  animationId = requestAnimationFrame(render);\n};\n\n\nSpatial Indexing\nFor thousands of nodes, use a quadtree:\nimport { Quadtree, Rectangle } from 'quadtree-lib';\n\nconst quadtree = new Quadtree({\n  width: 10000,\n  height: 10000,\n  maxElements: 10,\n});\n\n// Only query visible nodes\nfunction getVisibleNodes(camera: Camera, viewportWidth: number, viewportHeight: number) {\n  const visibleBounds = new Rectangle(\n    -camera.x / camera.zoom,\n    -camera.y / camera.zoom,\n    viewportWidth / camera.zoom,\n    viewportHeight / camera.zoom\n  );\n  \n  return quadtree.query(visibleBounds);\n}",
+    "crumbs": [
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
+    ]
+  },
+  {
+    "objectID": "HighPerformanceCanvas.html#webgl-webgpu-the-next-level",
+    "href": "HighPerformanceCanvas.html#webgl-webgpu-the-next-level",
+    "title": "High-Performance Canvas: Breaking the DOM Limit",
+    "section": "WebGL & WebGPU: The Next Level",
+    "text": "WebGL & WebGPU: The Next Level\nWhile Canvas 2D handles most cases, WebGL/WebGPU gives you GPU acceleration:\n\n\n\nTechnology\nUse Case\nComplexity\n\n\n\n\nCanvas 2D\n1,000-10,000 shapes\nLow\n\n\nWebGL\n10,000-100,000 shapes\nMedium\n\n\nWebGPU\n100,000+ shapes, 3D\nHigh\n\n\n\nLibraries that abstract the complexity: - PixiJS — 2D WebGL with Canvas fallback - Three.js — 3D rendering - Deck.gl — Large-scale data visualization\n\n\n\n\n\n\n\nArchitecture Pattern\n\n\n\nSeparate your Data Model (Zustand store) from your View Layer (Canvas renderer). This lets you: - Render the same data as a list (React) or graph (Canvas) - Persist state independently of rendering - Test business logic without graphics\n\n\nBy mastering Canvas, you unlock the ability to build tools that feel native—snappy, responsive, and capable of handling the complexity that serious users demand.",
     "crumbs": [
       "<span class='chapter-number'>14</span>  <span class='chapter-title'>High-Performance Canvas: Breaking the DOM Limit</span>"
     ]
@@ -764,7 +1034,7 @@
     "href": "CommandSystems.html",
     "title": "Command Systems: The “Cmd+K” Power User Experience",
     "section": "",
-    "text": "1. The Command Pattern\nIn a typical web app, you navigate by clicking buttons. In a Pro Tool, you navigate by thinking.\nApps like VS Code, Linear, and Notion have trained users to expect a global “Command Palette” (Cmd+K or Ctrl+K). This chapter shows you how to build one in React.\nThe “Command Pattern” separates the intent from the execution.\nInstead of burying logic in a button’s onClick, you register commands in a central registry.",
+    "text": "The Command Pattern\nIn a typical web app, you navigate by clicking buttons. In a Pro Tool, you navigate by thinking.\nApps like VS Code, Linear, Notion, and Raycast have trained users to expect a global “Command Palette” (Cmd+K or Ctrl+K). This chapter shows you how to build one—and the underlying architecture that makes it powerful.\nThe Command Pattern separates the intent from the execution:\nInstead of burying logic in a button’s onClick, you register commands in a central registry.",
     "crumbs": [
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
     ]
@@ -774,27 +1044,67 @@
     "href": "CommandSystems.html#the-command-pattern",
     "title": "Command Systems: The “Cmd+K” Power User Experience",
     "section": "",
-    "text": "type Command = {\n  id: string;\n  label: string;\n  icon?: React.ReactNode;\n  perform: () =&gt; void;\n};",
+    "text": "// packages/shared/src/commands.ts\ntype Command = {\n  id: string;\n  label: string;\n  description?: string;\n  icon?: React.ReactNode;\n  shortcut?: string;\n  keywords?: string[];    // For search matching\n  perform: () =&gt; void | Promise&lt;void&gt;;\n  enabled?: () =&gt; boolean;\n};\n\n\nWhy This Matters\n\n\n\nApproach\nDiscoverability\nKeyboard\nScripting\nTesting\n\n\n\n\nButton onClick\n❌ Hidden\n❌ No\n❌ No\n❌ Hard\n\n\nCommand Registry\n✅ Palette\n✅ Shortcuts\n✅ Yes\n✅ Easy",
     "crumbs": [
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
     ]
   },
   {
-    "objectID": "CommandSystems.html#using-cmdk",
-    "href": "CommandSystems.html#using-cmdk",
+    "objectID": "CommandSystems.html#command-registry",
+    "href": "CommandSystems.html#command-registry",
     "title": "Command Systems: The “Cmd+K” Power User Experience",
-    "section": "2. Using cmdk",
-    "text": "2. Using cmdk\nDon’t build the UI from scratch. The library cmdk (by Pace) is the gold standard. It handles the accessible dialog, filtering, and keyboard navigation.\nnpm install cmdk\nimport { Command } from 'cmdk';\nimport { useEffect, useState } from 'react';\n\nexport function CommandPalette() {\n  const [open, setOpen] = useState(false);\n\n  // Toggle with Cmd+K\n  useEffect(() =&gt; {\n    const down = (e: KeyboardEvent) =&gt; {\n      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {\n        e.preventDefault();\n        setOpen((open) =&gt; !open);\n      }\n    };\n    document.addEventListener('keydown', down);\n    return () =&gt; document.removeEventListener('keydown', down);\n  }, []);\n\n  return (\n    &lt;Command.Dialog open={open} onOpenChange={setOpen}&gt;\n      &lt;Command.Input placeholder=\"Type a command or search...\" /&gt;\n\n      &lt;Command.List&gt;\n        &lt;Command.Empty&gt;No results found.&lt;/Command.Empty&gt;\n\n        &lt;Command.Group heading=\"Projects\"&gt;\n          &lt;Command.Item onSelect={() =&gt; console.log('Create Project')}&gt;\n            Create New Project\n          &lt;/Command.Item&gt;\n          &lt;Command.Item onSelect={() =&gt; console.log('Search Projects')}&gt;\n            Search Projects...\n          &lt;/Command.Item&gt;\n        &lt;/Command.Group&gt;\n\n        &lt;Command.Group heading=\"Settings\"&gt;\n          &lt;Command.Item onSelect={() =&gt; console.log('Toggle Theme')}&gt;\n            Toggle Dark Mode\n          &lt;/Command.Item&gt;\n        &lt;/Command.Group&gt;\n      &lt;/Command.List&gt;\n    &lt;/Command.Dialog&gt;\n  );\n}",
+    "section": "Command Registry",
+    "text": "Command Registry\n// src/commands/registry.ts\nimport { create } from 'zustand';\nimport type { Command } from '@myproject/shared';\n\ninterface CommandStore {\n  commands: Map&lt;string, Command&gt;;\n  register: (command: Command) =&gt; void;\n  unregister: (id: string) =&gt; void;\n  execute: (id: string) =&gt; Promise&lt;void&gt;;\n  search: (query: string) =&gt; Command[];\n}\n\nexport const useCommandStore = create&lt;CommandStore&gt;((set, get) =&gt; ({\n  commands: new Map(),\n  \n  register: (command) =&gt; {\n    set((state) =&gt; {\n      const newCommands = new Map(state.commands);\n      newCommands.set(command.id, command);\n      return { commands: newCommands };\n    });\n  },\n  \n  unregister: (id) =&gt; {\n    set((state) =&gt; {\n      const newCommands = new Map(state.commands);\n      newCommands.delete(id);\n      return { commands: newCommands };\n    });\n  },\n  \n  execute: async (id) =&gt; {\n    const command = get().commands.get(id);\n    if (command && (command.enabled?.() ?? true)) {\n      await command.perform();\n    }\n  },\n  \n  search: (query) =&gt; {\n    const q = query.toLowerCase();\n    return Array.from(get().commands.values())\n      .filter((cmd) =&gt; {\n        if (cmd.enabled && !cmd.enabled()) return false;\n        return (\n          cmd.label.toLowerCase().includes(q) ||\n          cmd.description?.toLowerCase().includes(q) ||\n          cmd.keywords?.some((k) =&gt; k.toLowerCase().includes(q))\n        );\n      })\n      .slice(0, 10); // Limit results\n  },\n}));\n\nRegistering Commands\n// src/commands/project-commands.ts\nimport { useEffect } from 'react';\nimport { useCommandStore } from './registry';\nimport { useNavigate } from 'react-router-dom';\n\nexport function useProjectCommands() {\n  const navigate = useNavigate();\n  const register = useCommandStore((s) =&gt; s.register);\n  const unregister = useCommandStore((s) =&gt; s.unregister);\n\n  useEffect(() =&gt; {\n    const commands = [\n      {\n        id: 'project.create',\n        label: 'Create New Project',\n        description: 'Start a new project from scratch',\n        icon: &lt;PlusIcon /&gt;,\n        shortcut: '⌘N',\n        keywords: ['new', 'add'],\n        perform: () =&gt; navigate('/projects/new'),\n      },\n      {\n        id: 'project.search',\n        label: 'Search Projects',\n        description: 'Find a project by name',\n        icon: &lt;SearchIcon /&gt;,\n        shortcut: '⌘P',\n        keywords: ['find', 'open'],\n        perform: () =&gt; openProjectSearch(),\n      },\n      {\n        id: 'project.delete',\n        label: 'Delete Project',\n        description: 'Remove the current project',\n        icon: &lt;TrashIcon /&gt;,\n        keywords: ['remove'],\n        perform: () =&gt; confirmDelete(),\n        enabled: () =&gt; !!currentProject,\n      },\n    ];\n\n    commands.forEach(register);\n    return () =&gt; commands.forEach((c) =&gt; unregister(c.id));\n  }, [register, unregister, navigate]);\n}",
     "crumbs": [
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
     ]
   },
   {
-    "objectID": "CommandSystems.html#global-shortcuts",
-    "href": "CommandSystems.html#global-shortcuts",
+    "objectID": "CommandSystems.html#building-the-palette-with-cmdk",
+    "href": "CommandSystems.html#building-the-palette-with-cmdk",
     "title": "Command Systems: The “Cmd+K” Power User Experience",
-    "section": "3. Global Shortcuts",
-    "text": "3. Global Shortcuts\nCmd+K is just the entry point. You also want shortcuts like Cmd+S (Save) or Cmd+B (Toggle Sidebar).\nUse a custom hook useKeyboardShortcut:\nimport { useEffect } from 'react';\n\nfunction useKeyboardShortcut(key: string, callback: () =&gt; void, meta = false) {\n  useEffect(() =&gt; {\n    const handler = (event: KeyboardEvent) =&gt; {\n      if (event.key === key && event.metaKey === meta) {\n        event.preventDefault();\n        callback();\n      }\n    };\n    window.addEventListener('keydown', handler);\n    return () =&gt; window.removeEventListener('keydown', handler);\n  }, [key, callback, meta]);\n}\n\n// Usage\nfunction App() {\n  useKeyboardShortcut('s', () =&gt; saveProject(), true); // Cmd+S\n  return &lt;div&gt;App&lt;/div&gt;;\n}\nBy decoupling input (Keyboard/Mouse) from actions (Commands), you make your app scriptable, testable, and incredibly fast to use.",
+    "section": "Building the Palette with cmdk",
+    "text": "Building the Palette with cmdk\nDon’t build the UI from scratch. The library cmdk (by Pacea) is the gold standard:\nnpm install cmdk\n// src/components/CommandPalette.tsx\nimport { Command } from 'cmdk';\nimport { useEffect, useState } from 'react';\nimport { useCommandStore } from '../commands/registry';\n\nexport function CommandPalette() {\n  const [open, setOpen] = useState(false);\n  const [query, setQuery] = useState('');\n  const commands = useCommandStore((s) =&gt; s.search(query));\n  const execute = useCommandStore((s) =&gt; s.execute);\n\n  // Toggle with Cmd+K\n  useEffect(() =&gt; {\n    const handler = (e: KeyboardEvent) =&gt; {\n      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {\n        e.preventDefault();\n        setOpen((open) =&gt; !open);\n      }\n    };\n    document.addEventListener('keydown', handler);\n    return () =&gt; document.removeEventListener('keydown', handler);\n  }, []);\n\n  const handleSelect = async (commandId: string) =&gt; {\n    setOpen(false);\n    setQuery('');\n    await execute(commandId);\n  };\n\n  return (\n    &lt;Command.Dialog\n      open={open}\n      onOpenChange={setOpen}\n      label=\"Command Palette\"\n      className=\"command-dialog\"\n    &gt;\n      &lt;Command.Input\n        value={query}\n        onValueChange={setQuery}\n        placeholder=\"Type a command or search...\"\n      /&gt;\n\n      &lt;Command.List&gt;\n        &lt;Command.Empty&gt;No commands found.&lt;/Command.Empty&gt;\n\n        {commands.map((cmd) =&gt; (\n          &lt;Command.Item\n            key={cmd.id}\n            value={cmd.id}\n            onSelect={() =&gt; handleSelect(cmd.id)}\n          &gt;\n            &lt;span className=\"command-icon\"&gt;{cmd.icon}&lt;/span&gt;\n            &lt;div className=\"command-content\"&gt;\n              &lt;span className=\"command-label\"&gt;{cmd.label}&lt;/span&gt;\n              {cmd.description && (\n                &lt;span className=\"command-description\"&gt;{cmd.description}&lt;/span&gt;\n              )}\n            &lt;/div&gt;\n            {cmd.shortcut && (\n              &lt;kbd className=\"command-shortcut\"&gt;{cmd.shortcut}&lt;/kbd&gt;\n            )}\n          &lt;/Command.Item&gt;\n        ))}\n      &lt;/Command.List&gt;\n    &lt;/Command.Dialog&gt;\n  );\n}\n\nStyling\n/* src/styles/command-palette.css */\n.command-dialog {\n  position: fixed;\n  top: 20%;\n  left: 50%;\n  transform: translateX(-50%);\n  width: 100%;\n  max-width: 640px;\n  background: var(--bg-elevated);\n  border-radius: 12px;\n  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);\n  border: 1px solid var(--border);\n  overflow: hidden;\n}\n\n[cmdk-input] {\n  width: 100%;\n  padding: 16px 20px;\n  font-size: 16px;\n  border: none;\n  border-bottom: 1px solid var(--border);\n  background: transparent;\n  outline: none;\n}\n\n[cmdk-list] {\n  max-height: 400px;\n  overflow: auto;\n  padding: 8px;\n}\n\n[cmdk-item] {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 12px 16px;\n  border-radius: 8px;\n  cursor: pointer;\n}\n\n[cmdk-item][data-selected='true'] {\n  background: var(--accent);\n  color: white;\n}\n\n.command-shortcut {\n  margin-left: auto;\n  padding: 4px 8px;\n  background: var(--kbd-bg);\n  border-radius: 4px;\n  font-size: 12px;\n  font-family: monospace;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#global-keyboard-shortcuts",
+    "href": "CommandSystems.html#global-keyboard-shortcuts",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "Global Keyboard Shortcuts",
+    "text": "Global Keyboard Shortcuts\nCmd+K is just the entry point. Power users expect shortcuts like Cmd+S (Save) or Cmd+B (Toggle Sidebar).\n\nuseKeyboardShortcut Hook\n// src/hooks/useKeyboardShortcut.ts\nimport { useEffect, useCallback } from 'react';\n\ntype Modifier = 'meta' | 'ctrl' | 'alt' | 'shift';\n\ninterface ShortcutOptions {\n  key: string;\n  modifiers?: Modifier[];\n  callback: () =&gt; void;\n  enabled?: boolean;\n}\n\nexport function useKeyboardShortcut({\n  key,\n  modifiers = [],\n  callback,\n  enabled = true,\n}: ShortcutOptions) {\n  const handleKeyDown = useCallback(\n    (event: KeyboardEvent) =&gt; {\n      if (!enabled) return;\n\n      const modifiersMatch =\n        modifiers.every((mod) =&gt; {\n          switch (mod) {\n            case 'meta': return event.metaKey;\n            case 'ctrl': return event.ctrlKey;\n            case 'alt': return event.altKey;\n            case 'shift': return event.shiftKey;\n          }\n        }) &&\n        // Ensure no extra modifiers\n        (modifiers.includes('meta') || !event.metaKey) &&\n        (modifiers.includes('ctrl') || !event.ctrlKey) &&\n        (modifiers.includes('alt') || !event.altKey) &&\n        (modifiers.includes('shift') || !event.shiftKey);\n\n      if (event.key.toLowerCase() === key.toLowerCase() && modifiersMatch) {\n        event.preventDefault();\n        callback();\n      }\n    },\n    [key, modifiers, callback, enabled]\n  );\n\n  useEffect(() =&gt; {\n    document.addEventListener('keydown', handleKeyDown);\n    return () =&gt; document.removeEventListener('keydown', handleKeyDown);\n  }, [handleKeyDown]);\n}\n\n\nUsage\nfunction App() {\n  const { save, toggleSidebar, undo, redo } = useActions();\n\n  useKeyboardShortcut({ key: 's', modifiers: ['meta'], callback: save });\n  useKeyboardShortcut({ key: 'b', modifiers: ['meta'], callback: toggleSidebar });\n  useKeyboardShortcut({ key: 'z', modifiers: ['meta'], callback: undo });\n  useKeyboardShortcut({ key: 'z', modifiers: ['meta', 'shift'], callback: redo });\n\n  return &lt;main&gt;...&lt;/main&gt;;\n}",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#command-groups",
+    "href": "CommandSystems.html#command-groups",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "Command Groups",
+    "text": "Command Groups\nOrganize commands by category:\n&lt;Command.List&gt;\n  &lt;Command.Group heading=\"Projects\"&gt;\n    &lt;Command.Item&gt;Create Project&lt;/Command.Item&gt;\n    &lt;Command.Item&gt;Open Project&lt;/Command.Item&gt;\n  &lt;/Command.Group&gt;\n  \n  &lt;Command.Group heading=\"Settings\"&gt;\n    &lt;Command.Item&gt;Toggle Dark Mode&lt;/Command.Item&gt;\n    &lt;Command.Item&gt;Open Preferences&lt;/Command.Item&gt;\n  &lt;/Command.Group&gt;\n  \n  &lt;Command.Group heading=\"Help\"&gt;\n    &lt;Command.Item&gt;View Documentation&lt;/Command.Item&gt;\n    &lt;Command.Item&gt;Keyboard Shortcuts&lt;/Command.Item&gt;\n  &lt;/Command.Group&gt;\n&lt;/Command.List&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#nested-commands",
+    "href": "CommandSystems.html#nested-commands",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "Nested Commands",
+    "text": "Nested Commands\nSometimes you need sub-menus:\nfunction CommandPalette() {\n  const [pages, setPages] = useState&lt;string[]&gt;([]);\n  const page = pages[pages.length - 1];\n\n  return (\n    &lt;Command.Dialog&gt;\n      &lt;Command.Input /&gt;\n      &lt;Command.List&gt;\n        {!page && (\n          &lt;&gt;\n            &lt;Command.Item onSelect={() =&gt; setPages([...pages, 'theme'])}&gt;\n              Change Theme...\n            &lt;/Command.Item&gt;\n            &lt;Command.Item onSelect={() =&gt; setPages([...pages, 'language'])}&gt;\n              Change Language...\n            &lt;/Command.Item&gt;\n          &lt;/&gt;\n        )}\n\n        {page === 'theme' && (\n          &lt;&gt;\n            &lt;Command.Item onSelect={() =&gt; setTheme('light')}&gt;Light&lt;/Command.Item&gt;\n            &lt;Command.Item onSelect={() =&gt; setTheme('dark')}&gt;Dark&lt;/Command.Item&gt;\n            &lt;Command.Item onSelect={() =&gt; setTheme('system')}&gt;System&lt;/Command.Item&gt;\n          &lt;/&gt;\n        )}\n\n        {page === 'language' && (\n          &lt;&gt;\n            &lt;Command.Item onSelect={() =&gt; setLang('en')}&gt;English&lt;/Command.Item&gt;\n            &lt;Command.Item onSelect={() =&gt; setLang('es')}&gt;Español&lt;/Command.Item&gt;\n            &lt;Command.Item onSelect={() =&gt; setLang('fr')}&gt;Français&lt;/Command.Item&gt;\n          &lt;/&gt;\n        )}\n      &lt;/Command.List&gt;\n\n      {pages.length &gt; 0 && (\n        &lt;button onClick={() =&gt; setPages(pages.slice(0, -1))}&gt;\n          ← Back\n        &lt;/button&gt;\n      )}\n    &lt;/Command.Dialog&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
+    ]
+  },
+  {
+    "objectID": "CommandSystems.html#keyboard-shortcuts-reference-panel",
+    "href": "CommandSystems.html#keyboard-shortcuts-reference-panel",
+    "title": "Command Systems: The “Cmd+K” Power User Experience",
+    "section": "Keyboard Shortcuts Reference Panel",
+    "text": "Keyboard Shortcuts Reference Panel\nShow users all available shortcuts:\nfunction KeyboardShortcutsPanel() {\n  const commands = useCommandStore((s) =&gt; \n    Array.from(s.commands.values()).filter(c =&gt; c.shortcut)\n  );\n\n  return (\n    &lt;div className=\"shortcuts-panel\"&gt;\n      &lt;h2&gt;Keyboard Shortcuts&lt;/h2&gt;\n      &lt;table&gt;\n        &lt;tbody&gt;\n          {commands.map((cmd) =&gt; (\n            &lt;tr key={cmd.id}&gt;\n              &lt;td&gt;{cmd.label}&lt;/td&gt;\n              &lt;td&gt;&lt;kbd&gt;{cmd.shortcut}&lt;/kbd&gt;&lt;/td&gt;\n            &lt;/tr&gt;\n          ))}\n        &lt;/tbody&gt;\n      &lt;/table&gt;\n    &lt;/div&gt;\n  );\n}\n\n\n\n\n\n\n\nCommand System Benefits\n\n\n\n\nDiscoverability — Users can search for any action\nKeyboard-first — Power users fly through tasks\nScriptable — Commands can be triggered programmatically\nTestable — Test commands in isolation\nExtensible — Plugins can register new commands\n\n\n\nBy decoupling input (Keyboard/Mouse) from actions (Commands), you make your app scriptable, testable, and incredibly fast to use.",
     "crumbs": [
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Command Systems: The \"Cmd+K\" Power User Experience</span>"
     ]
@@ -804,7 +1114,17 @@
     "href": "SharedTypesAndSchemas.html",
     "title": "Shared Types & Schemas: The Glue of Your Architecture",
     "section": "",
-    "text": "1. Zod: Runtime Validation + Static Types\nIn a full-stack project (like our React + Rust + Python monorepo), the biggest source of bugs is Protocol Mismatch.\nTo fix this, we need a Single Source of Truth for our data schemas.\nTypeScript types disappear at runtime. Zod schemas stay. They are perfect for validation and type generation.\nIn packages/shared/src/schemas.ts:",
+    "text": "The Problem: Type Drift\nIn a full-stack project (like our React + Rust + Python monorepo), the biggest source of bugs is Protocol Mismatch.\nTo fix this, we need a Single Source of Truth for our data schemas.\nWithout shared schemas, types drift apart over time:\nResult: Runtime errors, silent data corruption, and hours of debugging.",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#the-problem-type-drift",
+    "href": "SharedTypesAndSchemas.html#the-problem-type-drift",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "",
+    "text": "Layer\nDefinition\nReality\n\n\n\n\nFrontend\ninterface User { id: string }\nGets id as number from API\n\n\nBackend\nclass User { id: int }\nSends id as integer\n\n\nPython ML\nuser_id: str\nExpects string, crashes on int",
     "crumbs": [
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
     ]
@@ -813,28 +1133,68 @@
     "objectID": "SharedTypesAndSchemas.html#zod-runtime-validation-static-types",
     "href": "SharedTypesAndSchemas.html#zod-runtime-validation-static-types",
     "title": "Shared Types & Schemas: The Glue of Your Architecture",
-    "section": "",
-    "text": "import { z } from 'zod';\n\nexport const ProjectSchema = z.object({\n  id: z.string().uuid(),\n  name: z.string().min(1),\n  createdAt: z.string().datetime(),\n  settings: z.object({\n    theme: z.enum(['light', 'dark']),\n    notifications: z.boolean(),\n  }),\n});\n\n// Auto-derive the TypeScript type!\nexport type Project = z.infer&lt;typeof ProjectSchema&gt;;",
+    "section": "Zod: Runtime Validation + Static Types",
+    "text": "Zod: Runtime Validation + Static Types\nTypeScript types disappear at runtime. Zod schemas stay. They are perfect for validation and type generation.\n\nDefining Schemas\n// packages/shared/src/schemas/user.ts\nimport { z } from 'zod';\n\nexport const UserSchema = z.object({\n  id: z.string().uuid(),\n  email: z.string().email(),\n  name: z.string().min(1).max(100),\n  role: z.enum(['admin', 'editor', 'viewer']),\n  createdAt: z.string().datetime(),\n  preferences: z.object({\n    theme: z.enum(['light', 'dark', 'system']),\n    notifications: z.boolean(),\n    language: z.string().length(2),\n  }),\n});\n\n// Auto-derive the TypeScript type!\nexport type User = z.infer&lt;typeof UserSchema&gt;;\n\n\nSchema Composition\nBuild complex schemas from simple ones:\n// packages/shared/src/schemas/project.ts\nimport { z } from 'zod';\nimport { UserSchema } from './user';\n\nexport const ProjectSchema = z.object({\n  id: z.string().uuid(),\n  name: z.string().min(1).max(200),\n  description: z.string().optional(),\n  owner: UserSchema.pick({ id: true, name: true, email: true }),\n  collaborators: z.array(UserSchema.pick({ id: true, name: true })),\n  settings: z.object({\n    isPublic: z.boolean(),\n    allowComments: z.boolean(),\n  }),\n  createdAt: z.string().datetime(),\n  updatedAt: z.string().datetime(),\n});\n\nexport type Project = z.infer&lt;typeof ProjectSchema&gt;;\n\n// Partial schemas for updates\nexport const ProjectUpdateSchema = ProjectSchema.partial().omit({\n  id: true,\n  createdAt: true,\n  owner: true,\n});\n\nexport type ProjectUpdate = z.infer&lt;typeof ProjectUpdateSchema&gt;;",
     "crumbs": [
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
     ]
   },
   {
-    "objectID": "SharedTypesAndSchemas.html#consuming-in-react-ui",
-    "href": "SharedTypesAndSchemas.html#consuming-in-react-ui",
+    "objectID": "SharedTypesAndSchemas.html#api-contract-schemas",
+    "href": "SharedTypesAndSchemas.html#api-contract-schemas",
     "title": "Shared Types & Schemas: The Glue of Your Architecture",
-    "section": "2. Consuming in React (UI)",
-    "text": "2. Consuming in React (UI)\nNow, your UI components are type-safe.\nimport { Project, ProjectSchema } from '@my-studio/shared';\n\nfunction ProjectSettings({ project }: { project: Project }) {\n  // Validate incoming data (e.g. from API)\n  const result = ProjectSchema.safeParse(project);\n\n  if (!result.success) {\n    console.error(\"Invalid project data!\", result.error);\n    return &lt;div&gt;Error loading project&lt;/div&gt;;\n  }\n  \n  return &lt;h1&gt;{project.name}&lt;/h1&gt;;\n}",
+    "section": "API Contract Schemas",
+    "text": "API Contract Schemas\nDefine your API requests and responses:\n// packages/shared/src/schemas/api.ts\nimport { z } from 'zod';\nimport { ProjectSchema } from './project';\n\n// Request schemas\nexport const CreateProjectRequest = z.object({\n  name: z.string().min(1),\n  description: z.string().optional(),\n  isPublic: z.boolean().default(false),\n});\n\n// Response schemas\nexport const ApiResponse = &lt;T extends z.ZodType&gt;(dataSchema: T) =&gt;\n  z.object({\n    success: z.boolean(),\n    data: dataSchema.optional(),\n    error: z.object({\n      code: z.string(),\n      message: z.string(),\n    }).optional(),\n    meta: z.object({\n      requestId: z.string(),\n      timestamp: z.string().datetime(),\n    }),\n  });\n\nexport const ProjectListResponse = ApiResponse(z.array(ProjectSchema));\nexport const ProjectResponse = ApiResponse(ProjectSchema);\n\n// Inference types\nexport type CreateProjectRequest = z.infer&lt;typeof CreateProjectRequest&gt;;\nexport type ProjectListResponse = z.infer&lt;typeof ProjectListResponse&gt;;",
     "crumbs": [
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
     ]
   },
   {
-    "objectID": "SharedTypesAndSchemas.html#consuming-in-python-sidecar",
-    "href": "SharedTypesAndSchemas.html#consuming-in-python-sidecar",
+    "objectID": "SharedTypesAndSchemas.html#consuming-in-react",
+    "href": "SharedTypesAndSchemas.html#consuming-in-react",
     "title": "Shared Types & Schemas: The Glue of Your Architecture",
-    "section": "3. Consuming in Python (Sidecar)",
-    "text": "3. Consuming in Python (Sidecar)\nWait, Python can’t read TypeScript files!\nCorrect. But we can generate Python Pydantic models from our Zod/JSON schemas, or simply ensure they match.\nA common pattern is to export the JSON Schema from Zod:\nimport { zodToJsonSchema } from 'zod-to-json-schema';\n\nconst jsonSchema = zodToJsonSchema(ProjectSchema, 'Project');\nconsole.log(JSON.stringify(jsonSchema, null, 2));\nYou can then use tools like datamodel-code-generator in Python to convert this JSON Schema into a Pydantic class automatically during your build process.\nResult: You change a field in packages/shared, run a script, and both your React UI and Python Backend types are updated. Sync nirvana.",
+    "section": "Consuming in React",
+    "text": "Consuming in React\n\nForm Validation with React Hook Form\n// apps/web/src/components/CreateProjectForm.tsx\nimport { useForm } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { CreateProjectRequest } from '@my-studio/shared';\n\nexport function CreateProjectForm() {\n  const form = useForm&lt;CreateProjectRequest&gt;({\n    resolver: zodResolver(CreateProjectRequest),\n    defaultValues: {\n      name: '',\n      isPublic: false,\n    },\n  });\n\n  const onSubmit = async (data: CreateProjectRequest) =&gt; {\n    // data is guaranteed to be valid!\n    await createProject(data);\n  };\n\n  return (\n    &lt;form onSubmit={form.handleSubmit(onSubmit)}&gt;\n      &lt;input {...form.register('name')} /&gt;\n      {form.formState.errors.name && (\n        &lt;span className=\"error\"&gt;{form.formState.errors.name.message}&lt;/span&gt;\n      )}\n      &lt;button type=\"submit\"&gt;Create&lt;/button&gt;\n    &lt;/form&gt;\n  );\n}\n\n\nAPI Response Validation\n// apps/web/src/hooks/useProjects.ts\nimport { useQuery } from '@tanstack/react-query';\nimport { ProjectListResponse, ProjectSchema } from '@my-studio/shared';\nimport { z } from 'zod';\n\nexport function useProjects() {\n  return useQuery({\n    queryKey: ['projects'],\n    queryFn: async () =&gt; {\n      const res = await fetch('/api/projects');\n      const json = await res.json();\n      \n      // Validate response matches expected schema\n      const parsed = ProjectListResponse.safeParse(json);\n      \n      if (!parsed.success) {\n        console.error('API response validation failed:', parsed.error);\n        throw new Error('Invalid API response');\n      }\n      \n      return parsed.data.data ?? [];\n    },\n  });\n}",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#generating-python-pydantic-models",
+    "href": "SharedTypesAndSchemas.html#generating-python-pydantic-models",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "Generating Python Pydantic Models",
+    "text": "Generating Python Pydantic Models\nPython can’t read TypeScript files directly. But we can generate Python models from our schemas.\n\nExport JSON Schema\n// packages/shared/scripts/generate-schemas.ts\nimport { zodToJsonSchema } from 'zod-to-json-schema';\nimport * as fs from 'fs';\nimport { UserSchema, ProjectSchema } from '../src/schemas';\n\nconst schemas = {\n  User: zodToJsonSchema(UserSchema),\n  Project: zodToJsonSchema(ProjectSchema),\n};\n\nfs.writeFileSync(\n  './dist/schemas.json',\n  JSON.stringify(schemas, null, 2)\n);\n\nconsole.log('✅ JSON Schemas generated');\n\n\nGenerate Pydantic Models\n# Install the generator\npip install datamodel-code-generator\n\n# Generate Python models from JSON Schema\ndatamodel-codegen \\\n  --input packages/shared/dist/schemas.json \\\n  --output apps/sidecar/models/generated.py \\\n  --output-model-type pydantic_v2.BaseModel\n\n\nGenerated Python Code\n# apps/sidecar/models/generated.py (auto-generated)\nfrom pydantic import BaseModel, EmailStr\nfrom typing import Literal, Optional\nfrom datetime import datetime\n\nclass UserPreferences(BaseModel):\n    theme: Literal['light', 'dark', 'system']\n    notifications: bool\n    language: str\n\nclass User(BaseModel):\n    id: str\n    email: EmailStr\n    name: str\n    role: Literal['admin', 'editor', 'viewer']\n    created_at: datetime\n    preferences: UserPreferences",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#build-pipeline-integration",
+    "href": "SharedTypesAndSchemas.html#build-pipeline-integration",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "Build Pipeline Integration",
+    "text": "Build Pipeline Integration\nAdd schema generation to your CI/CD:\n// package.json\n{\n  \"scripts\": {\n    \"schemas:build\": \"ts-node packages/shared/scripts/generate-schemas.ts\",\n    \"schemas:python\": \"datamodel-codegen --input packages/shared/dist/schemas.json --output apps/sidecar/models/generated.py\",\n    \"schemas:all\": \"npm run schemas:build && npm run schemas:python\",\n    \"prebuild\": \"npm run schemas:all\"\n  }\n}\n# .github/workflows/ci.yml\n- name: Generate schemas\n  run: npm run schemas:all\n  \n- name: Check for schema drift\n  run: git diff --exit-code apps/sidecar/models/generated.py",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#error-messages-that-help",
+    "href": "SharedTypesAndSchemas.html#error-messages-that-help",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "Error Messages That Help",
+    "text": "Error Messages That Help\nZod provides detailed error messages:\nconst result = UserSchema.safeParse({\n  id: '123', // Not a UUID!\n  email: 'not-an-email',\n  name: '',\n});\n\nif (!result.success) {\n  console.log(result.error.format());\n  // {\n  //   id: { _errors: ['Invalid uuid'] },\n  //   email: { _errors: ['Invalid email'] },\n  //   name: { _errors: ['String must contain at least 1 character(s)'] },\n  // }\n}\n\nCustom Error Messages\nconst UserSchema = z.object({\n  email: z.string().email({ message: 'Please enter a valid email address' }),\n  password: z.string()\n    .min(8, 'Password must be at least 8 characters')\n    .regex(/[A-Z]/, 'Password must contain an uppercase letter')\n    .regex(/[0-9]/, 'Password must contain a number'),\n});",
+    "crumbs": [
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
+    ]
+  },
+  {
+    "objectID": "SharedTypesAndSchemas.html#best-practices",
+    "href": "SharedTypesAndSchemas.html#best-practices",
+    "title": "Shared Types & Schemas: The Glue of Your Architecture",
+    "section": "Best Practices",
+    "text": "Best Practices\n\n\n\n\n\n\nSchema Organization\n\n\n\n\nOne schema per domain concept — User, Project, Comment\nCompose, don’t repeat — Use .pick(), .omit(), .extend()\nVersion your schemas — API v1, v2 can coexist\nGenerate, don’t maintain — Python/Rust types should be auto-generated\n\n\n\n\n\n\n\n\n\n\nPractice\nWhy\n\n\n\n\nSchemas in shared package\nSingle source of truth\n\n\nRuntime validation at boundaries\nCatch errors early (API, forms)\n\n\nCI checks for drift\nPrevent out-of-sync types\n\n\nDescriptive error messages\nBetter DX and UX\n\n\n\n\nResult: You change a field in packages/shared, run a script, and both your React UI and Python Backend types update automatically. Sync nirvana.",
     "crumbs": [
       "<span class='chapter-number'>16</span>  <span class='chapter-title'>Shared Types & Schemas: The Glue of Your Architecture</span>"
     ]
@@ -842,51 +1202,91 @@
   {
     "objectID": "ProductionDeployment.html",
     "href": "ProductionDeployment.html",
-    "title": "Production Deployment: CI/CD & Binaries",
+    "title": "Production Deployment: From Code to Users",
     "section": "",
-    "text": "1. GitHub Actions: The Automation Engine\nBuilding a cool app on localhost is fun. Delivering it to millions of users is engineering.\nIn this final chapter, we discuss how to automate the build and release process for your Monorepo Desktop App.\nWe use GitHub Actions to build our React site and Tauri binaries automatically whenever we push to main.\n.github/workflows/release.yml:\nThis single file will: 1. Spin up VMs for Mac, Windows, and Linux. 2. Install Rust and Node. 3. Build your React frontend (npm run build). 4. Compile the Rust backend (tauri build). 5. Bundle the Python sidecar. 6. Upload the artifacts (.dmg, .exe, .deb) to the GitHub Releases page.",
+    "text": "GitHub Actions: The Automation Engine\nBuilding a cool app on localhost is fun. Delivering it to millions of users is engineering.\nThis chapter covers the complete journey from commit to customer—CI/CD pipelines, code signing, auto-updates, and production monitoring.\nWe use GitHub Actions to build our React site and Tauri binaries automatically on every push.",
     "crumbs": [
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
     ]
   },
   {
     "objectID": "ProductionDeployment.html#github-actions-the-automation-engine",
     "href": "ProductionDeployment.html#github-actions-the-automation-engine",
-    "title": "Production Deployment: CI/CD & Binaries",
+    "title": "Production Deployment: From Code to Users",
     "section": "",
-    "text": "name: Release\non:\n  push:\n    tags:\n      - 'v*'\n\njobs:\n  release:\n    strategy:\n      fail-fast: false\n      matrix:\n        platform: [macos-latest, ubuntu-20.04, windows-latest]\n    \n    runs-on: ${{ matrix.platform }}\n    steps:\n      - uses: actions/checkout@v3\n      - name: Setup Node\n        uses: actions/setup-node@v3\n        with:\n          node-version: 18\n          \n      - name: Install Rust (Stable)\n        uses: dtolnay/rust-toolchain@stable\n        \n      - name: Install dependencies (Ubuntu only)\n        if: matrix.platform == 'ubuntu-20.04'\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev\n          \n      - name: Install JS Deps\n        run: npm install\n        \n      - name: Build React & Tauri\n        uses: tauri-apps/tauri-action@v0\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n        with:\n          tagName: ${{ github.ref_name }}\n          releaseName: \"App v__VERSION__\"\n          releaseBody: \"See the assets to download this version and install.\"\n          releaseDraft: true\n          prerelease: false",
+    "text": "Web App Deployment\n# .github/workflows/deploy-web.yml\nname: Deploy Web App\n\non:\n  push:\n    branches: [main]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    \n    steps:\n      - uses: actions/checkout@v4\n      \n      - uses: pnpm/action-setup@v2\n        with:\n          version: 8\n      \n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n          cache: 'pnpm'\n      \n      - name: Install dependencies\n        run: pnpm install --frozen-lockfile\n      \n      - name: Build\n        run: pnpm build\n        env:\n          VITE_API_URL: ${{ vars.PRODUCTION_API_URL }}\n      \n      - name: Deploy to Vercel\n        uses: amondnet/vercel-action@v25\n        with:\n          vercel-token: ${{ secrets.VERCEL_TOKEN }}\n          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}\n          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}\n          vercel-args: '--prod'\n\n\nDesktop App Release\n# .github/workflows/release-desktop.yml\nname: Release Desktop App\n\non:\n  push:\n    tags:\n      - 'v*'\n\npermissions:\n  contents: write\n\njobs:\n  release:\n    strategy:\n      fail-fast: false\n      matrix:\n        include:\n          - platform: macos-latest\n            args: '--target universal-apple-darwin'\n          - platform: ubuntu-22.04\n            args: ''\n          - platform: windows-latest\n            args: ''\n    \n    runs-on: ${{ matrix.platform }}\n    \n    steps:\n      - uses: actions/checkout@v4\n      \n      - uses: pnpm/action-setup@v2\n        with:\n          version: 8\n      \n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n          cache: 'pnpm'\n      \n      - name: Install Rust\n        uses: dtolnay/rust-toolchain@stable\n        with:\n          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}\n      \n      - name: Install Linux dependencies\n        if: matrix.platform == 'ubuntu-22.04'\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf\n      \n      - name: Install dependencies\n        run: pnpm install --frozen-lockfile\n      \n      - name: Build and Release\n        uses: tauri-apps/tauri-action@v0\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}\n          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}\n          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}\n          APPLE_ID: ${{ secrets.APPLE_ID }}\n          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}\n          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}\n        with:\n          tagName: ${{ github.ref_name }}\n          releaseName: 'v__VERSION__'\n          releaseBody: 'See assets below to download for your platform.'\n          releaseDraft: false\n          prerelease: false\n          args: ${{ matrix.args }}",
     "crumbs": [
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
     ]
   },
   {
-    "objectID": "ProductionDeployment.html#code-signing-the-painful-part",
-    "href": "ProductionDeployment.html#code-signing-the-painful-part",
-    "title": "Production Deployment: CI/CD & Binaries",
-    "section": "2. Code Signing (The Painful Part)",
-    "text": "2. Code Signing (The Painful Part)\nTo avoid the “Unverified Developer” warning on macOS and Windows, you must sign your code.\n\nmacOS: You need an Apple Developer ID ($99/year). Export your certificate and add it to GitHub Secrets (APPLE_CERTIFICATE, APPLE_PASSWORD).\nWindows: You need a code signing certificate (e.g., from Sectigo/DigiCert).\n\nTauri’s action handles the signing automatically if the environment variables are present.",
+    "objectID": "ProductionDeployment.html#code-signing",
+    "href": "ProductionDeployment.html#code-signing",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Code Signing",
+    "text": "Code Signing\nWithout code signing, users see scary warnings:\n\n\n\nPlatform\nWarning\n\n\n\n\nmacOS\n“App is from an unidentified developer”\n\n\nWindows\n“Windows protected your PC”\n\n\n\n\nmacOS Code Signing\n\nGet an Apple Developer ID ($99/year at developer.apple.com)\nExport your certificate as a .p12 file\nAdd to GitHub Secrets:\n\nAPPLE_CERTIFICATE — Base64 encoded .p12\nAPPLE_CERTIFICATE_PASSWORD — Password for the .p12\nAPPLE_SIGNING_IDENTITY — e.g., “Developer ID Application: Your Name”\nAPPLE_ID — Your Apple ID email\nAPPLE_PASSWORD — App-specific password\nAPPLE_TEAM_ID — Your team ID\n\nNotarization — Apple also requires notarization. Tauri handles this automatically with the secrets above.\n\n\n\nWindows Code Signing\n\nPurchase a code signing certificate (DigiCert, Sectigo, etc.)\nAdd to GitHub Secrets:\n\nWINDOWS_CERTIFICATE — Base64 encoded .pfx\nWINDOWS_CERTIFICATE_PASSWORD — Password",
     "crumbs": [
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
     ]
   },
   {
     "objectID": "ProductionDeployment.html#auto-updater",
     "href": "ProductionDeployment.html#auto-updater",
-    "title": "Production Deployment: CI/CD & Binaries",
-    "section": "3. Auto-Updater",
-    "text": "3. Auto-Updater\nTauri has a built-in auto-updater! You don’t need to write custom logic.\nIn tauri.conf.json:\n\"updater\": {\n  \"active\": true,\n  \"endpoints\": [\n    \"https://github.com/my-user/my-app/releases/latest/download/latest.json\"\n  ],\n  \"dialog\": true\n}\nWhen you publish a new release to GitHub, users will get a popup: “A new version is available. Install now?”.",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Auto-Updater",
+    "text": "Auto-Updater\nTauri has built-in auto-update support. Users get prompted when new versions are available.\n\nConfiguration\n// src-tauri/tauri.conf.json\n{\n  \"plugins\": {\n    \"updater\": {\n      \"active\": true,\n      \"dialog\": true,\n      \"endpoints\": [\n        \"https://github.com/YOUR_ORG/YOUR_REPO/releases/latest/download/latest.json\"\n      ],\n      \"pubkey\": \"YOUR_PUBLIC_KEY\"\n    }\n  }\n}\n\n\nGenerate Keys\n# Generate signing keys for updates\nnpx @tauri-apps/cli signer generate -w ~/.tauri/myapp.key\nAdd TAURI_SIGNING_PRIVATE_KEY and TAURI_SIGNING_PRIVATE_KEY_PASSWORD to your GitHub Secrets.\n\n\nUser Experience\nWhen you publish a new release, users see:\n┌────────────────────────────────────┐\n│  A new version is available!       │\n│                                    │\n│  Current: v1.0.0                   │\n│  New: v1.1.0                       │\n│                                    │\n│  [Install Now]  [Later]            │\n└────────────────────────────────────┘",
     "crumbs": [
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
     ]
   },
   {
-    "objectID": "ProductionDeployment.html#conclusion",
-    "href": "ProductionDeployment.html#conclusion",
-    "title": "Production Deployment: CI/CD & Binaries",
-    "section": "Conclusion",
-    "text": "Conclusion\nYou started this book learning useEffect. You are leaving it knowing how to architect a cross-platform, AI-powered desktop application with automated CI/CD.\nGo build something amazing.",
+    "objectID": "ProductionDeployment.html#environment-management",
+    "href": "ProductionDeployment.html#environment-management",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Environment Management",
+    "text": "Environment Management\n\nEnvironment Variables\n// vite.config.ts\nexport default defineConfig({\n  define: {\n    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),\n  },\n});\n// Use in React\nfunction Footer() {\n  return &lt;span&gt;v{__APP_VERSION__}&lt;/span&gt;;\n}\n\n\nBuild-time Configuration\n# GitHub Actions\n- name: Build\n  run: pnpm build\n  env:\n    VITE_API_URL: ${{ vars.PRODUCTION_API_URL }}\n    VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}\n    VITE_ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}",
     "crumbs": [
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: CI/CD & Binaries</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#error-tracking-with-sentry",
+    "href": "ProductionDeployment.html#error-tracking-with-sentry",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Error Tracking with Sentry",
+    "text": "Error Tracking with Sentry\nCatch production errors before users report them:\nnpm install @sentry/react\n// src/main.tsx\nimport * as Sentry from '@sentry/react';\n\nSentry.init({\n  dsn: import.meta.env.VITE_SENTRY_DSN,\n  environment: import.meta.env.MODE,\n  release: __APP_VERSION__,\n  integrations: [\n    Sentry.browserTracingIntegration(),\n    Sentry.replayIntegration(),\n  ],\n  tracesSampleRate: 0.1,\n  replaysSessionSampleRate: 0.1,\n  replaysOnErrorSampleRate: 1.0,\n});\n\nError Boundary Integration\nimport * as Sentry from '@sentry/react';\n\nfunction App() {\n  return (\n    &lt;Sentry.ErrorBoundary fallback={&lt;ErrorPage /&gt;}&gt;\n      &lt;Routes /&gt;\n    &lt;/Sentry.ErrorBoundary&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#performance-monitoring",
+    "href": "ProductionDeployment.html#performance-monitoring",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Performance Monitoring",
+    "text": "Performance Monitoring\n\nLighthouse CI\n# .github/workflows/lighthouse.yml\n- name: Lighthouse CI\n  uses: treosh/lighthouse-ci-action@v10\n  with:\n    urls: |\n      https://your-app.com/\n      https://your-app.com/dashboard\n    configPath: ./lighthouserc.json\n    uploadArtifacts: true\n// lighthouserc.json\n{\n  \"ci\": {\n    \"assert\": {\n      \"assertions\": {\n        \"categories:performance\": [\"error\", { \"minScore\": 0.9 }],\n        \"categories:accessibility\": [\"error\", { \"minScore\": 0.9 }],\n        \"first-contentful-paint\": [\"warn\", { \"maxNumericValue\": 2000 }]\n      }\n    }\n  }\n}",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#deployment-checklist",
+    "href": "ProductionDeployment.html#deployment-checklist",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Deployment Checklist",
+    "text": "Deployment Checklist\nBefore every production release:\n\nTests pass — Unit, integration, and E2E\nBuild succeeds — For all platforms\nEnvironment variables — All secrets configured\nFeature flags — New features behind flags\nRollback plan — Know how to revert quickly\nChangelog updated — Users should know what changed\nVersion bumped — Semantic versioning",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
+    ]
+  },
+  {
+    "objectID": "ProductionDeployment.html#rollback-strategy",
+    "href": "ProductionDeployment.html#rollback-strategy",
+    "title": "Production Deployment: From Code to Users",
+    "section": "Rollback Strategy",
+    "text": "Rollback Strategy\nThings will break. Have a plan:\n\nVercel/Netlify\n# Instant rollback to previous deployment\nvercel rollback\n\n\nGitHub Releases\nPoint users to the previous release while you fix:\n# Quickly create a patch release\ngit tag v1.0.1\ngit push origin v1.0.1\n\n\n\n\n\n\n\nDeployment Philosophy\n\n\n\n\nAutomate everything — Manual deployments cause mistakes\nShip small, ship often — Smaller changes = easier debugging\nMonitor from day one — You can’t fix what you can’t see\nPlan for failure — Rollbacks should take seconds, not hours\n\n\n\n\nYou started this book learning useEffect. You’re leaving it knowing how to architect a cross-platform, AI-powered desktop application with automated CI/CD.\nGo build something amazing.",
+    "crumbs": [
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Production Deployment: From Code to Users</span>"
     ]
   },
   {

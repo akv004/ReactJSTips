@@ -1,106 +1,386 @@
-# Production Deployment: CI/CD & Binaries
+# Production Deployment: From Code to Users
 
 Building a cool app on localhost is fun. Delivering it to millions of users is engineering.
 
-In this final chapter, we discuss how to automate the build and release process for your Monorepo Desktop App.
+This chapter covers the complete journey from commit to customer—CI/CD pipelines, code signing, auto-updates, and production monitoring.
+
+```{mermaid}
+flowchart LR
+    A["👨‍💻 Commit"] --> B["🔄 CI/CD"]
+    B --> C["🧪 Tests"]
+    C --> D["📦 Build"]
+    D --> E["🔐 Sign"]
+    E --> F["🚀 Release"]
+    F --> G["📱 Auto-Update"]
+    
+    style F fill:#10b981
+```
 
 ---
 
-## 1. GitHub Actions: The Automation Engine
+## GitHub Actions: The Automation Engine
 
-We use **GitHub Actions** to build our React site and Tauri binaries automatically whenever we push to `main`.
+We use **GitHub Actions** to build our React site and Tauri binaries automatically on every push.
 
-**`.github/workflows/release.yml`**:
+### Web App Deployment
 
 ```yaml
-name: Release
+# .github/workflows/deploy-web.yml
+name: Deploy Web App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build
+        run: pnpm build
+        env:
+          VITE_API_URL: ${{ vars.PRODUCTION_API_URL }}
+      
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+```
+
+### Desktop App Release
+
+```yaml
+# .github/workflows/release-desktop.yml
+name: Release Desktop App
+
 on:
   push:
     tags:
       - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   release:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+        include:
+          - platform: macos-latest
+            args: '--target universal-apple-darwin'
+          - platform: ubuntu-22.04
+            args: ''
+          - platform: windows-latest
+            args: ''
     
     runs-on: ${{ matrix.platform }}
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: 18
-          
-      - name: Install Rust (Stable)
+          version: 8
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-        
-      - name: Install dependencies (Ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
-          
-      - name: Install JS Deps
-        run: npm install
-        
-      - name: Build React & Tauri
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build and Release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "App v__VERSION__"
-          releaseBody: "See the assets to download this version and install."
-          releaseDraft: true
+          releaseName: 'v__VERSION__'
+          releaseBody: 'See assets below to download for your platform.'
+          releaseDraft: false
           prerelease: false
+          args: ${{ matrix.args }}
 ```
 
-This single file will:
-1.  Spin up VMs for Mac, Windows, and Linux.
-2.  Install Rust and Node.
-3.  Build your React frontend (`npm run build`).
-4.  Compile the Rust backend (`tauri build`).
-5.  Bundle the Python sidecar.
-6.  Upload the artifacts (`.dmg`, `.exe`, `.deb`) to the GitHub Releases page.
+---
+
+## Code Signing
+
+Without code signing, users see scary warnings:
+
+| Platform | Warning |
+|----------|---------|
+| **macOS** | "App is from an unidentified developer" |
+| **Windows** | "Windows protected your PC" |
+
+### macOS Code Signing
+
+1. **Get an Apple Developer ID** ($99/year at developer.apple.com)
+
+2. **Export your certificate** as a `.p12` file
+
+3. **Add to GitHub Secrets**:
+   - `APPLE_CERTIFICATE` — Base64 encoded `.p12`
+   - `APPLE_CERTIFICATE_PASSWORD` — Password for the `.p12`
+   - `APPLE_SIGNING_IDENTITY` — e.g., "Developer ID Application: Your Name"
+   - `APPLE_ID` — Your Apple ID email
+   - `APPLE_PASSWORD` — App-specific password
+   - `APPLE_TEAM_ID` — Your team ID
+
+4. **Notarization** — Apple also requires notarization. Tauri handles this automatically with the secrets above.
+
+### Windows Code Signing
+
+1. **Purchase a code signing certificate** (DigiCert, Sectigo, etc.)
+
+2. **Add to GitHub Secrets**:
+   - `WINDOWS_CERTIFICATE` — Base64 encoded `.pfx`
+   - `WINDOWS_CERTIFICATE_PASSWORD` — Password
 
 ---
 
-## 2. Code Signing (The Painful Part)
+## Auto-Updater
 
-To avoid the "Unverified Developer" warning on macOS and Windows, you must sign your code.
+Tauri has built-in auto-update support. Users get prompted when new versions are available.
 
-- **macOS**: You need an Apple Developer ID ($99/year). Export your certificate and add it to GitHub Secrets (`APPLE_CERTIFICATE`, `APPLE_PASSWORD`).
-- **Windows**: You need a code signing certificate (e.g., from Sectigo/DigiCert).
-
-Tauri's action handles the signing automatically if the environment variables are present.
-
----
-
-## 3. Auto-Updater
-
-Tauri has a built-in auto-updater! You don't need to write custom logic.
-
-In `tauri.conf.json`:
+### Configuration
 
 ```json
-"updater": {
-  "active": true,
-  "endpoints": [
-    "https://github.com/my-user/my-app/releases/latest/download/latest.json"
-  ],
-  "dialog": true
+// src-tauri/tauri.conf.json
+{
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "endpoints": [
+        "https://github.com/YOUR_ORG/YOUR_REPO/releases/latest/download/latest.json"
+      ],
+      "pubkey": "YOUR_PUBLIC_KEY"
+    }
+  }
 }
 ```
 
-When you publish a new release to GitHub, users will get a popup: "A new version is available. Install now?".
+### Generate Keys
+
+```bash
+# Generate signing keys for updates
+npx @tauri-apps/cli signer generate -w ~/.tauri/myapp.key
+```
+
+Add `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` to your GitHub Secrets.
+
+### User Experience
+
+When you publish a new release, users see:
+
+```
+┌────────────────────────────────────┐
+│  A new version is available!       │
+│                                    │
+│  Current: v1.0.0                   │
+│  New: v1.1.0                       │
+│                                    │
+│  [Install Now]  [Later]            │
+└────────────────────────────────────┘
+```
 
 ---
 
-## Conclusion
+## Environment Management
 
-You started this book learning `useEffect`. You are leaving it knowing how to architect a cross-platform, AI-powered desktop application with automated CI/CD.
+### Environment Variables
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  },
+});
+```
+
+```tsx
+// Use in React
+function Footer() {
+  return <span>v{__APP_VERSION__}</span>;
+}
+```
+
+### Build-time Configuration
+
+```yaml
+# GitHub Actions
+- name: Build
+  run: pnpm build
+  env:
+    VITE_API_URL: ${{ vars.PRODUCTION_API_URL }}
+    VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+    VITE_ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
+```
+
+---
+
+## Error Tracking with Sentry
+
+Catch production errors before users report them:
+
+```bash
+npm install @sentry/react
+```
+
+```tsx
+// src/main.tsx
+import * as Sentry from '@sentry/react';
+
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  environment: import.meta.env.MODE,
+  release: __APP_VERSION__,
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+  ],
+  tracesSampleRate: 0.1,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
+```
+
+### Error Boundary Integration
+
+```tsx
+import * as Sentry from '@sentry/react';
+
+function App() {
+  return (
+    <Sentry.ErrorBoundary fallback={<ErrorPage />}>
+      <Routes />
+    </Sentry.ErrorBoundary>
+  );
+}
+```
+
+---
+
+## Performance Monitoring
+
+### Lighthouse CI
+
+```yaml
+# .github/workflows/lighthouse.yml
+- name: Lighthouse CI
+  uses: treosh/lighthouse-ci-action@v10
+  with:
+    urls: |
+      https://your-app.com/
+      https://your-app.com/dashboard
+    configPath: ./lighthouserc.json
+    uploadArtifacts: true
+```
+
+```json
+// lighthouserc.json
+{
+  "ci": {
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.9 }],
+        "categories:accessibility": ["error", { "minScore": 0.9 }],
+        "first-contentful-paint": ["warn", { "maxNumericValue": 2000 }]
+      }
+    }
+  }
+}
+```
+
+---
+
+## Deployment Checklist
+
+Before every production release:
+
+- [ ] **Tests pass** — Unit, integration, and E2E
+- [ ] **Build succeeds** — For all platforms
+- [ ] **Environment variables** — All secrets configured
+- [ ] **Feature flags** — New features behind flags
+- [ ] **Rollback plan** — Know how to revert quickly
+- [ ] **Changelog updated** — Users should know what changed
+- [ ] **Version bumped** — Semantic versioning
+
+---
+
+## Rollback Strategy
+
+Things will break. Have a plan:
+
+### Vercel/Netlify
+
+```bash
+# Instant rollback to previous deployment
+vercel rollback
+```
+
+### GitHub Releases
+
+Point users to the previous release while you fix:
+
+```yaml
+# Quickly create a patch release
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+---
+
+::: {.callout-tip}
+## Deployment Philosophy
+
+1. **Automate everything** — Manual deployments cause mistakes
+2. **Ship small, ship often** — Smaller changes = easier debugging
+3. **Monitor from day one** — You can't fix what you can't see
+4. **Plan for failure** — Rollbacks should take seconds, not hours
+:::
+
+---
+
+You started this book learning `useEffect`. You're leaving it knowing how to architect a cross-platform, AI-powered desktop application with automated CI/CD.
 
 **Go build something amazing.**

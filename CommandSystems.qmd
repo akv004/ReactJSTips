@@ -2,76 +2,444 @@
 
 In a typical web app, you navigate by clicking buttons. In a **Pro Tool**, you navigate by thinking.
 
-Apps like VS Code, Linear, and Notion have trained users to expect a global "Command Palette" (`Cmd+K` or `Ctrl+K`). This chapter shows you how to build one in React.
+Apps like VS Code, Linear, Notion, and Raycast have trained users to expect a global "Command Palette" (`Cmd+K` or `Ctrl+K`). This chapter shows you how to build one—and the underlying architecture that makes it powerful.
+
+```{mermaid}
+flowchart LR
+    K["⌘K"] --> P["Command Palette"]
+    P --> S["Search"]
+    S --> C["Commands"]
+    C --> A["Actions"]
+    
+    style K fill:#3b82f6
+    style A fill:#10b981
+```
 
 ---
 
-## 1. The Command Pattern
+## The Command Pattern
 
-The "Command Pattern" separates the *intent* from the *execution*.
+The Command Pattern separates the **intent** from the **execution**:
 
 ```ts
+// packages/shared/src/commands.ts
 type Command = {
   id: string;
   label: string;
+  description?: string;
   icon?: React.ReactNode;
-  perform: () => void;
+  shortcut?: string;
+  keywords?: string[];    // For search matching
+  perform: () => void | Promise<void>;
+  enabled?: () => boolean;
 };
 ```
 
 Instead of burying logic in a button's `onClick`, you register commands in a central registry.
 
+### Why This Matters
+
+| Approach | Discoverability | Keyboard | Scripting | Testing |
+|----------|-----------------|----------|-----------|---------|
+| **Button onClick** | ❌ Hidden | ❌ No | ❌ No | ❌ Hard |
+| **Command Registry** | ✅ Palette | ✅ Shortcuts | ✅ Yes | ✅ Easy |
+
 ---
 
-## 2. Using `cmdk`
+## Command Registry
 
-Don't build the UI from scratch. The library `cmdk` (by Pace) is the gold standard. It handles the accessible dialog, filtering, and keyboard navigation.
+```tsx
+// src/commands/registry.ts
+import { create } from 'zustand';
+import type { Command } from '@myproject/shared';
+
+interface CommandStore {
+  commands: Map<string, Command>;
+  register: (command: Command) => void;
+  unregister: (id: string) => void;
+  execute: (id: string) => Promise<void>;
+  search: (query: string) => Command[];
+}
+
+export const useCommandStore = create<CommandStore>((set, get) => ({
+  commands: new Map(),
+  
+  register: (command) => {
+    set((state) => {
+      const newCommands = new Map(state.commands);
+      newCommands.set(command.id, command);
+      return { commands: newCommands };
+    });
+  },
+  
+  unregister: (id) => {
+    set((state) => {
+      const newCommands = new Map(state.commands);
+      newCommands.delete(id);
+      return { commands: newCommands };
+    });
+  },
+  
+  execute: async (id) => {
+    const command = get().commands.get(id);
+    if (command && (command.enabled?.() ?? true)) {
+      await command.perform();
+    }
+  },
+  
+  search: (query) => {
+    const q = query.toLowerCase();
+    return Array.from(get().commands.values())
+      .filter((cmd) => {
+        if (cmd.enabled && !cmd.enabled()) return false;
+        return (
+          cmd.label.toLowerCase().includes(q) ||
+          cmd.description?.toLowerCase().includes(q) ||
+          cmd.keywords?.some((k) => k.toLowerCase().includes(q))
+        );
+      })
+      .slice(0, 10); // Limit results
+  },
+}));
+```
+
+### Registering Commands
+
+```tsx
+// src/commands/project-commands.ts
+import { useEffect } from 'react';
+import { useCommandStore } from './registry';
+import { useNavigate } from 'react-router-dom';
+
+export function useProjectCommands() {
+  const navigate = useNavigate();
+  const register = useCommandStore((s) => s.register);
+  const unregister = useCommandStore((s) => s.unregister);
+
+  useEffect(() => {
+    const commands = [
+      {
+        id: 'project.create',
+        label: 'Create New Project',
+        description: 'Start a new project from scratch',
+        icon: <PlusIcon />,
+        shortcut: '⌘N',
+        keywords: ['new', 'add'],
+        perform: () => navigate('/projects/new'),
+      },
+      {
+        id: 'project.search',
+        label: 'Search Projects',
+        description: 'Find a project by name',
+        icon: <SearchIcon />,
+        shortcut: '⌘P',
+        keywords: ['find', 'open'],
+        perform: () => openProjectSearch(),
+      },
+      {
+        id: 'project.delete',
+        label: 'Delete Project',
+        description: 'Remove the current project',
+        icon: <TrashIcon />,
+        keywords: ['remove'],
+        perform: () => confirmDelete(),
+        enabled: () => !!currentProject,
+      },
+    ];
+
+    commands.forEach(register);
+    return () => commands.forEach((c) => unregister(c.id));
+  }, [register, unregister, navigate]);
+}
+```
+
+---
+
+## Building the Palette with cmdk
+
+Don't build the UI from scratch. The library **cmdk** (by Pacea) is the gold standard:
 
 ```bash
 npm install cmdk
 ```
 
 ```tsx
+// src/components/CommandPalette.tsx
 import { Command } from 'cmdk';
 import { useEffect, useState } from 'react';
+import { useCommandStore } from '../commands/registry';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const commands = useCommandStore((s) => s.search(query));
+  const execute = useCommandStore((s) => s.execute);
 
   // Toggle with Cmd+K
   useEffect(() => {
-    const down = (e: KeyboardEvent) => {
+    const handler = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
   }, []);
 
+  const handleSelect = async (commandId: string) => {
+    setOpen(false);
+    setQuery('');
+    await execute(commandId);
+  };
+
   return (
-    <Command.Dialog open={open} onOpenChange={setOpen}>
-      <Command.Input placeholder="Type a command or search..." />
+    <Command.Dialog
+      open={open}
+      onOpenChange={setOpen}
+      label="Command Palette"
+      className="command-dialog"
+    >
+      <Command.Input
+        value={query}
+        onValueChange={setQuery}
+        placeholder="Type a command or search..."
+      />
 
       <Command.List>
-        <Command.Empty>No results found.</Command.Empty>
+        <Command.Empty>No commands found.</Command.Empty>
 
-        <Command.Group heading="Projects">
-          <Command.Item onSelect={() => console.log('Create Project')}>
-            Create New Project
+        {commands.map((cmd) => (
+          <Command.Item
+            key={cmd.id}
+            value={cmd.id}
+            onSelect={() => handleSelect(cmd.id)}
+          >
+            <span className="command-icon">{cmd.icon}</span>
+            <div className="command-content">
+              <span className="command-label">{cmd.label}</span>
+              {cmd.description && (
+                <span className="command-description">{cmd.description}</span>
+              )}
+            </div>
+            {cmd.shortcut && (
+              <kbd className="command-shortcut">{cmd.shortcut}</kbd>
+            )}
           </Command.Item>
-          <Command.Item onSelect={() => console.log('Search Projects')}>
-            Search Projects...
-          </Command.Item>
-        </Command.Group>
-
-        <Command.Group heading="Settings">
-          <Command.Item onSelect={() => console.log('Toggle Theme')}>
-            Toggle Dark Mode
-          </Command.Item>
-        </Command.Group>
+        ))}
       </Command.List>
+    </Command.Dialog>
+  );
+}
+```
+
+### Styling
+
+```css
+/* src/styles/command-palette.css */
+.command-dialog {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 640px;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+[cmdk-input] {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  outline: none;
+}
+
+[cmdk-list] {
+  max-height: 400px;
+  overflow: auto;
+  padding: 8px;
+}
+
+[cmdk-item] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+[cmdk-item][data-selected='true'] {
+  background: var(--accent);
+  color: white;
+}
+
+.command-shortcut {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: var(--kbd-bg);
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+}
+```
+
+---
+
+## Global Keyboard Shortcuts
+
+`Cmd+K` is just the entry point. Power users expect shortcuts like `Cmd+S` (Save) or `Cmd+B` (Toggle Sidebar).
+
+### useKeyboardShortcut Hook
+
+```tsx
+// src/hooks/useKeyboardShortcut.ts
+import { useEffect, useCallback } from 'react';
+
+type Modifier = 'meta' | 'ctrl' | 'alt' | 'shift';
+
+interface ShortcutOptions {
+  key: string;
+  modifiers?: Modifier[];
+  callback: () => void;
+  enabled?: boolean;
+}
+
+export function useKeyboardShortcut({
+  key,
+  modifiers = [],
+  callback,
+  enabled = true,
+}: ShortcutOptions) {
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!enabled) return;
+
+      const modifiersMatch =
+        modifiers.every((mod) => {
+          switch (mod) {
+            case 'meta': return event.metaKey;
+            case 'ctrl': return event.ctrlKey;
+            case 'alt': return event.altKey;
+            case 'shift': return event.shiftKey;
+          }
+        }) &&
+        // Ensure no extra modifiers
+        (modifiers.includes('meta') || !event.metaKey) &&
+        (modifiers.includes('ctrl') || !event.ctrlKey) &&
+        (modifiers.includes('alt') || !event.altKey) &&
+        (modifiers.includes('shift') || !event.shiftKey);
+
+      if (event.key.toLowerCase() === key.toLowerCase() && modifiersMatch) {
+        event.preventDefault();
+        callback();
+      }
+    },
+    [key, modifiers, callback, enabled]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+}
+```
+
+### Usage
+
+```tsx
+function App() {
+  const { save, toggleSidebar, undo, redo } = useActions();
+
+  useKeyboardShortcut({ key: 's', modifiers: ['meta'], callback: save });
+  useKeyboardShortcut({ key: 'b', modifiers: ['meta'], callback: toggleSidebar });
+  useKeyboardShortcut({ key: 'z', modifiers: ['meta'], callback: undo });
+  useKeyboardShortcut({ key: 'z', modifiers: ['meta', 'shift'], callback: redo });
+
+  return <main>...</main>;
+}
+```
+
+---
+
+## Command Groups
+
+Organize commands by category:
+
+```tsx
+<Command.List>
+  <Command.Group heading="Projects">
+    <Command.Item>Create Project</Command.Item>
+    <Command.Item>Open Project</Command.Item>
+  </Command.Group>
+  
+  <Command.Group heading="Settings">
+    <Command.Item>Toggle Dark Mode</Command.Item>
+    <Command.Item>Open Preferences</Command.Item>
+  </Command.Group>
+  
+  <Command.Group heading="Help">
+    <Command.Item>View Documentation</Command.Item>
+    <Command.Item>Keyboard Shortcuts</Command.Item>
+  </Command.Group>
+</Command.List>
+```
+
+---
+
+## Nested Commands
+
+Sometimes you need sub-menus:
+
+```tsx
+function CommandPalette() {
+  const [pages, setPages] = useState<string[]>([]);
+  const page = pages[pages.length - 1];
+
+  return (
+    <Command.Dialog>
+      <Command.Input />
+      <Command.List>
+        {!page && (
+          <>
+            <Command.Item onSelect={() => setPages([...pages, 'theme'])}>
+              Change Theme...
+            </Command.Item>
+            <Command.Item onSelect={() => setPages([...pages, 'language'])}>
+              Change Language...
+            </Command.Item>
+          </>
+        )}
+
+        {page === 'theme' && (
+          <>
+            <Command.Item onSelect={() => setTheme('light')}>Light</Command.Item>
+            <Command.Item onSelect={() => setTheme('dark')}>Dark</Command.Item>
+            <Command.Item onSelect={() => setTheme('system')}>System</Command.Item>
+          </>
+        )}
+
+        {page === 'language' && (
+          <>
+            <Command.Item onSelect={() => setLang('en')}>English</Command.Item>
+            <Command.Item onSelect={() => setLang('es')}>Español</Command.Item>
+            <Command.Item onSelect={() => setLang('fr')}>Français</Command.Item>
+          </>
+        )}
+      </Command.List>
+
+      {pages.length > 0 && (
+        <button onClick={() => setPages(pages.slice(0, -1))}>
+          ← Back
+        </button>
+      )}
     </Command.Dialog>
   );
 }
@@ -79,33 +447,44 @@ export function CommandPalette() {
 
 ---
 
-## 3. Global Shortcuts
+## Keyboard Shortcuts Reference Panel
 
-`Cmd+K` is just the entry point. You also want shortcuts like `Cmd+S` (Save) or `Cmd+B` (Toggle Sidebar).
-
-Use a custom hook `useKeyboardShortcut`:
+Show users all available shortcuts:
 
 ```tsx
-import { useEffect } from 'react';
+function KeyboardShortcutsPanel() {
+  const commands = useCommandStore((s) => 
+    Array.from(s.commands.values()).filter(c => c.shortcut)
+  );
 
-function useKeyboardShortcut(key: string, callback: () => void, meta = false) {
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      if (event.key === key && event.metaKey === meta) {
-        event.preventDefault();
-        callback();
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [key, callback, meta]);
-}
-
-// Usage
-function App() {
-  useKeyboardShortcut('s', () => saveProject(), true); // Cmd+S
-  return <div>App</div>;
+  return (
+    <div className="shortcuts-panel">
+      <h2>Keyboard Shortcuts</h2>
+      <table>
+        <tbody>
+          {commands.map((cmd) => (
+            <tr key={cmd.id}>
+              <td>{cmd.label}</td>
+              <td><kbd>{cmd.shortcut}</kbd></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 ```
+
+---
+
+::: {.callout-tip}
+## Command System Benefits
+
+1. **Discoverability** — Users can search for any action
+2. **Keyboard-first** — Power users fly through tasks
+3. **Scriptable** — Commands can be triggered programmatically
+4. **Testable** — Test commands in isolation
+5. **Extensible** — Plugins can register new commands
+:::
 
 By decoupling input (Keyboard/Mouse) from actions (Commands), you make your app scriptable, testable, and incredibly fast to use.

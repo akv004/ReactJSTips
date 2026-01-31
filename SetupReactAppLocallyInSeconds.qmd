@@ -1,60 +1,255 @@
-## 🚀 Setup React App Locally in Seconds
+# Setup React App Locally in Seconds
 
-Before diving into code architecture and patterns, it’s useful to have a working React app scaffolded quickly — so you can focus immediately on building features.
+Before diving into code architecture and patterns, you need a working React app to experiment with. In the past, `create-react-app` (CRA) was the standard. Today, **Vite** has completely replaced it as the modern standard.
 
-In the past, `create-react-app` (CRA) was the go-to standard. However, the ecosystem has evolved. Today, **Vite** is the industry standard for starting new React projects. It offers significantly faster dev server startup, instant hot module replacement (HMR), and optimized production builds.
-
-In this chapter, you’ll get a highly streamlined shell script that:
-
-1. Prompts you for the project name (with a handy default)
-2. Sets up a new React app using **Vite** (the modern standard)
-3. Installs dependencies
-4. Launches the development server
-
-All of this happens in just a few seconds, assuming Node.js is already installed. The script works on macOS, Linux, and Windows Subsystem for Linux (WSL).
+```{mermaid}
+flowchart LR
+    V["Vite"] --> |"< 300ms"| S["Dev Server"]
+    C["CRA"] --> |"~30s"| S2["Dev Server"]
+    
+    style V fill:#646cff
+    style C fill:#61dafb
+```
 
 ---
 
- 🧠 **What You Need Pre-installed**
+## Vite vs Create React App
 
-- **Node.js** (v18 or higher recommended)
-- **npm** (comes with Node.js)
-- **npx** (comes with Node.js)
+| Feature | Vite | Create React App |
+|---------|------|------------------|
+| **Dev server startup** | < 300ms | 30-60 seconds |
+| **Hot Module Replacement** | Instant | Slow |
+| **Build time** | Fast (Rollup) | Slow (Webpack) |
+| **Bundle size** | Optimized | Larger |
+| **TypeScript** | Native | Requires setup |
+| **Maintained** | Active | Deprecated |
 
----
-
-### 🎯 Why Vite?
-
-- **Instant Server Start**: Unlike CRA, which bundles your entire app before starting, Vite serves modules on demand.
-- **Lightning Fast HMR**: Changes appear instantly, regardless of app size.
-- **Rich Plugin Ecosystem**: First-class support for TypeScript, JSX, CSS modules, and more out of the box.
-
----
-
-### 🧪 What You’ll Learn
-
-- Automatically scaffolding a React project from scratch
-- Setting up with either React+TypeScript or plain React
-- How to generalize the script for multiple environments or tooling preferences
+::: {.callout-warning}
+## CRA is Dead
+Create React App is no longer maintained. The React team officially recommends Vite or Next.js for new projects.
+:::
 
 ---
 
-📌 Now, let's look at the actual shell script for this automation:
+## Prerequisites
 
-📄 `run-react-app.sh`
+Before you start, ensure you have:
+
+- **Node.js** v18 or higher
+- **npm**, **pnpm**, or **yarn**
+
+```bash
+# Check your versions
+node --version  # Should be 18+
+npm --version
+```
+
+---
+
+## Quick Start (One Command)
+
+```bash
+# Create a new React + TypeScript project
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install
+npm run dev
+```
+
+That's it. Your app is running at `http://localhost:5173`.
+
+---
+
+## Interactive Setup
+
+For more control, run without the template flag:
+
+```bash
+npm create vite@latest
+```
+
+You'll be prompted:
+
+```
+✔ Project name: my-app
+✔ Select a framework: › React
+✔ Select a variant: › TypeScript + SWC
+```
+
+**SWC** is a Rust-based compiler that's 20x faster than Babel.
+
+---
+
+## Project Structure
+
+```
+my-app/
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── assets/
+│   │   └── react.svg
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+```
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Entry HTML file (Vite injects script) |
+| `src/main.tsx` | React entry point |
+| `src/App.tsx` | Root component |
+| `vite.config.ts` | Vite configuration |
+| `tsconfig.json` | TypeScript configuration |
+
+---
+
+## Essential Additions
+
+After scaffolding, add these immediately:
+
+### Path Aliases
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+});
+```
+
+```json
+// tsconfig.json - add to compilerOptions
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+Now you can import like:
+```tsx
+import { Button } from '@/components/Button';
+```
+
+### Environment Variables
+
+```bash
+# .env
+VITE_API_URL=http://localhost:3000
+VITE_APP_NAME=My App
+```
+
+```tsx
+// Access in code (must prefix with VITE_)
+const apiUrl = import.meta.env.VITE_API_URL;
+```
+
+---
+
+## Recommended Dev Dependencies
+
+```bash
+# ESLint + Prettier
+npm install -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react-hooks prettier eslint-config-prettier
+
+# Testing
+npm install -D vitest @testing-library/react @testing-library/user-event jsdom
+
+# CSS
+npm install -D sass  # If using SCSS
+```
+
+---
+
+## ESLint Configuration
+
+```js
+// .eslintrc.cjs
+module.exports = {
+  root: true,
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+  ],
+  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-refresh'],
+  rules: {
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+  },
+};
+```
+
+---
+
+## Scripts Reference
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  }
+}
+```
+
+| Script | What it does |
+|--------|--------------|
+| `npm run dev` | Start dev server with HMR |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Check for code issues |
+| `npm run test` | Run tests in watch mode |
+
+---
+
+## Shell Script for Automation
+
+Save this as `create-react.sh` for quick project creation:
 
 ```bash
 #!/usr/bin/env bash
 
-# Prompt for project name, with a default value
-read -p "Enter your React project name (default: my-react-app): " APP_NAME
-APP_NAME=${APP_NAME:-my-react-app}
+# Prompt for project name
+read -p "Enter project name (default: my-app): " APP_NAME
+APP_NAME=${APP_NAME:-my-app}
 
-# Prompt for TypeScript option
-read -p "Use TypeScript? (y/n, default y): " USE_TS
+# Prompt for TypeScript
+read -p "Use TypeScript? (y/n, default: y): " USE_TS
 USE_TS=${USE_TS:-y}
 
-echo "🚧 Creating project: $APP_NAME with Vite..."
+echo "🚧 Creating project: $APP_NAME"
 
 if [ "$USE_TS" == "y" ]; then
   npm create vite@latest "$APP_NAME" -- --template react-ts
@@ -67,27 +262,41 @@ cd "$APP_NAME"
 echo "📦 Installing dependencies..."
 npm install
 
-echo "🚀 Starting development server..."
+echo "🛠️ Adding dev tools..."
+npm install -D vitest @testing-library/react jsdom
+
+echo "🚀 Starting dev server..."
 npm run dev
 ```
 
-📌 **How to Use**:
-
-1.	Save the script as `run-react-app.sh`
-2.	Make it executable:
-
 ```bash
-chmod +x run-react-app.sh
+# Make executable and run
+chmod +x create-react.sh
+./create-react.sh
 ```
 
-3.	Run it in a terminal:
+---
 
-```bash
-./run-react-app.sh
-```
+## VS Code Extensions
 
-You'll be prompted for a project name and TypeScript preference. Within seconds, you’ll have your React app running at `localhost:5173`.
+For the best development experience:
 
+- **ES7+ React/Redux/GraphQL snippets** — Quick component scaffolding
+- **ESLint** — Inline linting
+- **Prettier** — Auto-formatting
+- **TypeScript Vue Plugin (Volar)** — Better TypeScript support
+- **Auto Rename Tag** — Rename paired tags
 
+---
 
+## What's Next?
 
+With your app running, you're ready to:
+
+1. **Learn React fundamentals** — Components, props, state
+2. **Master hooks** — useEffect, useCallback, custom hooks
+3. **Add routing** — React Router for navigation
+4. **Manage state** — Zustand, TanStack Query
+5. **Style your app** — CSS Modules, Tailwind, or styled-components
+
+Your React journey starts now. Keep this app running as you work through the rest of this book—every concept can be practiced immediately.

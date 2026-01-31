@@ -2,95 +2,475 @@
 
 React makes building UIs easy because it abstracts the DOM. But the DOM is heavy. Each `<div>` is an object with hundreds of properties, event listeners, and layout constraints.
 
-When you're building a tool like `ai-studio-template`—visualizing complex AI agents, knowledge graphs with thousands of nodes, or real-time data streams—React components will start to lag.
+When you're building a tool like a node-based editor, knowledge graph visualizer, or real-time data dashboard—React components will start to lag around **1,000+ elements**.
 
 The solution is to **drop down to the Canvas API**.
+
+```{mermaid}
+flowchart LR
+    subgraph DOM["DOM Rendering"]
+        D1["1,000 divs"]
+        D2["Layout calculation"]
+        D3["Event listeners"]
+        D4["~15 FPS 😰"]
+    end
+    
+    subgraph Canvas["Canvas Rendering"]
+        C1["1,000 shapes"]
+        C2["Pure math"]
+        C3["Single event handler"]
+        C4["~60 FPS 🚀"]
+    end
+    
+    style D4 fill:#ef4444
+    style C4 fill:#10b981
+```
+
+---
+
+## When to Use Canvas
+
+| Scenario | DOM | Canvas |
+|----------|-----|--------|
+| Forms, buttons, text inputs | ✅ | ❌ |
+| Lists with < 500 items | ✅ | ❌ |
+| Node graphs (100+ nodes) | ❌ | ✅ |
+| Real-time charts | ⚠️ | ✅ |
+| Particle effects | ❌ | ✅ |
+| Image manipulation | ❌ | ✅ |
+| Infinite canvas (Figma-style) | ❌ | ✅ |
 
 ---
 
 ## The Hybrid Approach
 
-We don't abandon React. We use React for the "chroma" (buttons, sidebars, modals) and Canvas for the "stage" (the main visualization area).
-
-### 1. The Rendering Loop
-
-In React, updates happen when props change. In Canvas, updates happen in a `requestAnimationFrame` loop (60fps).
-
-We need a bridge.
+We don't abandon React. We use React for the **chrome** (buttons, sidebars, modals) and Canvas for the **stage** (the main visualization area).
 
 ```tsx
-import { useRef, useEffect } from 'react';
+function App() {
+  return (
+    <div className="app">
+      {/* React for UI chrome */}
+      <Sidebar />
+      <Toolbar />
+      
+      {/* Canvas for performance-critical visualization */}
+      <CanvasStage nodes={nodes} edges={edges} />
+      
+      {/* React for overlays */}
+      <ContextMenu />
+      <NodeInspector />
+    </div>
+  );
+}
+```
 
-function CanvasStage({ nodes }) {
+---
+
+## The Rendering Loop
+
+In React, updates happen when props/state change. In Canvas, updates happen in a `requestAnimationFrame` loop (60fps). We need a bridge.
+
+### Basic Canvas Component
+
+```tsx
+import { useRef, useEffect, useCallback } from 'react';
+
+interface Node {
+  id: string;
+  x: number;
+  y: number;
+  label: string;
+  color: string;
+}
+
+interface CanvasStageProps {
+  nodes: Node[];
+  width?: number;
+  height?: number;
+}
+
+export function CanvasStage({ nodes, width = 800, height = 600 }: CanvasStageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const nodesRef = useRef(nodes);
+  
+  // Keep ref in sync without restarting loop
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
+    
+    const ctx = canvas.getContext('2d')!;
     let animationId: number;
 
     const render = () => {
-      // 1. Clear Screen
+      // 1. Clear screen
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 2. Draw Nodes (Pure Math, no DOM overhead!)
-      nodes.forEach(node => {
-        ctx.fillStyle = node.color;
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // Draw Label
-        ctx.fillStyle = 'white';
-        ctx.fillText(node.label, node.x, node.y);
+      // 2. Draw background grid
+      drawGrid(ctx, canvas.width, canvas.height);
+
+      // 3. Draw nodes (pure math, no DOM overhead!)
+      nodesRef.current.forEach(node => {
+        drawNode(ctx, node);
       });
 
-      // 3. Loop
+      // 4. Continue loop
       animationId = requestAnimationFrame(render);
     };
 
     render();
 
     return () => cancelAnimationFrame(animationId);
-  }, [nodes]); // Re-start loop if nodes reference changes (or use a ref for nodes to avoid restart)
+  }, []); // Empty deps = single loop instance
 
-  return <canvas ref={canvasRef} width={800} height={600} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      width={width}
+      height={height}
+      style={{ border: '1px solid #333' }}
+    />
+  );
+}
+
+function drawGrid(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  ctx.strokeStyle = '#2a2a2a';
+  ctx.lineWidth = 1;
+  
+  const gridSize = 20;
+  
+  for (let x = 0; x <= width; x += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+  
+  for (let y = 0; y <= height; y += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+}
+
+function drawNode(ctx: CanvasRenderingContext2D, node: Node) {
+  const radius = 30;
+  
+  // Shadow
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 4;
+  
+  // Circle
+  ctx.fillStyle = node.color;
+  ctx.beginPath();
+  ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+  ctx.fill();
+  
+  // Reset shadow
+  ctx.shadowColor = 'transparent';
+  
+  // Label
+  ctx.fillStyle = 'white';
+  ctx.font = '12px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(node.label, node.x, node.y);
 }
 ```
 
 ---
 
-## 2. Hittesting: Interacting with Pixels
+## Hit Testing: Interacting with Pixels
 
 Since we don't have DOM elements, we don't have `onClick`. We have coordinates.
 
 ```tsx
-const handleClick = (e: React.MouseEvent) => {
-  const rect = canvasRef.current.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+interface CanvasStageProps {
+  nodes: Node[];
+  onNodeClick?: (node: Node) => void;
+  onNodeDrag?: (node: Node, x: number, y: number) => void;
+}
 
-  // Find the node under the mouse
-  const clickedNode = nodes.find(node => {
-    const dist = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
-    return dist < 20; // 20 is the radius
-  });
+export function CanvasStage({ nodes, onNodeClick, onNodeDrag }: CanvasStageProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  if (clickedNode) {
-    console.log("Clicked:", clickedNode.label);
-    setSelectedNode(clickedNode);
-  }
-};
+  const getMousePos = (e: React.MouseEvent) => {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  };
+
+  const findNodeAt = (x: number, y: number): Node | undefined => {
+    // Check in reverse order (top nodes first)
+    return [...nodes].reverse().find(node => {
+      const dist = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
+      return dist < 30; // 30 = node radius
+    });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const { x, y } = getMousePos(e);
+    const node = findNodeAt(x, y);
+    
+    if (node) {
+      setSelectedNode(node);
+      setIsDragging(true);
+      onNodeClick?.(node);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !selectedNode) return;
+    
+    const { x, y } = getMousePos(e);
+    onNodeDrag?.(selectedNode, x, y);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <canvas
+      ref={canvasRef}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      style={{ cursor: isDragging ? 'grabbing' : 'default' }}
+    />
+  );
+}
 ```
 
 ---
 
-## 3. WebGPU: The Next Frontier
+## Pan & Zoom: Infinite Canvas
 
-While `Canvas 2D` is fast, `WebGPU` gives you direct access to the graphics card. It's complex, but libraries like **PixiJS** or **Three.js** abstract it away nicely.
+For Figma-style infinite canvases, we need to track camera position:
 
-For 99% of "Pro Tools" (like Figma, VS Code's minimap, Miro), Canvas 2D is sufficient. But for 3D or millions of particles, reach for WebGPU.
+```tsx
+interface Camera {
+  x: number;
+  y: number;
+  zoom: number;
+}
 
-By separating your **Data Model** (Zustand store) from your **View Layer** (Canvas), you can render the same data in a list (React) or a graph (Canvas) simultaneously.
+function useCamera() {
+  const [camera, setCamera] = useState<Camera>({ x: 0, y: 0, zoom: 1 });
+
+  const pan = useCallback((dx: number, dy: number) => {
+    setCamera(c => ({ ...c, x: c.x + dx, y: c.y + dy }));
+  }, []);
+
+  const zoomTo = useCallback((factor: number, centerX: number, centerY: number) => {
+    setCamera(c => {
+      const newZoom = Math.max(0.1, Math.min(5, c.zoom * factor));
+      
+      // Zoom towards mouse position
+      const zoomDelta = newZoom - c.zoom;
+      const offsetX = (centerX - c.x) * (zoomDelta / c.zoom);
+      const offsetY = (centerY - c.y) * (zoomDelta / c.zoom);
+      
+      return {
+        x: c.x - offsetX,
+        y: c.y - offsetY,
+        zoom: newZoom,
+      };
+    });
+  }, []);
+
+  return { camera, pan, zoomTo };
+}
+```
+
+### Applying Camera Transform
+
+```tsx
+useEffect(() => {
+  const render = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Apply camera transform
+    ctx.save();
+    ctx.translate(camera.x, camera.y);
+    ctx.scale(camera.zoom, camera.zoom);
+    
+    // Draw everything in world space
+    drawGrid(ctx, 10000, 10000);
+    nodes.forEach(node => drawNode(ctx, node));
+    
+    ctx.restore();
+    
+    animationId = requestAnimationFrame(render);
+  };
+}, [camera]);
+```
+
+---
+
+## Connecting Nodes: Drawing Edges
+
+```tsx
+interface Edge {
+  id: string;
+  from: string;
+  to: string;
+}
+
+function drawEdges(
+  ctx: CanvasRenderingContext2D,
+  edges: Edge[],
+  nodes: Node[]
+) {
+  const nodeMap = new Map(nodes.map(n => [n.id, n]));
+  
+  edges.forEach(edge => {
+    const from = nodeMap.get(edge.from);
+    const to = nodeMap.get(edge.to);
+    if (!from || !to) return;
+    
+    // Bezier curve for smooth connections
+    const midX = (from.x + to.x) / 2;
+    
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.bezierCurveTo(
+      midX, from.y,  // Control point 1
+      midX, to.y,    // Control point 2
+      to.x, to.y     // End point
+    );
+    ctx.stroke();
+    
+    // Arrow head
+    drawArrowHead(ctx, midX, to.y, to.x, to.y);
+  });
+}
+
+function drawArrowHead(
+  ctx: CanvasRenderingContext2D,
+  fromX: number, fromY: number,
+  toX: number, toY: number
+) {
+  const angle = Math.atan2(toY - fromY, toX - fromX);
+  const size = 10;
+  
+  ctx.fillStyle = '#666';
+  ctx.beginPath();
+  ctx.moveTo(toX, toY);
+  ctx.lineTo(
+    toX - size * Math.cos(angle - Math.PI / 6),
+    toY - size * Math.sin(angle - Math.PI / 6)
+  );
+  ctx.lineTo(
+    toX - size * Math.cos(angle + Math.PI / 6),
+    toY - size * Math.sin(angle + Math.PI / 6)
+  );
+  ctx.closePath();
+  ctx.fill();
+}
+```
+
+---
+
+## Performance Optimization
+
+### Dirty Rectangles
+
+Only redraw what changed:
+
+```tsx
+const dirtyRegions = useRef<Set<string>>(new Set());
+
+function markDirty(nodeId: string) {
+  dirtyRegions.current.add(nodeId);
+}
+
+const render = () => {
+  if (dirtyRegions.current.size === 0) {
+    animationId = requestAnimationFrame(render);
+    return; // Nothing to update
+  }
+  
+  // Only redraw dirty regions
+  dirtyRegions.current.forEach(nodeId => {
+    const node = nodes.find(n => n.id === nodeId);
+    if (node) {
+      // Clear just this node's area
+      ctx.clearRect(node.x - 40, node.y - 40, 80, 80);
+      drawNode(ctx, node);
+    }
+  });
+  
+  dirtyRegions.current.clear();
+  animationId = requestAnimationFrame(render);
+};
+```
+
+### Spatial Indexing
+
+For thousands of nodes, use a quadtree:
+
+```tsx
+import { Quadtree, Rectangle } from 'quadtree-lib';
+
+const quadtree = new Quadtree({
+  width: 10000,
+  height: 10000,
+  maxElements: 10,
+});
+
+// Only query visible nodes
+function getVisibleNodes(camera: Camera, viewportWidth: number, viewportHeight: number) {
+  const visibleBounds = new Rectangle(
+    -camera.x / camera.zoom,
+    -camera.y / camera.zoom,
+    viewportWidth / camera.zoom,
+    viewportHeight / camera.zoom
+  );
+  
+  return quadtree.query(visibleBounds);
+}
+```
+
+---
+
+## WebGL & WebGPU: The Next Level
+
+While Canvas 2D handles most cases, WebGL/WebGPU gives you GPU acceleration:
+
+| Technology | Use Case | Complexity |
+|------------|----------|------------|
+| **Canvas 2D** | 1,000-10,000 shapes | Low |
+| **WebGL** | 10,000-100,000 shapes | Medium |
+| **WebGPU** | 100,000+ shapes, 3D | High |
+
+Libraries that abstract the complexity:
+- **PixiJS** — 2D WebGL with Canvas fallback
+- **Three.js** — 3D rendering
+- **Deck.gl** — Large-scale data visualization
+
+---
+
+::: {.callout-tip}
+## Architecture Pattern
+
+Separate your **Data Model** (Zustand store) from your **View Layer** (Canvas renderer). This lets you:
+- Render the same data as a list (React) or graph (Canvas)
+- Persist state independently of rendering
+- Test business logic without graphics
+:::
+
+By mastering Canvas, you unlock the ability to build tools that feel native—snappy, responsive, and capable of handling the complexity that serious users demand.
