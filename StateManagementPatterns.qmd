@@ -4,7 +4,7 @@ Managing state is arguably the hardest part of building large React applications
 
 In the early days, we only had Redux. Today, we have a rich ecosystem of tools tailored for specific problems. This chapter guides you through choosing the right one.
 
-```mermaid
+```{mermaid}
 flowchart TD
     A["What kind of state?"] --> B{"UI-only?<br/>(toggles, forms)"}
     B -->|Yes| C["useState / useReducer"]

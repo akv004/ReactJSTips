@@ -4,7 +4,7 @@ Forms are the backbone of interactive applications. In React, handling forms wel
 
 This chapter covers modern form patterns using **React Hook Form** and **Zod** for type-safe validation.
 
-```mermaid
+```{mermaid}
 flowchart LR
     A["User Input"] --> B["React Hook Form"]
     B --> C{"Zod Schema<br/>Validation"}

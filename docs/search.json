@@ -1,55 +1,5 @@
 [
   {
-    "objectID": "MonorepoArchitecture.html",
-    "href": "MonorepoArchitecture.html",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "",
-    "text": "The “Apps vs. Packages” Pattern\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to “dependency hell” and code duplication.\nThe solution? A Monorepo.\nIn this chapter, we’ll explore how to structure a modern React monorepo using npm/pnpm workspaces, inspired by the architecture of high-performance tools like ai-studio-template.\nState-of-the-art monorepos typically follow this directory structure:",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
-    "href": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "",
-    "text": "graph TD\n    Root[Root /] --&gt; Apps[apps /]\n    Root --&gt; Pkgs[packages /]\n    \n    Apps --&gt; Desktop[desktop / (Tauri + Rust)]\n    Apps --&gt; Web[web / (Next.js or Vite)]\n    Apps --&gt; Sidecar[sidecar / (Python AI)]\n    \n    Pkgs --&gt; Shared[shared / (Types & Config)]\n    Pkgs --&gt; UI[ui-kit / (React Components)]\n    \n    Desktop -.-&gt; Shared\n    Web -.-&gt; Shared\n    Web -.-&gt; UI\n\napps/: Deployable applications. They consume packages but are rarely consumed themselves.\npackages/: Shared libraries. Hosted internally and imported by apps.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#setting-up-workspaces",
-    "href": "MonorepoArchitecture.html#setting-up-workspaces",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "Setting Up Workspaces",
-    "text": "Setting Up Workspaces\nYou don’t need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.\npackage.json (Root):\n{\n  \"name\": \"my-ai-studio\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}\nNow, any folder inside apps or packages with its own package.json is treated as a workspace.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#the-power-of-packagesshared",
-    "href": "MonorepoArchitecture.html#the-power-of-packagesshared",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "3. The Power of packages/shared",
-    "text": "3. The Power of packages/shared\nImagine you have a TypeScript interface Project that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).\nInstead of copying types.ts into every folder, you create a shared package.\npackages/shared/package.json:\n{\n  \"name\": \"@my-studio/shared\",\n  \"version\": \"1.0.0\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\"\n}\nUsage in React App:\nnpm install @my-studio/shared\nimport { Project } from '@my-studio/shared';\n\nexport function ProjectCard({ project }: { project: Project }) {\n  return &lt;div&gt;{project.name}&lt;/div&gt;;\n}\nNow, when you update the type definition in one place, every app gets the update instantly (and TypeScript will scream at you if you broke something).",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
-    "objectID": "MonorepoArchitecture.html#why-this-approach",
-    "href": "MonorepoArchitecture.html#why-this-approach",
-    "title": "Monorepo Architecture: Scaling Beyond a Single App",
-    "section": "Why This approach?",
-    "text": "Why This approach?\n\nSingle Source of Truth: Define types and utilities once.\nAtomic Commits: You can change the API and the UI in a single PR.\nUnified Tooling: Run npm install once at the root to install dependencies for ALL apps.\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri.",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
-    ]
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "The React Blueprint",
@@ -570,11 +520,61 @@
     ]
   },
   {
+    "objectID": "MonorepoArchitecture.html",
+    "href": "MonorepoArchitecture.html",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "",
+    "text": "The “Apps vs. Packages” Pattern\nAs your React project grows, you often find yourself with multiple related codebases: a web app, a desktop app, a shared component library, and maybe a backend server. Managing these as separate repositories can lead to “dependency hell” and code duplication.\nThe solution? A Monorepo.\nIn this chapter, we’ll explore how to structure a modern React monorepo using npm/pnpm workspaces, inspired by the architecture of high-performance tools like ai-studio-template.\nState-of-the-art monorepos typically follow this directory structure:\ngraph TD\n    Root[Root /] --&gt; Apps[apps /]\n    Root --&gt; Pkgs[packages /]\n    \n    Apps --&gt; Desktop[desktop / (Tauri + Rust)]\n    Apps --&gt; Web[web / (Next.js or Vite)]\n    Apps --&gt; Sidecar[sidecar / (Python AI)]\n    \n    Pkgs --&gt; Shared[shared / (Types & Config)]\n    Pkgs --&gt; UI[ui-kit / (React Components)]\n    \n    Desktop -.-&gt; Shared\n    Web -.-&gt; Shared\n    Web -.-&gt; UI",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "href": "MonorepoArchitecture.html#the-apps-vs.-packages-pattern",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "",
+    "text": "apps/: Deployable applications. They consume packages but are rarely consumed themselves.\npackages/: Shared libraries. Hosted internally and imported by apps.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#setting-up-workspaces",
+    "href": "MonorepoArchitecture.html#setting-up-workspaces",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Setting Up Workspaces",
+    "text": "Setting Up Workspaces\nYou don’t need complex tools like Nx or Turborepo to get started. Node.js understands workspaces natively.\npackage.json (Root):\n{\n  \"name\": \"my-ai-studio\",\n  \"private\": true,\n  \"workspaces\": [\n    \"apps/*\",\n    \"packages/*\"\n  ]\n}\nNow, any folder inside apps or packages with its own package.json is treated as a workspace.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "href": "MonorepoArchitecture.html#the-power-of-packagesshared",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "3. The Power of packages/shared",
+    "text": "3. The Power of packages/shared\nImagine you have a TypeScript interface Project that is used by your Backend (Node/Rust), your Frontend (React), and your AI Service (Python).\nInstead of copying types.ts into every folder, you create a shared package.\npackages/shared/package.json:\n{\n  \"name\": \"@my-studio/shared\",\n  \"version\": \"1.0.0\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\"\n}\nUsage in React App:\nnpm install @my-studio/shared\nimport { Project } from '@my-studio/shared';\n\nexport function ProjectCard({ project }: { project: Project }) {\n  return &lt;div&gt;{project.name}&lt;/div&gt;;\n}\nNow, when you update the type definition in one place, every app gets the update instantly (and TypeScript will scream at you if you broke something).",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
+    "objectID": "MonorepoArchitecture.html#why-this-approach",
+    "href": "MonorepoArchitecture.html#why-this-approach",
+    "title": "Monorepo Architecture: Scaling Beyond a Single App",
+    "section": "Why This approach?",
+    "text": "Why This approach?\n\nSingle Source of Truth: Define types and utilities once.\nAtomic Commits: You can change the API and the UI in a single PR.\nUnified Tooling: Run npm install once at the root to install dependencies for ALL apps.\n\nIn the next chapter, we’ll see how to wrap one of these apps in a native shell using Tauri.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Monorepo Architecture: Scaling Beyond a Single App</span>"
+    ]
+  },
+  {
     "objectID": "CrossPlatformDesktopApps.html",
     "href": "CrossPlatformDesktopApps.html",
     "title": "Cross-Platform Desktop Apps: React on the Desktop",
     "section": "",
-    "text": "Architecture: The Rust Sandwich\nFor years, Electron was the king of building desktop apps with web technologies. But it had a heavy cost: it bundled an entire Chrome browser and Node.js runtime with every single app.\nEnter Tauri.\nTauri allows you to build tiny, blazing-fast binaries for macOS, Windows, and Linux by using the OS’s native webview (WebKit on macOS, WebView2 on Windows) and a Rust backend.\nAnd the best part? The UI is just a standard React app.\nThink of a Tauri app as a sandwich:",
+    "text": "Architecture: The Rust Sandwich\nFor years, Electron was the king of building desktop apps with web technologies. But it had a heavy cost: it bundled an entire Chrome browser and Node.js runtime with every single app.\nEnter Tauri.\nTauri allows you to build tiny, blazing-fast binaries for macOS, Windows, and Linux by using the OS’s native webview (WebKit on macOS, WebView2 on Windows) and a Rust backend.\nAnd the best part? The UI is just a standard React app.\nThink of a Tauri app as a sandwich:\nsequenceDiagram\n    participant React as React UI (WebView)\n    participant IPC as Tauri IPC\n    participant Rust as Rust Backend\n    \n    React-&gt;&gt;IPC: invoke('save_file', { content })\n    IPC-&gt;&gt;Rust: Execute Command\n    Rust--&gt;&gt;IPC: Result (Success/Error)\n    IPC--&gt;&gt;React: Promise Resolve",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
     ]
@@ -584,7 +584,7 @@
     "href": "CrossPlatformDesktopApps.html#architecture-the-rust-sandwich",
     "title": "Cross-Platform Desktop Apps: React on the Desktop",
     "section": "",
-    "text": "Top Bun (Frontend): Your React + Vite app (ui/). It talks to the system via an “IPC Bridge”.\nMeat (Backend): The Rust Core (src-tauri/). It handles file system access, window management, and heavy computation.\nBottom Bun (OS): The native operating system.\n\nsequenceDiagram\n    participant React as React UI (WebView)\n    participant IPC as Tauri IPC\n    participant Rust as Rust Backend\n    \n    React-&gt;&gt;IPC: invoke('save_file', { content })\n    IPC-&gt;&gt;Rust: Execute Command\n    Rust--&gt;&gt;IPC: Result (Success/Error)\n    IPC--&gt;&gt;React: Promise Resolve",
+    "text": "Top Bun (Frontend): Your React + Vite app (ui/). It talks to the system via an “IPC Bridge”.\nMeat (Backend): The Rust Core (src-tauri/). It handles file system access, window management, and heavy computation.\nBottom Bun (OS): The native operating system.",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>Cross-Platform Desktop Apps: React on the Desktop</span>"
     ]
@@ -914,17 +914,7 @@
     "href": "AuthenticationPatterns.html",
     "title": "Authentication Patterns: Securing Your React App",
     "section": "",
-    "text": "The Authentication Flow\nAuthentication is the gateway to your application. Get it wrong, and you expose user data. Get it right, and your users trust you.\nThis chapter covers JWT-based authentication, protected routes, and OAuth integration.",
-    "crumbs": [
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
-    ]
-  },
-  {
-    "objectID": "AuthenticationPatterns.html#the-authentication-flow",
-    "href": "AuthenticationPatterns.html#the-authentication-flow",
-    "title": "Authentication Patterns: Securing Your React App",
-    "section": "",
-    "text": "sequenceDiagram\n    participant User\n    participant React as React App\n    participant API as Backend API\n    participant DB as Database\n\n    User-&gt;&gt;React: Enter credentials\n    React-&gt;&gt;API: POST /auth/login\n    API-&gt;&gt;DB: Validate credentials\n    DB--&gt;&gt;API: User data\n    API--&gt;&gt;React: JWT Token + Refresh Token\n    React-&gt;&gt;React: Store tokens (httpOnly cookie or memory)\n    React-&gt;&gt;API: GET /api/profile (Bearer token)\n    API--&gt;&gt;React: Protected data",
+    "text": "The Authentication Flow\nAuthentication is the gateway to your application. Get it wrong, and you expose user data. Get it right, and your users trust you.\nThis chapter covers JWT-based authentication, protected routes, and OAuth integration.\nsequenceDiagram\n    participant User\n    participant React as React App\n    participant API as Backend API\n    participant DB as Database\n\n    User-&gt;&gt;React: Enter credentials\n    React-&gt;&gt;API: POST /auth/login\n    API-&gt;&gt;DB: Validate credentials\n    DB--&gt;&gt;API: User data\n    API--&gt;&gt;React: JWT Token + Refresh Token\n    React-&gt;&gt;React: Store tokens (httpOnly cookie or memory)\n    React-&gt;&gt;API: GET /api/profile (Bearer token)\n    API--&gt;&gt;React: Protected data",
     "crumbs": [
       "<span class='chapter-number'>19</span>  <span class='chapter-title'>Authentication Patterns: Securing Your React App</span>"
     ]
@@ -1094,7 +1084,7 @@
     "href": "DataFetchingStrategies.html#tanstack-query-the-solution",
     "title": "Data Fetching Strategies: Beyond Basic Fetch",
     "section": "TanStack Query: The Solution",
-    "text": "TanStack Query: The Solution\nTanStack Query (formerly React Query) handles caching, deduplication, background refetching, and more.\nnpm install @tanstack/react-query\n\nSetup\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\n\nconst queryClient = new QueryClient();\n\nfunction App() {\n  return (\n    &lt;QueryClientProvider client={queryClient}&gt;\n      &lt;YourApp /&gt;\n    &lt;/QueryClientProvider&gt;\n  );\n}\n\n\nBasic Usage\nimport { useQuery } from '@tanstack/react-query';\n\nfunction UserProfile({ userId }) {\n  const { data: user, isLoading, error } = useQuery({\n    queryKey: ['user', userId],\n    queryFn: () =&gt; fetch(`/api/users/${userId}`).then(res =&gt; res.json()),\n  });\n\n  if (isLoading) return &lt;Skeleton /&gt;;\n  if (error) return &lt;Error message={error.message} /&gt;;\n\n  return &lt;Profile user={user} /&gt;;\n}\nBenefits: - ✅ Automatic caching - ✅ Background refetching on window focus - ✅ Request deduplication - ✅ Stale-while-revalidate pattern\nsequenceDiagram\n    participant U as User\n    participant C as Cache\n    participant S as Server\n\n    U-&gt;&gt;C: Request data\n    alt Cache has data\n        C-&gt;&gt;U: Return cached (stale) instantly\n        C-&gt;&gt;S: Fetch fresh in background\n        S--&gt;&gt;C: New data\n        C-&gt;&gt;U: Update UI with fresh data\n    else Cache empty\n        C-&gt;&gt;S: Fetch from server\n        S--&gt;&gt;C: Response\n        C-&gt;&gt;U: Show data\n    end",
+    "text": "TanStack Query: The Solution\nTanStack Query (formerly React Query) handles caching, deduplication, background refetching, and more.\nnpm install @tanstack/react-query\n\nSetup\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\n\nconst queryClient = new QueryClient();\n\nfunction App() {\n  return (\n    &lt;QueryClientProvider client={queryClient}&gt;\n      &lt;YourApp /&gt;\n    &lt;/QueryClientProvider&gt;\n  );\n}\n\n\nBasic Usage\nimport { useQuery } from '@tanstack/react-query';\n\nfunction UserProfile({ userId }) {\n  const { data: user, isLoading, error } = useQuery({\n    queryKey: ['user', userId],\n    queryFn: () =&gt; fetch(`/api/users/${userId}`).then(res =&gt; res.json()),\n  });\n\n  if (isLoading) return &lt;Skeleton /&gt;;\n  if (error) return &lt;Error message={error.message} /&gt;;\n\n  return &lt;Profile user={user} /&gt;;\n}\nBenefits: - ✅ Automatic caching - ✅ Background refetching on window focus - ✅ Request deduplication - ✅ Stale-while-revalidate pattern\n\n\n\n\n\nsequenceDiagram\n    participant U as User\n    participant C as Cache\n    participant S as Server\n\n    U-&gt;&gt;C: Request data\n    alt Cache has data\n        C-&gt;&gt;U: Return cached (stale) instantly\n        C-&gt;&gt;S: Fetch fresh in background\n        S--&gt;&gt;C: New data\n        C-&gt;&gt;U: Update UI with fresh data\n    else Cache empty\n        C-&gt;&gt;S: Fetch from server\n        S--&gt;&gt;C: Response\n        C-&gt;&gt;U: Show data\n    end",
     "crumbs": [
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
     ]
@@ -1314,7 +1304,7 @@
     "href": "Internationalization.html#translation-workflow",
     "title": "Internationalization (i18n): Building Global-Ready Apps",
     "section": "Translation Workflow",
-    "text": "Translation Workflow\ngraph LR\n    A[Developer] --&gt;|Extract keys| B[JSON files]\n    B --&gt;|Upload| C[Translation Platform]\n    C --&gt;|Translate| D[Translators]\n    D --&gt;|Export| B\n    B --&gt;|Build| E[App]\nPopular platforms: Crowdin, Lokalise, Phrase\nYour app speaks one language. Your users speak many.",
+    "text": "Translation Workflow\n\n\n\n\n\ngraph LR\n    A[Developer] --&gt;|Extract keys| B[JSON files]\n    B --&gt;|Upload| C[Translation Platform]\n    C --&gt;|Translate| D[Translators]\n    D --&gt;|Export| B\n    B --&gt;|Build| E[App]\n\n\n\n\n\n\nPopular platforms: Crowdin, Lokalise, Phrase\nYour app speaks one language. Your users speak many.",
     "crumbs": [
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>Internationalization (i18n): Building Global-Ready Apps</span>"
     ]
@@ -1374,7 +1364,7 @@
     "href": "RealtimeFeatures.html#reconnection-strategy",
     "title": "Real-time Features: Live Updates Without Refresh",
     "section": "Reconnection Strategy",
-    "text": "Reconnection Strategy\nReal-world connections drop. Implement exponential backoff:\nstateDiagram-v2\n    [*] --&gt; Connecting\n    Connecting --&gt; Open: onopen\n    Connecting --&gt; Error: onerror\n    Open --&gt; Closed: onclose\n    Error --&gt; Reconnecting: after delay\n    Closed --&gt; Reconnecting: after delay\n    Reconnecting --&gt; Connecting: attempt\n    \n    note right of Reconnecting\n        Exponential backoff:\n        1s → 2s → 4s → 8s...\n        max 30s\n    end note\nfunction useReconnectingWebSocket(url: string) {\n  const [status, setStatus] = useState('connecting');\n  const reconnectDelay = useRef(1000);\n\n  useEffect(() =&gt; {\n    let ws: WebSocket;\n    let reconnectTimer: NodeJS.Timeout;\n\n    function connect() {\n      ws = new WebSocket(url);\n\n      ws.onopen = () =&gt; {\n        setStatus('open');\n        reconnectDelay.current = 1000; // Reset delay on success\n      };\n\n      ws.onclose = () =&gt; {\n        setStatus('reconnecting');\n        // Exponential backoff: 1s, 2s, 4s, 8s... max 30s\n        reconnectTimer = setTimeout(() =&gt; {\n          reconnectDelay.current = Math.min(reconnectDelay.current * 2, 30000);\n          connect();\n        }, reconnectDelay.current);\n      };\n    }\n\n    connect();\n\n    return () =&gt; {\n      clearTimeout(reconnectTimer);\n      ws?.close();\n    };\n  }, [url]);\n\n  return status;\n}",
+    "text": "Reconnection Strategy\nReal-world connections drop. Implement exponential backoff:\n\n\n\n\n\nstateDiagram-v2\n    [*] --&gt; Connecting\n    Connecting --&gt; Open: onopen\n    Connecting --&gt; Error: onerror\n    Open --&gt; Closed: onclose\n    Error --&gt; Reconnecting: after delay\n    Closed --&gt; Reconnecting: after delay\n    Reconnecting --&gt; Connecting: attempt\n    \n    note right of Reconnecting\n        Exponential backoff:\n        1s → 2s → 4s → 8s...\n        max 30s\n    end note\n\n\n\n\n\n\nfunction useReconnectingWebSocket(url: string) {\n  const [status, setStatus] = useState('connecting');\n  const reconnectDelay = useRef(1000);\n\n  useEffect(() =&gt; {\n    let ws: WebSocket;\n    let reconnectTimer: NodeJS.Timeout;\n\n    function connect() {\n      ws = new WebSocket(url);\n\n      ws.onopen = () =&gt; {\n        setStatus('open');\n        reconnectDelay.current = 1000; // Reset delay on success\n      };\n\n      ws.onclose = () =&gt; {\n        setStatus('reconnecting');\n        // Exponential backoff: 1s, 2s, 4s, 8s... max 30s\n        reconnectTimer = setTimeout(() =&gt; {\n          reconnectDelay.current = Math.min(reconnectDelay.current * 2, 30000);\n          connect();\n        }, reconnectDelay.current);\n      };\n    }\n\n    connect();\n\n    return () =&gt; {\n      clearTimeout(reconnectTimer);\n      ws?.close();\n    };\n  }, [url]);\n\n  return status;\n}",
     "crumbs": [
       "<span class='chapter-number'>24</span>  <span class='chapter-title'>Real-time Features: Live Updates Without Refresh</span>"
     ]
@@ -1434,7 +1424,7 @@
     "href": "EnterprisePatterns.html#microfrontends-independent-deployments",
     "title": "Enterprise React Patterns: Scaling to Large Teams",
     "section": "Microfrontends: Independent Deployments",
-    "text": "Microfrontends: Independent Deployments\nWhen your monolith becomes too big, split it into independently deployable frontends.\ngraph TD\n    Shell[App Shell] --&gt; Header[Header MFE]\n    Shell --&gt; Sidebar[Sidebar MFE]\n    Shell --&gt; Main[Main Content]\n    Main --&gt; ProductTeam[Product Pages MFE]\n    Main --&gt; CartTeam[Cart MFE]\n    Main --&gt; CheckoutTeam[Checkout MFE]\n\nModule Federation (Webpack 5)\nShare code between builds at runtime:\n// shell/webpack.config.js\nconst ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');\n\nmodule.exports = {\n  plugins: [\n    new ModuleFederationPlugin({\n      name: 'shell',\n      remotes: {\n        cart: 'cart@https://cart.example.com/remoteEntry.js',\n        checkout: 'checkout@https://checkout.example.com/remoteEntry.js',\n      },\n      shared: ['react', 'react-dom'],\n    }),\n  ],\n};\n// shell/src/App.tsx\nconst Cart = React.lazy(() =&gt; import('cart/CartWidget'));\nconst Checkout = React.lazy(() =&gt; import('checkout/CheckoutFlow'));\n\nfunction App() {\n  return (\n    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;\n      &lt;Cart /&gt;\n      &lt;Checkout /&gt;\n    &lt;/Suspense&gt;\n  );\n}",
+    "text": "Microfrontends: Independent Deployments\nWhen your monolith becomes too big, split it into independently deployable frontends.\n\n\n\n\n\ngraph TD\n    Shell[App Shell] --&gt; Header[Header MFE]\n    Shell --&gt; Sidebar[Sidebar MFE]\n    Shell --&gt; Main[Main Content]\n    Main --&gt; ProductTeam[Product Pages MFE]\n    Main --&gt; CartTeam[Cart MFE]\n    Main --&gt; CheckoutTeam[Checkout MFE]\n\n\n\n\n\n\n\nModule Federation (Webpack 5)\nShare code between builds at runtime:\n// shell/webpack.config.js\nconst ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');\n\nmodule.exports = {\n  plugins: [\n    new ModuleFederationPlugin({\n      name: 'shell',\n      remotes: {\n        cart: 'cart@https://cart.example.com/remoteEntry.js',\n        checkout: 'checkout@https://checkout.example.com/remoteEntry.js',\n      },\n      shared: ['react', 'react-dom'],\n    }),\n  ],\n};\n// shell/src/App.tsx\nconst Cart = React.lazy(() =&gt; import('cart/CartWidget'));\nconst Checkout = React.lazy(() =&gt; import('checkout/CheckoutFlow'));\n\nfunction App() {\n  return (\n    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;\n      &lt;Cart /&gt;\n      &lt;Checkout /&gt;\n    &lt;/Suspense&gt;\n  );\n}",
     "crumbs": [
       "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]

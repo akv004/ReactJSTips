@@ -2,7 +2,7 @@
 
 React is fast by default, but complex applications can suffer from sluggish interactions if not optimized. This chapter explores techniques to keep your app responsive, focusing on **rendering performance** and **bundle size**.
 
-```mermaid
+```{mermaid}
 flowchart LR
     A["State Change"] --> B["Re-render<br/>Component Tree"]
     B --> C{"Props<br/>Changed?"}

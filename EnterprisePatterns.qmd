@@ -76,7 +76,7 @@ function Dashboard() {
 
 When your monolith becomes too big, split it into independently deployable frontends.
 
-```mermaid
+```{mermaid}
 graph TD
     Shell[App Shell] --> Header[Header MFE]
     Shell --> Sidebar[Sidebar MFE]

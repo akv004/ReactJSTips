@@ -200,7 +200,7 @@ function TodoList() {
 
 Real-world connections drop. Implement exponential backoff:
 
-```mermaid
+```{mermaid}
 stateDiagram-v2
     [*] --> Connecting
     Connecting --> Open: onopen

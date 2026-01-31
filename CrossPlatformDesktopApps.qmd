@@ -18,7 +18,7 @@ Think of a Tauri app as a sandwich:
 2.  **Meat (Backend)**: The Rust Core (`src-tauri/`). It handles file system access, window management, and heavy computation.
 3.  **Bottom Bun (OS)**: The native operating system.
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant React as React UI (WebView)
     participant IPC as Tauri IPC

@@ -12,7 +12,7 @@ In this chapter, we'll explore how to structure a modern React monorepo using **
 
 State-of-the-art monorepos typically follow this directory structure:
 
-```mermaid
+```{mermaid}
 graph TD
     Root[Root /] --> Apps[apps /]
     Root --> Pkgs[packages /]

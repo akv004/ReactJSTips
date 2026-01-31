@@ -8,7 +8,7 @@ This chapter covers **JWT-based authentication**, **protected routes**, and **OA
 
 ## The Authentication Flow
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant User
     participant React as React App

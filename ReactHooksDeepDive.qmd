@@ -4,7 +4,7 @@ Hooks revolutionized React in version 16.8, allowing us to use state and other R
 
 In this chapter, we go beyond `useState` and explore the patterns and pitfalls of React's more advanced hooks.
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant R as React
     participant C as Component

@@ -83,7 +83,7 @@ function UserProfile({ userId }) {
 - ✅ Request deduplication
 - ✅ Stale-while-revalidate pattern
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant U as User
     participant C as Cache

@@ -226,7 +226,7 @@ function App() {
 
 ## Translation Workflow
 
-```mermaid
+```{mermaid}
 graph LR
     A[Developer] -->|Extract keys| B[JSON files]
     B -->|Upload| C[Translation Platform]
