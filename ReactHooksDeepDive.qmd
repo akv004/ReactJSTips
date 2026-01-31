@@ -4,6 +4,26 @@ Hooks revolutionized React in version 16.8, allowing us to use state and other R
 
 In this chapter, we go beyond `useState` and explore the patterns and pitfalls of React's more advanced hooks.
 
+```mermaid
+sequenceDiagram
+    participant R as React
+    participant C as Component
+    participant E as useEffect
+
+    R->>C: Render component
+    C->>R: Return JSX
+    R->>R: Commit to DOM
+    R->>E: Run effect (after paint)
+    
+    Note over R,E: On re-render with changed deps...
+    R->>E: Run cleanup function
+    R->>C: Re-render component
+    R->>E: Run effect again
+    
+    Note over R,E: On unmount...
+    R->>E: Run final cleanup
+```
+
 ---
 
 ## The Dependency Array: `useEffect` Mastery

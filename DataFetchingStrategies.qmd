@@ -83,6 +83,25 @@ function UserProfile({ userId }) {
 - ✅ Request deduplication
 - ✅ Stale-while-revalidate pattern
 
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Cache
+    participant S as Server
+
+    U->>C: Request data
+    alt Cache has data
+        C->>U: Return cached (stale) instantly
+        C->>S: Fetch fresh in background
+        S-->>C: New data
+        C->>U: Update UI with fresh data
+    else Cache empty
+        C->>S: Fetch from server
+        S-->>C: Response
+        C->>U: Show data
+    end
+```
+
 ---
 
 ## Mutations: Updating Data

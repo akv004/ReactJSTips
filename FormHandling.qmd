@@ -4,6 +4,22 @@ Forms are the backbone of interactive applications. In React, handling forms wel
 
 This chapter covers modern form patterns using **React Hook Form** and **Zod** for type-safe validation.
 
+```mermaid
+flowchart LR
+    A["User Input"] --> B["React Hook Form"]
+    B --> C{"Zod Schema<br/>Validation"}
+    C -->|Valid| D["Submit Handler"]
+    C -->|Invalid| E["Error State"]
+    E --> F["Display Errors"]
+    D --> G["API Call"]
+    G -->|Success| H["Success Toast"]
+    G -->|Failure| I["Error Toast"]
+    
+    style B fill:#ec4899
+    style C fill:#8b5cf6
+    style D fill:#10b981
+```
+
 ---
 
 ## The Problem with Native Forms

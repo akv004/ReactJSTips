@@ -4,6 +4,24 @@ Managing state is arguably the hardest part of building large React applications
 
 In the early days, we only had Redux. Today, we have a rich ecosystem of tools tailored for specific problems. This chapter guides you through choosing the right one.
 
+```mermaid
+flowchart TD
+    A["What kind of state?"] --> B{"UI-only?<br/>(toggles, forms)"}
+    B -->|Yes| C["useState / useReducer"]
+    B -->|No| D{"Shared across<br/>many components?"}
+    D -->|No| C
+    D -->|Yes| E{"High-frequency<br/>updates?"}
+    E -->|No| F["React Context"]
+    E -->|Yes| G["Zustand / Jotai"]
+    A --> H{"Server data?<br/>(API responses)"}
+    H -->|Yes| I["TanStack Query"]
+    
+    style C fill:#10b981
+    style F fill:#3b82f6
+    style G fill:#8b5cf6
+    style I fill:#f59e0b
+```
+
 ---
 
 ## 1. Local State: `useState` & `useReducer`

@@ -200,6 +200,23 @@ function TodoList() {
 
 Real-world connections drop. Implement exponential backoff:
 
+```mermaid
+stateDiagram-v2
+    [*] --> Connecting
+    Connecting --> Open: onopen
+    Connecting --> Error: onerror
+    Open --> Closed: onclose
+    Error --> Reconnecting: after delay
+    Closed --> Reconnecting: after delay
+    Reconnecting --> Connecting: attempt
+    
+    note right of Reconnecting
+        Exponential backoff:
+        1s → 2s → 4s → 8s...
+        max 30s
+    end note
+```
+
 ```tsx
 function useReconnectingWebSocket(url: string) {
   const [status, setStatus] = useState('connecting');
