@@ -6,11 +6,13 @@ To my family, friends, and mentors — thank you for your encouragement, patienc
 
 ## About the Author
 
-Amit Kumar Verma is a Lead Software Engineer with over 15 years of professional experience in building large-scale, cloud-native applications. His expertise includes **front-end development** with frameworks like React and AngularJS, **backend services** with Java, Spring Boot, and Node.js, and **DevOps practices** leveraging Docker and Kubernetes.
+Amit Kumar Verma is a Lead Software Engineer with over 15 years of experience building large-scale, cloud-native applications. His expertise spans **frontend development** with React and Next.js, **backend services** with Java, Spring Boot, and Node.js, and **DevOps practices** leveraging Docker and Kubernetes.
 
-Amit is passionate about creating performant, maintainable user interfaces that scale. He has led successful frontend and full-stack teams in domains such as healthcare, fintech, retail, and insurance, and has worked extensively with tools like React, TypeScript, Redux, Recoil, Zustand, and Next.js.
+Amit is passionate about creating performant, maintainable user interfaces that scale. He has led frontend and full-stack teams in healthcare, fintech, retail, and insurance, working extensively with React, TypeScript, Zustand, and TanStack Query.
 
-He believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When he's not writing code or leading architecture discussions, Amit enjoys exploring new frameworks, mentoring junior developers, and turning complex frontend problems into elegant patterns.
+He believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When not writing code or leading architecture discussions, Amit mentors developers, explores new frameworks, and turns complex frontend problems into elegant patterns.
+
+He is also the author of [**The AI Jungle: Learn AI & ML with Nature's Wisdom**](https://akv004.github.io/the-ai-jungle/).
 
 ---
 
