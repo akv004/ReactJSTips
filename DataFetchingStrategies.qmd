@@ -77,11 +77,15 @@ function UserProfile({ userId }) {
 }
 ```
 
-**Benefits:**
-- ✅ Automatic caching
-- ✅ Background refetching on window focus
-- ✅ Request deduplication
-- ✅ Stale-while-revalidate pattern
+
+::: {.callout-tip}
+## Benefits
+
+- **Automatic caching** — Data is stored and reused
+- **Background refetching** — Updates on window focus
+- **Request deduplication** — Multiple components share one request
+- **Stale-while-revalidate** — Show cached data immediately, update in background
+:::
 
 ```{mermaid}
 sequenceDiagram
