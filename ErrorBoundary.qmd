@@ -1,64 +1,316 @@
-# Chapter: Error Boundary in React
+# Error Boundaries: Graceful Failure in React
 
-As your application grows, more components are added and it becomes harder to track all possible exceptions that might occur during rendering. React offers a powerful feature to catch such errors: **Error Boundaries**.
+As your application grows, more components are added and it becomes harder to track all possible exceptions during rendering. React offers **Error Boundaries** — special components that catch errors and display fallback UI instead of crashing your entire app.
 
-## What is an Error Boundary?
+```{mermaid}
+flowchart TD
+    subgraph WithBoundary["With Error Boundary ✅"]
+        A1["App"] --> B1["ErrorBoundary"]
+        B1 --> C1["Widget"]
+        C1 -->|"💥 Crash"| D1["Fallback UI"]
+        B1 --> E1["Rest of App ✓"]
+    end
+    
+    subgraph WithoutBoundary["Without Error Boundary ❌"]
+        A2["App"] --> C2["Widget"]
+        C2 -->|"💥 Crash"| D2["Entire App Crashes"]
+    end
+    
+    style D1 fill:#fbbf24
+    style D2 fill:#ef4444
+    style E1 fill:#10b981
+```
 
-An Error Boundary is a special kind of React component that catches JavaScript errors anywhere in its child component tree, logs those errors, and displays a fallback UI instead of the component tree that crashed.
+---
 
-> Error boundaries catch errors during **rendering**, in **lifecycle methods**, and in **constructors** of the whole tree below them.
+## What Does an Error Boundary Catch?
 
-## Why Do We Need Error Boundaries?
+| Caught ✅ | Not Caught ❌ |
+|-----------|---------------|
+| Errors during rendering | Event handlers |
+| Lifecycle method errors | Async code (setTimeout, fetch) |
+| Constructor errors | Server-side rendering |
+| Errors in child components | Errors in the boundary itself |
 
-In a large application, it's not practical to wrap every small component in a try-catch. Error Boundaries help you:
+::: {.callout-important}
+## Event Handlers Need Try-Catch
+Error boundaries only catch errors during the **render phase**. For event handlers, you still need traditional `try-catch` blocks.
+:::
 
-- Prevent the whole app from crashing.
-- Show a user-friendly message.
-- Log errors for debugging or analytics.
-- Allow the rest of the app to continue functioning.
+---
 
-## When Don't They Work?
+## Where to Place Error Boundaries
 
-Error boundaries do **not** catch errors for:
+This is the most common question. Here's the strategic placement pattern:
 
-- Event handlers (you still need try-catch for those).
-- Asynchronous code (e.g., `setTimeout` or `fetch`).
-- Server-side rendering.
-- Errors thrown in the error boundary itself.
+```{mermaid}
+flowchart TD
+    App["🏠 App"]
+    
+    App --> Layout["Layout"]
+    
+    Layout --> Sidebar["📁 Sidebar"]
+    Layout --> Main["📄 Main Content"]
+    
+    Main --> Route1["Route: Dashboard"]
+    Main --> Route2["Route: Settings"]
+    
+    Route1 --> Widget1["📊 Chart Widget"]
+    Route1 --> Widget2["📈 Analytics Widget"]
+    Route1 --> Widget3["🔔 Notifications"]
+    
+    subgraph Boundaries["Error Boundary Placement"]
+        B1["🛡️ Route-Level<br/>(catches page crashes)"]
+        B2["🛡️ Widget-Level<br/>(isolates failures)"]
+        B3["🛡️ Third-Party<br/>(untrusted code)"]
+    end
+    
+    style App fill:#3b82f6
+    style B1 fill:#fbbf24
+    style B2 fill:#fbbf24
+    style B3 fill:#fbbf24
+```
 
-### The Modern Way: `react-error-boundary`
+### Placement Strategy
 
-While writing a class component works, the modern React ecosystem prefers functional components. The library `react-error-boundary` provides a simple wrapper component and hooks to handle errors gracefully without writing a class.
+| Level | When to Use | Example |
+|-------|-------------|---------|
+| **App Root** | Last resort fallback | "Something went wrong. Reload?" |
+| **Route/Page** | Each route gets its own boundary | Dashboard, Settings, Profile |
+| **Feature/Widget** | Independent features that can fail | Charts, Comments, Chat |
+| **Third-Party** | External libraries you don't control | Embeds, Plugins, SDKs |
 
-**Installation**:
+---
+
+## The Modern Way: react-error-boundary
+
+The `react-error-boundary` library provides a clean, hook-friendly API:
+
 ```bash
 npm install react-error-boundary
 ```
 
-**Usage**:
+### Basic Usage
 
 ```tsx
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary } from 'react-error-boundary';
 
-function Fallback({ error, resetErrorBoundary }) {
+function ErrorFallback({ error, resetErrorBoundary }) {
   return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre style={{ color: "red" }}>{error.message}</pre>
+    <div role="alert" className="error-fallback">
+      <h2>Something went wrong</h2>
+      <pre>{error.message}</pre>
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   );
 }
 
-export default function App() {
+function App() {
   return (
     <ErrorBoundary
-      FallbackComponent={Fallback}
+      FallbackComponent={ErrorFallback}
+      onError={(error, info) => {
+        // Log to Sentry, LogRocket, etc.
+        console.error('Error caught:', error, info);
+      }}
       onReset={() => {
-        // Reset the state of your app so the error doesn't happen again
+        // Reset app state if needed
+        window.location.reload();
       }}
     >
-      <MyComponent />
+      <Dashboard />
+    </ErrorBoundary>
+  );
+}
+```
+
+### Reset on Navigation
+
+```tsx
+import { useLocation } from 'react-router-dom';
+
+function App() {
+  const location = useLocation();
+
+  return (
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      resetKeys={[location.pathname]}  // Reset when route changes
+    >
+      <Routes />
+    </ErrorBoundary>
+  );
+}
+```
+
+### useErrorBoundary Hook
+
+For programmatic error throwing:
+
+```tsx
+import { useErrorBoundary } from 'react-error-boundary';
+
+function DataFetcher() {
+  const { showBoundary } = useErrorBoundary();
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/api/data');
+      if (!res.ok) throw new Error('Failed to fetch');
+      return res.json();
+    } catch (error) {
+      showBoundary(error);  // Trigger the error boundary
+    }
+  };
+
+  // ...
+}
+```
+
+---
+
+## Component Hierarchy Example
+
+Here's a real-world component tree with strategic error boundary placement:
+
+```tsx
+// App.tsx
+import { ErrorBoundary } from 'react-error-boundary';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <BrowserRouter>
+      {/* 🛡️ Level 1: App-wide crash protection */}
+      <ErrorBoundary FallbackComponent={AppCrashFallback}>
+        <Layout>
+          <Sidebar />
+          
+          <main>
+            {/* 🛡️ Level 2: Route-level isolation */}
+            <ErrorBoundary FallbackComponent={PageErrorFallback}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            </ErrorBoundary>
+          </main>
+        </Layout>
+      </ErrorBoundary>
+    </BrowserRouter>
+  );
+}
+
+// Dashboard.tsx
+function Dashboard() {
+  return (
+    <div className="dashboard">
+      <h1>Dashboard</h1>
+      
+      <div className="widgets">
+        {/* 🛡️ Level 3: Widget-level isolation */}
+        <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
+          <AnalyticsChart />
+        </ErrorBoundary>
+        
+        <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
+          <RecentActivity />
+        </ErrorBoundary>
+        
+        {/* 🛡️ Level 4: Third-party isolation */}
+        <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
+          <ThirdPartyEmbed />
+        </ErrorBoundary>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Fallback UI Patterns
+
+### Minimal Widget Fallback
+
+```tsx
+function WidgetErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div className="widget-error">
+      <span>⚠️ Failed to load</span>
+      <button onClick={resetErrorBoundary}>Retry</button>
+    </div>
+  );
+}
+```
+
+### Informative Page Fallback
+
+```tsx
+function PageErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div className="page-error">
+      <h2>This page encountered an error</h2>
+      <p>We've been notified and are working on a fix.</p>
+      
+      <details>
+        <summary>Error details</summary>
+        <pre>{error.message}</pre>
+        <pre>{error.stack}</pre>
+      </details>
+      
+      <div className="actions">
+        <button onClick={resetErrorBoundary}>Try again</button>
+        <button onClick={() => window.location.href = '/'}>
+          Go to homepage
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+### Full App Crash Fallback
+
+```tsx
+function AppCrashFallback({ error }) {
+  return (
+    <div className="app-crash">
+      <h1>😵 Something went wrong</h1>
+      <p>The application has crashed. Please reload the page.</p>
+      <button onClick={() => window.location.reload()}>
+        Reload Application
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## Production Error Logging
+
+Integrate with error tracking services:
+
+```tsx
+import * as Sentry from '@sentry/react';
+import { ErrorBoundary } from 'react-error-boundary';
+
+function logError(error: Error, info: { componentStack: string }) {
+  Sentry.captureException(error, {
+    extra: {
+      componentStack: info.componentStack,
+    },
+  });
+}
+
+function App() {
+  return (
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onError={logError}
+    >
+      <Routes />
     </ErrorBoundary>
   );
 }
@@ -66,67 +318,125 @@ export default function App() {
 
 ---
 
-### The Manual Way: Class Components
+## The Manual Way: Class Component
 
-If you prefer zero dependencies or need to understand how it works under the hood, here is the robust class-based implementation.
-
-✅ Production-Ready ErrorBoundary.tsx (with full logging)
-
-```ts
-import React from 'react'
-
-type ErrorBoundaryProps = {
-  name?: string  // optional label for where the boundary is used
-  fallback?: React.ReactNode
-  children: React.ReactNode
-}
-// ... (rest of class component)
-```
-
- ---
-
- ### 🧩 Example Usage to Isolate Internal Component Failures
+If you need zero dependencies or want to understand how it works:
 
 ```tsx
-import { ErrorBoundary } from './ErrorBoundary' // Your class component OR library wrapper
-import MyComponent from '@internal-lib/MyComponent'
+import React, { Component, ReactNode } from 'react';
 
-export default function App() {
-  return (
-    <ErrorBoundary name="App" fallback={<div>App crashed</div>}>
-      <Header />
-      <ErrorBoundary name="InternalLib:MyComponent" fallback={<div>Widget failed</div>}>
-        <MyComponent />
-      </ErrorBoundary>
-      <Footer />
-    </ErrorBoundary>
-  )
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
-```
 
+interface State {
+  hasError: boolean;
+  error: Error | null;
+}
 
+class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
 
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
 
-⚙️ Bonus: Enable Source Maps in Your Builds
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+    this.props.onError?.(error, errorInfo);
+  }
 
-Make sure your tsconfig.json and vite/webpack config includes:
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback ?? (
+        <div>Something went wrong.</div>
+      );
+    }
 
-```json
-{
-  "compilerOptions": {
-    "sourceMap": true
+    return this.props.children;
   }
 }
+
+export default ErrorBoundary;
 ```
 
-In webpack:
-```js
-devtool: 'source-map'
-```
+---
 
 ## Best Practices
 
-- Use error boundaries **strategically** (e.g., around routes, widgets, or external integrations).
-- Combine with **logging tools** (like Sentry or LogRocket) to track and report issues.
-- Keep fallback UI **helpful and minimal**.
-- Avoid putting an error boundary around your **entire app** unless you have a good reason (like a global crash screen).
+::: {.callout-tip}
+## Error Boundary Strategy
+
+1. **Don't wrap everything** — Be strategic, not paranoid
+2. **Isolate untrusted code** — Third-party libraries get their own boundary
+3. **Reset on navigation** — Use `resetKeys` with route changes
+4. **Log to a service** — Sentry, LogRocket, or your own backend
+5. **Keep fallbacks helpful** — Show actionable UI, not just "Error"
+6. **Test your boundaries** — Intentionally throw errors in development
+:::
+
+| Do ✅ | Don't ❌ |
+|-------|---------|
+| Wrap routes independently | Wrap entire app in one boundary |
+| Isolate widgets | Let one widget crash the page |
+| Log errors to a service | Silently swallow errors |
+| Provide retry buttons | Show only "Something went wrong" |
+| Reset on navigation | Keep error state forever |
+
+---
+
+## Testing Error Boundaries
+
+```tsx
+// ErrorBoundary.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ErrorBoundary } from 'react-error-boundary';
+
+function ThrowError() {
+  throw new Error('Test error');
+}
+
+test('renders fallback when child throws', () => {
+  render(
+    <ErrorBoundary fallback={<div>Error occurred</div>}>
+      <ThrowError />
+    </ErrorBoundary>
+  );
+
+  expect(screen.getByText('Error occurred')).toBeInTheDocument();
+});
+
+test('resets when resetErrorBoundary is called', async () => {
+  const user = userEvent.setup();
+  let shouldThrow = true;
+
+  function MaybeThrow() {
+    if (shouldThrow) throw new Error('Test error');
+    return <div>Success</div>;
+  }
+
+  render(
+    <ErrorBoundary
+      FallbackComponent={({ resetErrorBoundary }) => (
+        <button onClick={resetErrorBoundary}>Reset</button>
+      )}
+      onReset={() => { shouldThrow = false; }}
+    >
+      <MaybeThrow />
+    </ErrorBoundary>
+  );
+
+  await user.click(screen.getByText('Reset'));
+  expect(screen.getByText('Success')).toBeInTheDocument();
+});
+```
+
+---
+
+Error boundaries transform your app from "one crash kills everything" to "graceful degradation with user feedback." Place them strategically, log errors properly, and always give users a way to recover.
