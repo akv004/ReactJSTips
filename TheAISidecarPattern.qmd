@@ -1,72 +1,600 @@
 # The AI Sidecar Pattern: Python for Intelligence, React for Beauty
 
-React is amazing for UIs. But let's be honest: JavaScript isn't the best language for heavy AI workloads. Python is the undisputed king of AI (PyTorch, TensorFlow, Pandas).
+React is amazing for UIs. But let's be honest: JavaScript isn't the best language for heavy AI workloads. Python is the undisputed king of AI (PyTorch, TensorFlow, Pandas, LangChain).
 
 So, how do you build a desktop app that has the **interactivity of React** but the **intelligence of Python**?
 
 You use the **Sidecar Pattern**.
 
+```{mermaid}
+flowchart LR
+    subgraph Tauri["Tauri Shell"]
+        A["React UI"]
+    end
+    
+    subgraph Sidecar["Python Sidecar"]
+        B["FastAPI Server"]
+        C["AI Models"]
+        D["PyTorch / LangChain"]
+    end
+    
+    A <-->|"HTTP/WebSocket"| B
+    B --> C
+    C --> D
+    
+    style A fill:#61dafb
+    style B fill:#3776ab
+    style D fill:#ee4c2c
+```
+
 ---
 
 ## What is a Sidecar?
 
-In our architecture, the main application (Tauri/Electron) spawns a separate, invisible child process—the Sidecar. In this case, it's a Python server (FastAPI or Flask).
+In microservices, a "sidecar" is a helper process that runs alongside your main application. In our architecture, the main application (Tauri) spawns a separate, invisible child process—a Python server.
 
-1.  **Main App Creates Child Process**: On startup, Tauri launches `server.py`.
-2.  **Health Check**: The main app pings `localhost:8000/health` until the Python server is ready.
-3.  **Communication**: The React UI calls the Python API via standard HTTP requests (or WebSockets).
-4.  **Shutdown**: When the main window closes, Tauri kills the Python process.
+| Component | Language | Responsibility |
+|-----------|----------|----------------|
+| **Main App** | Rust/React | UI, window management, system access |
+| **Sidecar** | Python | AI inference, heavy computation |
 
 ---
 
-## 2. Setting Up the Python Sidecar
+## Architecture Deep Dive
 
-In `apps/sidecar/server.py`:
+### Process Lifecycle
+
+```{mermaid}
+sequenceDiagram
+    participant T as Tauri
+    participant P as Python Sidecar
+    participant R as React UI
+    
+    T->>P: Spawn process (server.py)
+    P->>P: Initialize FastAPI
+    P->>P: Load AI models
+    
+    loop Health Check
+        T->>P: GET /health
+        P-->>T: 200 OK
+    end
+    
+    T->>R: Signal ready
+    R->>P: POST /infer
+    P-->>R: AI Response
+    
+    Note over T,R: User closes app
+    T->>P: SIGTERM
+    P->>P: Graceful shutdown
+```
+
+### Directory Structure
+
+```
+apps/
+├── desktop/                 # Tauri + React
+│   ├── src/
+│   │   ├── App.tsx
+│   │   └── hooks/
+│   │       └── useSidecar.ts
+│   └── src-tauri/
+│       └── src/
+│           └── sidecar.rs
+└── sidecar/                 # Python AI Server
+    ├── server.py
+    ├── models/
+    │   └── inference.py
+    ├── requirements.txt
+    └── pyproject.toml
+```
+
+---
+
+## Setting Up the Python Sidecar
+
+### FastAPI Server
 
 ```python
-from fastapi import FastAPI
+# apps/sidecar/server.py
+import os
+import signal
+import sys
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import torch
 
-app = FastAPI()
+# Global model reference
+model = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handle startup and shutdown."""
+    global model
+    print("🚀 Loading AI models...")
+    model = load_model()
+    print("✅ Models loaded, server ready")
+    yield
+    print("👋 Shutting down gracefully...")
+    cleanup_resources()
+
+app = FastAPI(lifespan=lifespan)
+
+# Allow requests from Tauri
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["tauri://localhost", "http://localhost:1420"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class InferenceRequest(BaseModel):
     prompt: str
+    max_tokens: int = 256
+    temperature: float = 0.7
 
-@app.post("/infer")
+class InferenceResponse(BaseModel):
+    result: str
+    tokens_used: int
+    inference_time_ms: float
+
+@app.get("/health")
+async def health():
+    """Health check endpoint for Tauri."""
+    return {
+        "status": "healthy",
+        "model_loaded": model is not None,
+        "gpu_available": torch.cuda.is_available()
+    }
+
+@app.post("/infer", response_model=InferenceResponse)
 async def infer(req: InferenceRequest):
-    # This is where you load PyTorch / Llama / Stable Diffusion
-    result = perform_heavy_computation(req.prompt)
-    return {"result": result}
-```
+    """Run AI inference."""
+    import time
+    start = time.perf_counter()
+    
+    try:
+        result = model.generate(
+            req.prompt,
+            max_tokens=req.max_tokens,
+            temperature=req.temperature
+        )
+        
+        elapsed = (time.perf_counter() - start) * 1000
+        
+        return InferenceResponse(
+            result=result.text,
+            tokens_used=result.token_count,
+            inference_time_ms=elapsed
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-This server runs independently. You can dev it, test it, and debug it without even touching the UI.
+def load_model():
+    """Load your AI model here."""
+    # Example: Load a local LLM
+    # from transformers import AutoModelForCausalLM, AutoTokenizer
+    # return AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
+    pass
+
+def cleanup_resources():
+    """Free GPU memory, close connections."""
+    global model
+    if model:
+        del model
+        torch.cuda.empty_cache()
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("SIDECAR_PORT", 8000))
+    uvicorn.run(app, host="127.0.0.1", port=port)
+```
 
 ---
 
-## 3. The React Client
+## Spawning from Tauri (Rust)
 
-From the perspective of React, this is just another REST API.
+### Sidecar Management
+
+```rust
+// src-tauri/src/sidecar.rs
+use std::process::{Child, Command, Stdio};
+use std::sync::Mutex;
+use tauri::State;
+
+pub struct SidecarState {
+    pub process: Mutex<Option<Child>>,
+}
+
+#[tauri::command]
+pub fn start_sidecar(state: State<SidecarState>) -> Result<u16, String> {
+    let port = 8000u16;
+    
+    let child = Command::new("python")
+        .args(["-m", "uvicorn", "server:app", "--host", "127.0.0.1", "--port", &port.to_string()])
+        .current_dir("../sidecar")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Failed to start sidecar: {}", e))?;
+    
+    *state.process.lock().unwrap() = Some(child);
+    
+    Ok(port)
+}
+
+#[tauri::command]
+pub fn stop_sidecar(state: State<SidecarState>) -> Result<(), String> {
+    if let Some(mut child) = state.process.lock().unwrap().take() {
+        child.kill().map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+```
+
+### Register in main.rs
+
+```rust
+// src-tauri/src/main.rs
+mod sidecar;
+
+fn main() {
+    tauri::Builder::default()
+        .manage(sidecar::SidecarState {
+            process: Mutex::new(None),
+        })
+        .invoke_handler(tauri::generate_handler![
+            sidecar::start_sidecar,
+            sidecar::stop_sidecar,
+        ])
+        .run(tauri::generate_context!())
+        .expect("error running tauri application");
+}
+```
+
+---
+
+## The React Integration
+
+### useSidecar Hook
 
 ```tsx
-// Using React Query for sidecar calls
-const { mutate } = useMutation({
-    mutationFn: async (prompt: string) => {
-        const res = await fetch('http://localhost:8000/infer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt })
-        });
-        return res.json();
+// src/hooks/useSidecar.ts
+import { invoke } from '@tauri-apps/api/core';
+import { useEffect, useState } from 'react';
+
+interface SidecarStatus {
+  ready: boolean;
+  port: number | null;
+  error: string | null;
+}
+
+export function useSidecar() {
+  const [status, setStatus] = useState<SidecarStatus>({
+    ready: false,
+    port: null,
+    error: null,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+    let attempts = 0;
+    const maxAttempts = 30;
+
+    async function startAndWait() {
+      try {
+        // Start the Python sidecar
+        const port = await invoke<number>('start_sidecar');
+        
+        // Poll health endpoint until ready
+        while (attempts < maxAttempts && mounted) {
+          try {
+            const res = await fetch(`http://localhost:${port}/health`);
+            if (res.ok) {
+              const health = await res.json();
+              if (health.model_loaded) {
+                setStatus({ ready: true, port, error: null });
+                return;
+              }
+            }
+          } catch {
+            // Server not ready yet
+          }
+          
+          attempts++;
+          await new Promise(r => setTimeout(r, 500));
+        }
+        
+        setStatus({ ready: false, port, error: 'Sidecar failed to start' });
+      } catch (e) {
+        setStatus({ ready: false, port: null, error: String(e) });
+      }
     }
-});
+
+    startAndWait();
+
+    return () => {
+      mounted = false;
+      invoke('stop_sidecar').catch(console.error);
+    };
+  }, []);
+
+  return status;
+}
+```
+
+### AI Inference Hook
+
+```tsx
+// src/hooks/useInference.ts
+import { useMutation } from '@tanstack/react-query';
+import { useSidecar } from './useSidecar';
+
+interface InferenceParams {
+  prompt: string;
+  maxTokens?: number;
+  temperature?: number;
+}
+
+interface InferenceResult {
+  result: string;
+  tokens_used: number;
+  inference_time_ms: number;
+}
+
+export function useInference() {
+  const { port, ready } = useSidecar();
+
+  return useMutation({
+    mutationFn: async (params: InferenceParams): Promise<InferenceResult> => {
+      if (!ready || !port) {
+        throw new Error('Sidecar not ready');
+      }
+
+      const res = await fetch(`http://localhost:${port}/infer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: params.prompt,
+          max_tokens: params.maxTokens ?? 256,
+          temperature: params.temperature ?? 0.7,
+        }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.detail || 'Inference failed');
+      }
+
+      return res.json();
+    },
+  });
+}
+```
+
+### Usage in a Component
+
+```tsx
+// src/components/AIChat.tsx
+import { useState } from 'react';
+import { useInference } from '../hooks/useInference';
+import { useSidecar } from '../hooks/useSidecar';
+
+export function AIChat() {
+  const [prompt, setPrompt] = useState('');
+  const sidecar = useSidecar();
+  const inference = useInference();
+
+  if (sidecar.error) {
+    return <div className="error">Failed to start AI: {sidecar.error}</div>;
+  }
+
+  if (!sidecar.ready) {
+    return (
+      <div className="loading">
+        <span className="spinner" />
+        Loading AI models...
+      </div>
+    );
+  }
+
+  return (
+    <div className="chat">
+      <textarea
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="Ask the AI anything..."
+      />
+      
+      <button
+        onClick={() => inference.mutate({ prompt })}
+        disabled={inference.isPending}
+      >
+        {inference.isPending ? 'Thinking...' : 'Send'}
+      </button>
+
+      {inference.data && (
+        <div className="response">
+          <p>{inference.data.result}</p>
+          <small>
+            {inference.data.tokens_used} tokens in {inference.data.inference_time_ms.toFixed(0)}ms
+          </small>
+        </div>
+      )}
+
+      {inference.error && (
+        <div className="error">{inference.error.message}</div>
+      )}
+    </div>
+  );
+}
 ```
 
 ---
 
-## 4. Why This Architecture Wins
+## Streaming Responses
 
-- **Decoupling**: The UI team can iterate on React components while the AI team iterates on the Python model. The API contract is the only touchpoint.
-- **Stability**: If the Python process crashes (OOM), the UI doesn't freeze. React can show a "Service Restarting..." message and relaunch the sidecar.
-- **Ecosystem**: You get access to `npm` packages for UI and `pip` packages for AI.
+For long AI outputs, stream tokens as they're generated:
+
+### Python Streaming Endpoint
+
+```python
+from fastapi.responses import StreamingResponse
+import asyncio
+
+@app.post("/infer/stream")
+async def infer_stream(req: InferenceRequest):
+    """Stream tokens as they're generated."""
+    
+    async def generate():
+        for token in model.generate_stream(req.prompt):
+            yield f"data: {token}\n\n"
+            await asyncio.sleep(0)  # Yield control
+        yield "data: [DONE]\n\n"
+    
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream"
+    )
+```
+
+### React Streaming Hook
+
+```tsx
+export function useStreamingInference() {
+  const { port } = useSidecar();
+  const [streaming, setStreaming] = useState(false);
+  const [tokens, setTokens] = useState<string[]>([]);
+
+  const stream = async (prompt: string) => {
+    setStreaming(true);
+    setTokens([]);
+
+    const res = await fetch(`http://localhost:${port}/infer/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const reader = res.body?.getReader();
+    const decoder = new TextDecoder();
+
+    while (reader) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') {
+            setStreaming(false);
+            return;
+          }
+          setTokens(prev => [...prev, data]);
+        }
+      }
+    }
+  };
+
+  return { stream, streaming, tokens, text: tokens.join('') };
+}
+```
+
+---
+
+## Error Handling & Recovery
+
+### Automatic Restart
+
+```tsx
+function useSidecarWithRecovery() {
+  const [restartCount, setRestartCount] = useState(0);
+  const sidecar = useSidecar();
+
+  useEffect(() => {
+    if (sidecar.error && restartCount < 3) {
+      const timer = setTimeout(() => {
+        setRestartCount(c => c + 1);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [sidecar.error, restartCount]);
+
+  return {
+    ...sidecar,
+    isRecovering: sidecar.error && restartCount < 3,
+  };
+}
+```
+
+### Graceful Degradation
+
+```tsx
+function AIFeature() {
+  const sidecar = useSidecar();
+
+  if (!sidecar.ready) {
+    return <FallbackUI />;  // Show non-AI features
+  }
+
+  return <AIChat />;
+}
+```
+
+---
+
+## Performance Tips
+
+| Optimization | Impact |
+|--------------|--------|
+| **Preload models on startup** | Eliminates first-inference latency |
+| **Use GPU if available** | 10-100x faster inference |
+| **Batch requests** | Reduce per-request overhead |
+| **Keep connection alive** | Avoid TCP handshake per request |
+| **Use WebSockets for bidirectional** | Lower latency than HTTP polls |
+
+### Model Loading Strategy
+
+```python
+# Load once at startup, not per-request
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    
+    # Check GPU availability
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"🎮 Using device: {device}")
+    
+    # Load with appropriate precision
+    model = load_model().to(device)
+    
+    if device == "cuda":
+        model = model.half()  # FP16 for GPU
+    
+    yield
+    
+    del model
+    torch.cuda.empty_cache()
+```
+
+---
+
+## Why This Architecture Wins
+
+1. **Decoupling**: The UI team iterates on React while the AI team iterates on Python. The API contract is the only touchpoint.
+
+2. **Stability**: If Python crashes (OOM, model error), the UI stays responsive. React shows "Reconnecting..." and relaunches the sidecar.
+
+3. **Ecosystem**: Full access to `npm` for UI and `pip` for AI—no compromises.
+
+4. **Debugging**: Test Python server independently with `curl` or Postman. Test React with mocked responses.
+
+5. **Deployment**: Bundle Python with PyInstaller or ship a conda environment alongside your app.
+
+---
 
 In the next chapter, we'll discuss how to render the complex visual outputs of these AI models using a High-Performance Canvas.
