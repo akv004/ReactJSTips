@@ -1,0 +1,376 @@
+# E2E Testing with Playwright: Beyond Unit Tests
+
+Unit tests verify functions. Integration tests verify components. **E2E tests verify your application works for real users**. Playwright is the modern standard for browser automation—fast, reliable, and built for the future.
+
+---
+
+## Why Playwright?
+
+```{mermaid}
+flowchart LR
+    A["Playwright"] --> B["Multi-browser"]
+    A --> C["Auto-waiting"]
+    A --> D["Native TypeScript"]
+    A --> E["Parallel execution"]
+    A --> F["Codegen"]
+    A --> G["API testing"]
+    
+    style A fill:#10b981
+```
+
+| Feature | Playwright | Cypress |
+|---------|------------|---------|
+| Multi-browser | ✅ Chrome, Firefox, Safari, Mobile | ⚠️ Limited |
+| Multi-tab | ✅ Native | ❌ Single tab |
+| Speed | ✅ Parallel by default | ⚠️ Paid feature |
+| TypeScript | ✅ First-class | ⚠️ Bolted on |
+| API Testing | ✅ Built-in | ❌ Separate tool |
+| Network mocking | ✅ Powerful | ✅ Good |
+
+---
+
+## Setup
+
+```bash
+# Initialize Playwright in your project
+npm init playwright@latest
+
+# This creates:
+# - playwright.config.ts
+# - tests/ directory
+# - .github/workflows/playwright.yml (optional)
+```
+
+### Configuration
+
+```ts
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  
+  use: {
+    baseURL: 'http://localhost:5173',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+  },
+
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile', use: { ...devices['iPhone 14'] } },
+  ],
+
+  // Start your dev server before running tests
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+---
+
+## Writing Your First Test
+
+```ts
+// tests/auth.spec.ts
+import { test, expect } from '@playwright/test';
+
+test.describe('Authentication', () => {
+  test('user can log in', async ({ page }) => {
+    // Navigate
+    await page.goto('/login');
+
+    // Fill form
+    await page.getByLabel('Email').fill('user@example.com');
+    await page.getByLabel('Password').fill('password123');
+
+    // Submit
+    await page.getByRole('button', { name: 'Sign In' }).click();
+
+    // Assert redirect and welcome message
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByText('Welcome back')).toBeVisible();
+  });
+
+  test('shows error for invalid credentials', async ({ page }) => {
+    await page.goto('/login');
+    await page.getByLabel('Email').fill('user@example.com');
+    await page.getByLabel('Password').fill('wrongpassword');
+    await page.getByRole('button', { name: 'Sign In' }).click();
+
+    await expect(page.getByText('Invalid credentials')).toBeVisible();
+    await expect(page).toHaveURL('/login'); // Still on login page
+  });
+});
+```
+
+---
+
+## Locators: Finding Elements
+
+Playwright's locators auto-wait and auto-retry. Use semantic locators for resilient tests:
+
+```ts
+// ✅ Best: Role-based (accessible and resilient)
+page.getByRole('button', { name: 'Submit' });
+page.getByRole('textbox', { name: 'Email' });
+page.getByRole('link', { name: 'Home' });
+
+// ✅ Good: Label-based
+page.getByLabel('Password');
+page.getByPlaceholder('Search...');
+page.getByText('Welcome');
+
+// ⚠️ Okay: Test IDs (when semantic isn't possible)
+page.getByTestId('user-avatar');
+
+// ❌ Avoid: CSS selectors (brittle)
+page.locator('.btn-primary');
+page.locator('#submit-btn');
+```
+
+### Chaining Locators
+
+```ts
+// Find within a specific container
+const sidebar = page.getByRole('navigation');
+await sidebar.getByRole('link', { name: 'Settings' }).click();
+
+// Filter by additional criteria
+await page
+  .getByRole('listitem')
+  .filter({ hasText: 'Product A' })
+  .getByRole('button', { name: 'Add to Cart' })
+  .click();
+```
+
+---
+
+## Page Object Model
+
+Organize tests with reusable page objects:
+
+```ts
+// tests/pages/LoginPage.ts
+import { Page, Locator } from '@playwright/test';
+
+export class LoginPage {
+  readonly page: Page;
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly submitButton: Locator;
+  readonly errorMessage: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.emailInput = page.getByLabel('Email');
+    this.passwordInput = page.getByLabel('Password');
+    this.submitButton = page.getByRole('button', { name: 'Sign In' });
+    this.errorMessage = page.getByRole('alert');
+  }
+
+  async goto() {
+    await this.page.goto('/login');
+  }
+
+  async login(email: string, password: string) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
+  }
+}
+```
+
+```ts
+// tests/auth.spec.ts
+import { test, expect } from '@playwright/test';
+import { LoginPage } from './pages/LoginPage';
+
+test('user can log in', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login('user@example.com', 'password123');
+  
+  await expect(page).toHaveURL('/dashboard');
+});
+```
+
+---
+
+## Mocking API Responses
+
+Test edge cases without hitting real APIs:
+
+```ts
+test('handles server error gracefully', async ({ page }) => {
+  // Mock the API to return 500
+  await page.route('**/api/users/*', route => {
+    route.fulfill({
+      status: 500,
+      body: JSON.stringify({ error: 'Internal Server Error' }),
+    });
+  });
+
+  await page.goto('/profile');
+  
+  await expect(page.getByText('Something went wrong')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Retry' })).toBeVisible();
+});
+
+test('shows empty state when no data', async ({ page }) => {
+  await page.route('**/api/todos', route => {
+    route.fulfill({
+      status: 200,
+      body: JSON.stringify([]),
+    });
+  });
+
+  await page.goto('/todos');
+  
+  await expect(page.getByText('No todos yet')).toBeVisible();
+});
+```
+
+---
+
+## Visual Regression Testing
+
+Catch unintended UI changes:
+
+```ts
+test('homepage looks correct', async ({ page }) => {
+  await page.goto('/');
+  
+  // Full page screenshot
+  await expect(page).toHaveScreenshot('homepage.png');
+});
+
+test('button states', async ({ page }) => {
+  await page.goto('/components');
+  
+  const button = page.getByRole('button', { name: 'Submit' });
+  
+  // Screenshot specific element
+  await expect(button).toHaveScreenshot('button-default.png');
+  
+  await button.hover();
+  await expect(button).toHaveScreenshot('button-hover.png');
+});
+```
+
+Update snapshots when intentional changes are made:
+
+```bash
+npx playwright test --update-snapshots
+```
+
+---
+
+## CI/CD Integration
+
+```yaml
+# .github/workflows/e2e.yml
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        
+      - name: Run E2E tests
+        run: npx playwright test
+        
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+```
+
+---
+
+## Codegen: Record Tests Automatically
+
+Let Playwright write tests for you:
+
+```bash
+# Opens a browser and generates code as you interact
+npx playwright codegen localhost:5173
+```
+
+This is perfect for:
+- Quickly scaffolding complex user flows
+- Onboarding team members to E2E testing
+- Debugging locator issues
+
+---
+
+## Debugging Failed Tests
+
+```bash
+# Run with headed browser
+npx playwright test --headed
+
+# Run in debug mode (step through)
+npx playwright test --debug
+
+# Open last test report
+npx playwright show-report
+```
+
+### Trace Viewer
+
+When tests fail, Playwright captures a trace:
+
+```bash
+npx playwright show-trace trace.zip
+```
+
+The trace shows:
+- Screenshots at every step
+- Network requests
+- Console logs
+- DOM snapshots
+- Action timeline
+
+---
+
+## Testing Checklist
+
+| Test Type | What to Test | Example |
+|-----------|--------------|---------|
+| **Critical Paths** | User can complete core flows | Login, checkout, signup |
+| **Error States** | App handles failures gracefully | API errors, network offline |
+| **Edge Cases** | Unusual but valid scenarios | Empty states, long text |
+| **Accessibility** | Screen reader compatibility | `toHaveAccessibleName()` |
+| **Visual** | UI matches design | Screenshot comparisons |
+
+E2E tests are your safety net. They don't replace unit tests—they complement them by testing what users actually experience.

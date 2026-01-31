@@ -1,0 +1,465 @@
+# Building Design Systems: From Components to Libraries
+
+Every mature React team eventually faces the same challenge: **how do we share components across projects?** This chapter covers building, documenting, and publishing professional component libraries.
+
+---
+
+## What is a Design System?
+
+```{mermaid}
+flowchart TD
+    A["Design Tokens"] --> B["Primitives"]
+    B --> C["Components"]
+    C --> D["Patterns"]
+    D --> E["Templates"]
+    
+    A --> |"colors, spacing, fonts"| B
+    B --> |"Button, Input, Card"| C
+    C --> |"LoginForm, DataTable"| D
+    D --> |"DashboardLayout"| E
+```
+
+| Layer | Example | Changes |
+|-------|---------|---------|
+| **Design Tokens** | `--color-primary: #3b82f6` | Rarely |
+| **Primitives** | `<Button>`, `<Input>` | Sometimes |
+| **Components** | `<SearchBar>`, `<UserCard>` | Often |
+| **Patterns** | `<Pagination>`, `<DataGrid>` | Frequently |
+
+---
+
+## Project Structure
+
+```
+packages/
+├── ui/                     # Component library
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Button/
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── Button.stories.tsx
+│   │   │   │   ├── Button.test.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── index.ts
+│   │   ├── tokens/
+│   │   │   └── colors.ts
+│   │   └── index.ts
+│   ├── package.json
+│   └── tsconfig.json
+└── docs/                   # Storybook site
+```
+
+---
+
+## Building Components
+
+### A Professional Button Component
+
+```tsx
+// packages/ui/src/components/Button/Button.tsx
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '../../utils/cn';
+
+const buttonVariants = cva(
+  // Base styles
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  isLoading?: boolean;
+}
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, isLoading, children, disabled, ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={disabled || isLoading}
+        {...props}
+      >
+        {isLoading && (
+          <svg
+            className="mr-2 h-4 w-4 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
+          </svg>
+        )}
+        {children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';
+```
+
+---
+
+## Documenting with Storybook 8
+
+```bash
+# Initialize Storybook
+npx storybook@latest init
+```
+
+### Writing Stories
+
+```tsx
+// Button.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './Button';
+
+const meta: Meta<typeof Button> = {
+  title: 'Components/Button',
+  component: Button,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+    },
+    size: {
+      control: 'select',
+      options: ['default', 'sm', 'lg', 'icon'],
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    children: 'Button',
+  },
+};
+
+export const Destructive: Story = {
+  args: {
+    variant: 'destructive',
+    children: 'Delete',
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+    children: 'Saving...',
+  },
+};
+
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      <Button variant="default">Default</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="destructive">Destructive</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="link">Link</Button>
+    </div>
+  ),
+};
+```
+
+---
+
+## Package Configuration
+
+### package.json
+
+```json
+{
+  "name": "@yourorg/ui",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src/",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+```
+
+### tsup.config.ts
+
+```ts
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/index.ts'],
+  format: ['cjs', 'esm'],
+  dts: true,
+  splitting: true,
+  sourcemap: true,
+  clean: true,
+  external: ['react', 'react-dom'],
+});
+```
+
+---
+
+## Versioning with Changesets
+
+Changesets automates versioning and changelogs:
+
+```bash
+# Install
+npm install -D @changesets/cli
+
+# Initialize
+npx changeset init
+```
+
+### Workflow
+
+```bash
+# 1. After making changes, create a changeset
+npx changeset
+
+# This prompts:
+# - Which packages changed?
+# - Is this a major/minor/patch?
+# - Describe the change
+
+# 2. When ready to release
+npx changeset version  # Updates versions and CHANGELOG.md
+npx changeset publish  # Publishes to npm
+```
+
+### Example Changeset
+
+```markdown
+---
+"@yourorg/ui": minor
+---
+
+Added `isLoading` prop to Button component with spinner animation.
+```
+
+---
+
+## Publishing to npm
+
+### First-time Setup
+
+```bash
+# Login to npm
+npm login
+
+# For scoped packages, ensure public access
+npm publish --access public
+```
+
+### GitHub Actions for Publishing
+
+```yaml
+# .github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          
+      - run: npm ci
+      - run: npm run build
+      
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
+        with:
+          publish: npx changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+---
+
+## Consuming Your Library
+
+### Installation
+
+```bash
+npm install @yourorg/ui
+```
+
+### Usage
+
+```tsx
+import { Button } from '@yourorg/ui';
+import '@yourorg/ui/styles.css';
+
+function App() {
+  return (
+    <Button variant="primary" isLoading={saving}>
+      Save Changes
+    </Button>
+  );
+}
+```
+
+---
+
+## Design Tokens
+
+Centralize design decisions:
+
+```ts
+// packages/ui/src/tokens/colors.ts
+export const colors = {
+  primary: {
+    50: '#eff6ff',
+    100: '#dbeafe',
+    500: '#3b82f6',
+    600: '#2563eb',
+    700: '#1d4ed8',
+  },
+  semantic: {
+    success: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
+  },
+} as const;
+
+// Generate CSS custom properties
+export function generateCSSVariables() {
+  return Object.entries(colors.primary)
+    .map(([key, value]) => `--color-primary-${key}: ${value};`)
+    .join('\n');
+}
+```
+
+---
+
+## Testing Components
+
+```tsx
+// Button.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('renders children', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
+  });
+
+  it('shows loading spinner when isLoading', () => {
+    render(<Button isLoading>Save</Button>);
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('calls onClick when clicked', async () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Click</Button>);
+    
+    await userEvent.click(screen.getByRole('button'));
+    
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not call onClick when disabled', async () => {
+    const handleClick = vi.fn();
+    render(<Button disabled onClick={handleClick}>Click</Button>);
+    
+    await userEvent.click(screen.getByRole('button'));
+    
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+});
+```
+
+---
+
+## Library Checklist
+
+Before publishing v1.0.0:
+
+- [ ] **Documentation** — Storybook with all component states
+- [ ] **TypeScript** — Full type coverage with exported types
+- [ ] **Accessibility** — Keyboard navigation, ARIA attributes
+- [ ] **Testing** — Unit tests for all components
+- [ ] **Theming** — CSS variables for customization
+- [ ] **Tree-shaking** — ESM exports for optimal bundling
+- [ ] **Changelog** — Automated with Changesets
+- [ ] **License** — MIT or appropriate license
+
+Building a design system is an investment. Start small, iterate based on real usage, and resist the urge to over-engineer before you have consumers.

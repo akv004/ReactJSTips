@@ -1,0 +1,293 @@
+# Debugging Modern React: From Console to Profiler
+
+Bugs are inevitable. What separates senior engineers from juniors isn't avoiding bugs—it's **finding them fast**. This chapter covers the modern debugging toolkit for React applications.
+
+---
+
+## React DevTools: Your Primary Weapon
+
+Install the [React DevTools](https://react.dev/learn/react-developer-tools) browser extension. It adds two tabs to your browser's developer tools:
+
+### Components Tab
+
+Inspect the component tree, view props and state, and trace where data comes from.
+
+```{mermaid}
+flowchart LR
+    A["Select Component"] --> B["View Props"]
+    A --> C["View State"]
+    A --> D["View Hooks"]
+    B --> E["Trace to Source"]
+    C --> F["Edit Live"]
+    D --> G["See Dependencies"]
+```
+
+**Pro Tips:**
+
+- **Click any component** → See its props, state, and hooks in the right panel
+- **Search by name** → Type component name to find it instantly
+- **"Rendered by"** → Trace the parent chain to understand data flow
+- **Edit state live** → Double-click state values to modify and test
+
+---
+
+## The Profiler: Finding Performance Bottlenecks
+
+The Profiler tab records renders and shows you exactly why components re-rendered.
+
+### Recording a Session
+
+1. Open Profiler tab
+2. Click "Record" button
+3. Interact with your app
+4. Click "Stop"
+5. Analyze the flame graph
+
+### Reading the Flame Graph
+
+| Color | Meaning |
+|-------|---------|
+| **Gray** | Did not render |
+| **Blue-Green** | Fast render (< 1ms) |
+| **Yellow** | Medium render (1-16ms) |
+| **Red** | Slow render (> 16ms) — Optimize this! |
+
+### Why Did This Render?
+
+Enable "Record why each component rendered" in Profiler settings. Common causes:
+
+1. **Props changed** — Parent passed new reference
+2. **State changed** — Component's own state updated
+3. **Context changed** — Provider value changed
+4. **Parent rendered** — No memoization
+
+---
+
+## Console Debugging Patterns
+
+### Strategic Logging
+
+```tsx
+// ❌ Bad: Noise
+console.log(data);
+
+// ✅ Good: Context
+console.log('[UserProfile] Fetched user:', { userId, data });
+
+// ✅ Better: Grouped
+console.group('Auth Flow');
+console.log('Token:', token);
+console.log('User:', user);
+console.groupEnd();
+
+// ✅ Best: Conditional in dev only
+if (import.meta.env.DEV) {
+  console.log('[Debug] State update:', state);
+}
+```
+
+### useDebugValue for Custom Hooks
+
+Make your custom hooks show meaningful info in DevTools:
+
+```tsx
+function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
+  
+  // Shows "Authenticated: john@example.com" or "Not authenticated" in DevTools
+  useDebugValue(user ? `Authenticated: ${user.email}` : 'Not authenticated');
+  
+  return { user, login, logout };
+}
+```
+
+---
+
+## Debugging State Issues
+
+### The "Why Did My State Disappear?" Pattern
+
+```tsx
+// ❌ Common mistake: Setting state during render
+function BadComponent({ items }) {
+  const [filtered, setFiltered] = useState([]);
+  
+  // 🔥 This causes infinite loops!
+  setFiltered(items.filter(i => i.active));
+  
+  return <List items={filtered} />;
+}
+
+// ✅ Fix: Use useMemo for derived state
+function GoodComponent({ items }) {
+  const filtered = useMemo(
+    () => items.filter(i => i.active),
+    [items]
+  );
+  
+  return <List items={filtered} />;
+}
+```
+
+### Stale Closure Debugging
+
+```tsx
+function Counter() {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // ❌ Bug: count is always 0 (stale closure)
+      console.log('Count is:', count);
+      setCount(count + 1); // Always sets to 1
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, []); // Empty deps = stale closure
+  
+  // ✅ Fix: Use functional update
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(prev => prev + 1); // Always uses latest
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+}
+```
+
+---
+
+## Network Debugging
+
+### Inspecting API Calls
+
+1. Open **Network tab** in DevTools
+2. Filter by **Fetch/XHR**
+3. Click any request to see:
+   - **Headers** — Auth tokens, content types
+   - **Payload** — What you sent
+   - **Response** — What came back
+   - **Timing** — Where time was spent
+
+### Debugging with TanStack Query DevTools
+
+```tsx
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <YourApp />
+      {/* Floating button in dev mode */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+The Query DevTools show:
+- All cached queries
+- Query status (fresh, stale, fetching)
+- Cache timing
+- Manual refetch/invalidate buttons
+
+---
+
+## Source Maps & Error Boundaries
+
+### Production Debugging with Source Maps
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  build: {
+    sourcemap: true, // Generate source maps
+  },
+});
+```
+
+::: {.callout-warning}
+## Security Note
+Source maps expose your original code. Options:
+- **Hidden source maps** — Upload to error tracking only
+- **Separate hosting** — Serve maps from authenticated endpoint
+:::
+
+### Error Boundary with Reporting
+
+```tsx
+import { ErrorBoundary } from 'react-error-boundary';
+
+function ErrorFallback({ error, resetErrorBoundary }) {
+  // Report to your error tracking service
+  useEffect(() => {
+    reportError(error);
+  }, [error]);
+
+  return (
+    <div role="alert">
+      <h2>Something went wrong</h2>
+      <pre>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <YourApp />
+    </ErrorBoundary>
+  );
+}
+```
+
+---
+
+## AI-Assisted Debugging
+
+Modern workflows include AI as a debugging partner:
+
+```markdown
+## Prompt Template for Debugging
+
+I have a React component that [describe behavior].
+
+Expected: [what should happen]
+Actual: [what happens instead]
+
+Here's the relevant code:
+```tsx
+[paste component]
+```
+
+I've tried: [what you've checked]
+
+What could cause this?
+```
+
+**When to use AI:**
+- Unfamiliar error messages
+- Complex state interactions
+- Performance issues you can't pinpoint
+
+**When NOT to use AI:**
+- Before reading the actual error message
+- Without reproducing the bug yourself first
+- For trivial console.log placement
+
+---
+
+## Debugging Checklist
+
+1. [ ] **Read the error** — The message often tells you exactly what's wrong
+2. [ ] **Reproduce reliably** — Can you trigger it consistently?
+3. [ ] **Isolate the cause** — Comment out code until it works, then add back
+4. [ ] **Check the network** — Is the API returning what you expect?
+5. [ ] **Inspect state** — Use React DevTools to see current values
+6. [ ] **Check dependencies** — Are effect deps complete and correct?
+7. [ ] **Profile renders** — Is something re-rendering too often?
+8. [ ] **Search the error** — Someone else has probably seen it
+
+The best debuggers aren't those who never encounter bugs—they're the ones who find them in minutes, not hours.

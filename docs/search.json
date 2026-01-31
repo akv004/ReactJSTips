@@ -1488,5 +1488,335 @@
     "crumbs": [
       "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html",
+    "href": "DebuggingModernReact.html",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "",
+    "text": "React DevTools: Your Primary Weapon\nBugs are inevitable. What separates senior engineers from juniors isn’t avoiding bugs—it’s finding them fast. This chapter covers the modern debugging toolkit for React applications.\nInstall the React DevTools browser extension. It adds two tabs to your browser’s developer tools:",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#react-devtools-your-primary-weapon",
+    "href": "DebuggingModernReact.html#react-devtools-your-primary-weapon",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "",
+    "text": "Components Tab\nInspect the component tree, view props and state, and trace where data comes from.\n\n\n\n\n\nflowchart LR\n    A[\"Select Component\"] --&gt; B[\"View Props\"]\n    A --&gt; C[\"View State\"]\n    A --&gt; D[\"View Hooks\"]\n    B --&gt; E[\"Trace to Source\"]\n    C --&gt; F[\"Edit Live\"]\n    D --&gt; G[\"See Dependencies\"]\n\n\n\n\n\n\nPro Tips:\n\nClick any component → See its props, state, and hooks in the right panel\nSearch by name → Type component name to find it instantly\n“Rendered by” → Trace the parent chain to understand data flow\nEdit state live → Double-click state values to modify and test",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#the-profiler-finding-performance-bottlenecks",
+    "href": "DebuggingModernReact.html#the-profiler-finding-performance-bottlenecks",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "The Profiler: Finding Performance Bottlenecks",
+    "text": "The Profiler: Finding Performance Bottlenecks\nThe Profiler tab records renders and shows you exactly why components re-rendered.\n\nRecording a Session\n\nOpen Profiler tab\nClick “Record” button\nInteract with your app\nClick “Stop”\nAnalyze the flame graph\n\n\n\nReading the Flame Graph\n\n\n\nColor\nMeaning\n\n\n\n\nGray\nDid not render\n\n\nBlue-Green\nFast render (&lt; 1ms)\n\n\nYellow\nMedium render (1-16ms)\n\n\nRed\nSlow render (&gt; 16ms) — Optimize this!\n\n\n\n\n\nWhy Did This Render?\nEnable “Record why each component rendered” in Profiler settings. Common causes:\n\nProps changed — Parent passed new reference\nState changed — Component’s own state updated\nContext changed — Provider value changed\nParent rendered — No memoization",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#console-debugging-patterns",
+    "href": "DebuggingModernReact.html#console-debugging-patterns",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "Console Debugging Patterns",
+    "text": "Console Debugging Patterns\n\nStrategic Logging\n// ❌ Bad: Noise\nconsole.log(data);\n\n// ✅ Good: Context\nconsole.log('[UserProfile] Fetched user:', { userId, data });\n\n// ✅ Better: Grouped\nconsole.group('Auth Flow');\nconsole.log('Token:', token);\nconsole.log('User:', user);\nconsole.groupEnd();\n\n// ✅ Best: Conditional in dev only\nif (import.meta.env.DEV) {\n  console.log('[Debug] State update:', state);\n}\n\n\nuseDebugValue for Custom Hooks\nMake your custom hooks show meaningful info in DevTools:\nfunction useAuth() {\n  const [user, setUser] = useState&lt;User | null&gt;(null);\n  \n  // Shows \"Authenticated: john@example.com\" or \"Not authenticated\" in DevTools\n  useDebugValue(user ? `Authenticated: ${user.email}` : 'Not authenticated');\n  \n  return { user, login, logout };\n}",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#debugging-state-issues",
+    "href": "DebuggingModernReact.html#debugging-state-issues",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "Debugging State Issues",
+    "text": "Debugging State Issues\n\nThe “Why Did My State Disappear?” Pattern\n// ❌ Common mistake: Setting state during render\nfunction BadComponent({ items }) {\n  const [filtered, setFiltered] = useState([]);\n  \n  // 🔥 This causes infinite loops!\n  setFiltered(items.filter(i =&gt; i.active));\n  \n  return &lt;List items={filtered} /&gt;;\n}\n\n// ✅ Fix: Use useMemo for derived state\nfunction GoodComponent({ items }) {\n  const filtered = useMemo(\n    () =&gt; items.filter(i =&gt; i.active),\n    [items]\n  );\n  \n  return &lt;List items={filtered} /&gt;;\n}\n\n\nStale Closure Debugging\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  \n  useEffect(() =&gt; {\n    const interval = setInterval(() =&gt; {\n      // ❌ Bug: count is always 0 (stale closure)\n      console.log('Count is:', count);\n      setCount(count + 1); // Always sets to 1\n    }, 1000);\n    \n    return () =&gt; clearInterval(interval);\n  }, []); // Empty deps = stale closure\n  \n  // ✅ Fix: Use functional update\n  useEffect(() =&gt; {\n    const interval = setInterval(() =&gt; {\n      setCount(prev =&gt; prev + 1); // Always uses latest\n    }, 1000);\n    \n    return () =&gt; clearInterval(interval);\n  }, []);\n}",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#network-debugging",
+    "href": "DebuggingModernReact.html#network-debugging",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "Network Debugging",
+    "text": "Network Debugging\n\nInspecting API Calls\n\nOpen Network tab in DevTools\nFilter by Fetch/XHR\nClick any request to see:\n\nHeaders — Auth tokens, content types\nPayload — What you sent\nResponse — What came back\nTiming — Where time was spent\n\n\n\n\nDebugging with TanStack Query DevTools\nimport { ReactQueryDevtools } from '@tanstack/react-query-devtools';\n\nfunction App() {\n  return (\n    &lt;QueryClientProvider client={queryClient}&gt;\n      &lt;YourApp /&gt;\n      {/* Floating button in dev mode */}\n      &lt;ReactQueryDevtools initialIsOpen={false} /&gt;\n    &lt;/QueryClientProvider&gt;\n  );\n}\nThe Query DevTools show: - All cached queries - Query status (fresh, stale, fetching) - Cache timing - Manual refetch/invalidate buttons",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#source-maps-error-boundaries",
+    "href": "DebuggingModernReact.html#source-maps-error-boundaries",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "Source Maps & Error Boundaries",
+    "text": "Source Maps & Error Boundaries\n\nProduction Debugging with Source Maps\n// vite.config.ts\nexport default defineConfig({\n  build: {\n    sourcemap: true, // Generate source maps\n  },\n});\n\n\n\n\n\n\nSecurity Note\n\n\n\nSource maps expose your original code. Options: - Hidden source maps — Upload to error tracking only - Separate hosting — Serve maps from authenticated endpoint\n\n\n\n\nError Boundary with Reporting\nimport { ErrorBoundary } from 'react-error-boundary';\n\nfunction ErrorFallback({ error, resetErrorBoundary }) {\n  // Report to your error tracking service\n  useEffect(() =&gt; {\n    reportError(error);\n  }, [error]);\n\n  return (\n    &lt;div role=\"alert\"&gt;\n      &lt;h2&gt;Something went wrong&lt;/h2&gt;\n      &lt;pre&gt;{error.message}&lt;/pre&gt;\n      &lt;button onClick={resetErrorBoundary}&gt;Try again&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\n\nfunction App() {\n  return (\n    &lt;ErrorBoundary FallbackComponent={ErrorFallback}&gt;\n      &lt;YourApp /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#ai-assisted-debugging",
+    "href": "DebuggingModernReact.html#ai-assisted-debugging",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "AI-Assisted Debugging",
+    "text": "AI-Assisted Debugging\nModern workflows include AI as a debugging partner:\n## Prompt Template for Debugging\n\nI have a React component that [describe behavior].\n\nExpected: [what should happen]\nActual: [what happens instead]\n\nHere's the relevant code:\n```tsx\n[paste component]\nI’ve tried: [what you’ve checked]\nWhat could cause this? ```\nWhen to use AI: - Unfamiliar error messages - Complex state interactions - Performance issues you can’t pinpoint\nWhen NOT to use AI: - Before reading the actual error message - Without reproducing the bug yourself first - For trivial console.log placement",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "DebuggingModernReact.html#debugging-checklist",
+    "href": "DebuggingModernReact.html#debugging-checklist",
+    "title": "Debugging Modern React: From Console to Profiler",
+    "section": "Debugging Checklist",
+    "text": "Debugging Checklist\n\nRead the error — The message often tells you exactly what’s wrong\nReproduce reliably — Can you trigger it consistently?\nIsolate the cause — Comment out code until it works, then add back\nCheck the network — Is the API returning what you expect?\nInspect state — Use React DevTools to see current values\nCheck dependencies — Are effect deps complete and correct?\nProfile renders — Is something re-rendering too often?\nSearch the error — Someone else has probably seen it\n\nThe best debuggers aren’t those who never encounter bugs—they’re the ones who find them in minutes, not hours.",
+    "crumbs": [
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html",
+    "href": "E2ETestingPlaywright.html",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "",
+    "text": "Why Playwright?\nUnit tests verify functions. Integration tests verify components. E2E tests verify your application works for real users. Playwright is the modern standard for browser automation—fast, reliable, and built for the future.\nflowchart LR\n    A[\"Playwright\"] --&gt; B[\"Multi-browser\"]\n    A --&gt; C[\"Auto-waiting\"]\n    A --&gt; D[\"Native TypeScript\"]\n    A --&gt; E[\"Parallel execution\"]\n    A --&gt; F[\"Codegen\"]\n    A --&gt; G[\"API testing\"]\n    \n    style A fill:#10b981",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#why-playwright",
+    "href": "E2ETestingPlaywright.html#why-playwright",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "",
+    "text": "Feature\nPlaywright\nCypress\n\n\n\n\nMulti-browser\n✅ Chrome, Firefox, Safari, Mobile\n⚠️ Limited\n\n\nMulti-tab\n✅ Native\n❌ Single tab\n\n\nSpeed\n✅ Parallel by default\n⚠️ Paid feature\n\n\nTypeScript\n✅ First-class\n⚠️ Bolted on\n\n\nAPI Testing\n✅ Built-in\n❌ Separate tool\n\n\nNetwork mocking\n✅ Powerful\n✅ Good",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#setup",
+    "href": "E2ETestingPlaywright.html#setup",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Setup",
+    "text": "Setup\n# Initialize Playwright in your project\nnpm init playwright@latest\n\n# This creates:\n# - playwright.config.ts\n# - tests/ directory\n# - .github/workflows/playwright.yml (optional)\n\nConfiguration\n// playwright.config.ts\nimport { defineConfig, devices } from '@playwright/test';\n\nexport default defineConfig({\n  testDir: './tests',\n  fullyParallel: true,\n  forbidOnly: !!process.env.CI,\n  retries: process.env.CI ? 2 : 0,\n  workers: process.env.CI ? 1 : undefined,\n  reporter: 'html',\n  \n  use: {\n    baseURL: 'http://localhost:5173',\n    trace: 'on-first-retry',\n    screenshot: 'only-on-failure',\n  },\n\n  projects: [\n    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },\n    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },\n    { name: 'webkit', use: { ...devices['Desktop Safari'] } },\n    { name: 'mobile', use: { ...devices['iPhone 14'] } },\n  ],\n\n  // Start your dev server before running tests\n  webServer: {\n    command: 'npm run dev',\n    url: 'http://localhost:5173',\n    reuseExistingServer: !process.env.CI,\n  },\n});",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#writing-your-first-test",
+    "href": "E2ETestingPlaywright.html#writing-your-first-test",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Writing Your First Test",
+    "text": "Writing Your First Test\n// tests/auth.spec.ts\nimport { test, expect } from '@playwright/test';\n\ntest.describe('Authentication', () =&gt; {\n  test('user can log in', async ({ page }) =&gt; {\n    // Navigate\n    await page.goto('/login');\n\n    // Fill form\n    await page.getByLabel('Email').fill('user@example.com');\n    await page.getByLabel('Password').fill('password123');\n\n    // Submit\n    await page.getByRole('button', { name: 'Sign In' }).click();\n\n    // Assert redirect and welcome message\n    await expect(page).toHaveURL('/dashboard');\n    await expect(page.getByText('Welcome back')).toBeVisible();\n  });\n\n  test('shows error for invalid credentials', async ({ page }) =&gt; {\n    await page.goto('/login');\n    await page.getByLabel('Email').fill('user@example.com');\n    await page.getByLabel('Password').fill('wrongpassword');\n    await page.getByRole('button', { name: 'Sign In' }).click();\n\n    await expect(page.getByText('Invalid credentials')).toBeVisible();\n    await expect(page).toHaveURL('/login'); // Still on login page\n  });\n});",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#locators-finding-elements",
+    "href": "E2ETestingPlaywright.html#locators-finding-elements",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Locators: Finding Elements",
+    "text": "Locators: Finding Elements\nPlaywright’s locators auto-wait and auto-retry. Use semantic locators for resilient tests:\n// ✅ Best: Role-based (accessible and resilient)\npage.getByRole('button', { name: 'Submit' });\npage.getByRole('textbox', { name: 'Email' });\npage.getByRole('link', { name: 'Home' });\n\n// ✅ Good: Label-based\npage.getByLabel('Password');\npage.getByPlaceholder('Search...');\npage.getByText('Welcome');\n\n// ⚠️ Okay: Test IDs (when semantic isn't possible)\npage.getByTestId('user-avatar');\n\n// ❌ Avoid: CSS selectors (brittle)\npage.locator('.btn-primary');\npage.locator('#submit-btn');\n\nChaining Locators\n// Find within a specific container\nconst sidebar = page.getByRole('navigation');\nawait sidebar.getByRole('link', { name: 'Settings' }).click();\n\n// Filter by additional criteria\nawait page\n  .getByRole('listitem')\n  .filter({ hasText: 'Product A' })\n  .getByRole('button', { name: 'Add to Cart' })\n  .click();",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#page-object-model",
+    "href": "E2ETestingPlaywright.html#page-object-model",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Page Object Model",
+    "text": "Page Object Model\nOrganize tests with reusable page objects:\n// tests/pages/LoginPage.ts\nimport { Page, Locator } from '@playwright/test';\n\nexport class LoginPage {\n  readonly page: Page;\n  readonly emailInput: Locator;\n  readonly passwordInput: Locator;\n  readonly submitButton: Locator;\n  readonly errorMessage: Locator;\n\n  constructor(page: Page) {\n    this.page = page;\n    this.emailInput = page.getByLabel('Email');\n    this.passwordInput = page.getByLabel('Password');\n    this.submitButton = page.getByRole('button', { name: 'Sign In' });\n    this.errorMessage = page.getByRole('alert');\n  }\n\n  async goto() {\n    await this.page.goto('/login');\n  }\n\n  async login(email: string, password: string) {\n    await this.emailInput.fill(email);\n    await this.passwordInput.fill(password);\n    await this.submitButton.click();\n  }\n}\n// tests/auth.spec.ts\nimport { test, expect } from '@playwright/test';\nimport { LoginPage } from './pages/LoginPage';\n\ntest('user can log in', async ({ page }) =&gt; {\n  const loginPage = new LoginPage(page);\n  await loginPage.goto();\n  await loginPage.login('user@example.com', 'password123');\n  \n  await expect(page).toHaveURL('/dashboard');\n});",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#mocking-api-responses",
+    "href": "E2ETestingPlaywright.html#mocking-api-responses",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Mocking API Responses",
+    "text": "Mocking API Responses\nTest edge cases without hitting real APIs:\ntest('handles server error gracefully', async ({ page }) =&gt; {\n  // Mock the API to return 500\n  await page.route('**/api/users/*', route =&gt; {\n    route.fulfill({\n      status: 500,\n      body: JSON.stringify({ error: 'Internal Server Error' }),\n    });\n  });\n\n  await page.goto('/profile');\n  \n  await expect(page.getByText('Something went wrong')).toBeVisible();\n  await expect(page.getByRole('button', { name: 'Retry' })).toBeVisible();\n});\n\ntest('shows empty state when no data', async ({ page }) =&gt; {\n  await page.route('**/api/todos', route =&gt; {\n    route.fulfill({\n      status: 200,\n      body: JSON.stringify([]),\n    });\n  });\n\n  await page.goto('/todos');\n  \n  await expect(page.getByText('No todos yet')).toBeVisible();\n});",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#visual-regression-testing",
+    "href": "E2ETestingPlaywright.html#visual-regression-testing",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Visual Regression Testing",
+    "text": "Visual Regression Testing\nCatch unintended UI changes:\ntest('homepage looks correct', async ({ page }) =&gt; {\n  await page.goto('/');\n  \n  // Full page screenshot\n  await expect(page).toHaveScreenshot('homepage.png');\n});\n\ntest('button states', async ({ page }) =&gt; {\n  await page.goto('/components');\n  \n  const button = page.getByRole('button', { name: 'Submit' });\n  \n  // Screenshot specific element\n  await expect(button).toHaveScreenshot('button-default.png');\n  \n  await button.hover();\n  await expect(button).toHaveScreenshot('button-hover.png');\n});\nUpdate snapshots when intentional changes are made:\nnpx playwright test --update-snapshots",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#cicd-integration",
+    "href": "E2ETestingPlaywright.html#cicd-integration",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "CI/CD Integration",
+    "text": "CI/CD Integration\n# .github/workflows/e2e.yml\nname: E2E Tests\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n          \n      - name: Install dependencies\n        run: npm ci\n        \n      - name: Install Playwright browsers\n        run: npx playwright install --with-deps\n        \n      - name: Run E2E tests\n        run: npx playwright test\n        \n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: playwright-report\n          path: playwright-report/\n          retention-days: 30",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#codegen-record-tests-automatically",
+    "href": "E2ETestingPlaywright.html#codegen-record-tests-automatically",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Codegen: Record Tests Automatically",
+    "text": "Codegen: Record Tests Automatically\nLet Playwright write tests for you:\n# Opens a browser and generates code as you interact\nnpx playwright codegen localhost:5173\nThis is perfect for: - Quickly scaffolding complex user flows - Onboarding team members to E2E testing - Debugging locator issues",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#debugging-failed-tests",
+    "href": "E2ETestingPlaywright.html#debugging-failed-tests",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Debugging Failed Tests",
+    "text": "Debugging Failed Tests\n# Run with headed browser\nnpx playwright test --headed\n\n# Run in debug mode (step through)\nnpx playwright test --debug\n\n# Open last test report\nnpx playwright show-report\n\nTrace Viewer\nWhen tests fail, Playwright captures a trace:\nnpx playwright show-trace trace.zip\nThe trace shows: - Screenshots at every step - Network requests - Console logs - DOM snapshots - Action timeline",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "E2ETestingPlaywright.html#testing-checklist",
+    "href": "E2ETestingPlaywright.html#testing-checklist",
+    "title": "E2E Testing with Playwright: Beyond Unit Tests",
+    "section": "Testing Checklist",
+    "text": "Testing Checklist\n\n\n\n\n\n\n\n\nTest Type\nWhat to Test\nExample\n\n\n\n\nCritical Paths\nUser can complete core flows\nLogin, checkout, signup\n\n\nError States\nApp handles failures gracefully\nAPI errors, network offline\n\n\nEdge Cases\nUnusual but valid scenarios\nEmpty states, long text\n\n\nAccessibility\nScreen reader compatibility\ntoHaveAccessibleName()\n\n\nVisual\nUI matches design\nScreenshot comparisons\n\n\n\nE2E tests are your safety net. They don’t replace unit tests—they complement them by testing what users actually experience.",
+    "crumbs": [
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>E2E Testing with Playwright: Beyond Unit Tests</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html",
+    "href": "BuildingDesignSystems.html",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "",
+    "text": "What is a Design System?\nEvery mature React team eventually faces the same challenge: how do we share components across projects? This chapter covers building, documenting, and publishing professional component libraries.\nflowchart TD\n    A[\"Design Tokens\"] --&gt; B[\"Primitives\"]\n    B --&gt; C[\"Components\"]\n    C --&gt; D[\"Patterns\"]\n    D --&gt; E[\"Templates\"]\n    \n    A --&gt; |\"colors, spacing, fonts\"| B\n    B --&gt; |\"Button, Input, Card\"| C\n    C --&gt; |\"LoginForm, DataTable\"| D\n    D --&gt; |\"DashboardLayout\"| E",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#what-is-a-design-system",
+    "href": "BuildingDesignSystems.html#what-is-a-design-system",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "",
+    "text": "Layer\nExample\nChanges\n\n\n\n\nDesign Tokens\n--color-primary: #3b82f6\nRarely\n\n\nPrimitives\n&lt;Button&gt;, &lt;Input&gt;\nSometimes\n\n\nComponents\n&lt;SearchBar&gt;, &lt;UserCard&gt;\nOften\n\n\nPatterns\n&lt;Pagination&gt;, &lt;DataGrid&gt;\nFrequently",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#project-structure",
+    "href": "BuildingDesignSystems.html#project-structure",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Project Structure",
+    "text": "Project Structure\npackages/\n├── ui/                     # Component library\n│   ├── src/\n│   │   ├── components/\n│   │   │   ├── Button/\n│   │   │   │   ├── Button.tsx\n│   │   │   │   ├── Button.stories.tsx\n│   │   │   │   ├── Button.test.tsx\n│   │   │   │   └── index.ts\n│   │   │   └── index.ts\n│   │   ├── tokens/\n│   │   │   └── colors.ts\n│   │   └── index.ts\n│   ├── package.json\n│   └── tsconfig.json\n└── docs/                   # Storybook site",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#building-components",
+    "href": "BuildingDesignSystems.html#building-components",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Building Components",
+    "text": "Building Components\n\nA Professional Button Component\n// packages/ui/src/components/Button/Button.tsx\nimport { forwardRef, type ButtonHTMLAttributes } from 'react';\nimport { cva, type VariantProps } from 'class-variance-authority';\nimport { cn } from '../../utils/cn';\n\nconst buttonVariants = cva(\n  // Base styles\n  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',\n  {\n    variants: {\n      variant: {\n        default: 'bg-primary text-primary-foreground hover:bg-primary/90',\n        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',\n        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',\n        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',\n        ghost: 'hover:bg-accent hover:text-accent-foreground',\n        link: 'text-primary underline-offset-4 hover:underline',\n      },\n      size: {\n        default: 'h-10 px-4 py-2',\n        sm: 'h-9 rounded-md px-3',\n        lg: 'h-11 rounded-md px-8',\n        icon: 'h-10 w-10',\n      },\n    },\n    defaultVariants: {\n      variant: 'default',\n      size: 'default',\n    },\n  }\n);\n\nexport interface ButtonProps\n  extends ButtonHTMLAttributes&lt;HTMLButtonElement&gt;,\n    VariantProps&lt;typeof buttonVariants&gt; {\n  isLoading?: boolean;\n}\n\nexport const Button = forwardRef&lt;HTMLButtonElement, ButtonProps&gt;(\n  ({ className, variant, size, isLoading, children, disabled, ...props }, ref) =&gt; {\n    return (\n      &lt;button\n        className={cn(buttonVariants({ variant, size, className }))}\n        ref={ref}\n        disabled={disabled || isLoading}\n        {...props}\n      &gt;\n        {isLoading && (\n          &lt;svg\n            className=\"mr-2 h-4 w-4 animate-spin\"\n            fill=\"none\"\n            viewBox=\"0 0 24 24\"\n          &gt;\n            &lt;circle\n              className=\"opacity-25\"\n              cx=\"12\"\n              cy=\"12\"\n              r=\"10\"\n              stroke=\"currentColor\"\n              strokeWidth=\"4\"\n            /&gt;\n            &lt;path\n              className=\"opacity-75\"\n              fill=\"currentColor\"\n              d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z\"\n            /&gt;\n          &lt;/svg&gt;\n        )}\n        {children}\n      &lt;/button&gt;\n    );\n  }\n);\n\nButton.displayName = 'Button';",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#documenting-with-storybook-8",
+    "href": "BuildingDesignSystems.html#documenting-with-storybook-8",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Documenting with Storybook 8",
+    "text": "Documenting with Storybook 8\n# Initialize Storybook\nnpx storybook@latest init\n\nWriting Stories\n// Button.stories.tsx\nimport type { Meta, StoryObj } from '@storybook/react';\nimport { Button } from './Button';\n\nconst meta: Meta&lt;typeof Button&gt; = {\n  title: 'Components/Button',\n  component: Button,\n  parameters: {\n    layout: 'centered',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],\n    },\n    size: {\n      control: 'select',\n      options: ['default', 'sm', 'lg', 'icon'],\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj&lt;typeof meta&gt;;\n\nexport const Default: Story = {\n  args: {\n    children: 'Button',\n  },\n};\n\nexport const Destructive: Story = {\n  args: {\n    variant: 'destructive',\n    children: 'Delete',\n  },\n};\n\nexport const Loading: Story = {\n  args: {\n    isLoading: true,\n    children: 'Saving...',\n  },\n};\n\nexport const AllVariants: Story = {\n  render: () =&gt; (\n    &lt;div className=\"flex flex-wrap gap-4\"&gt;\n      &lt;Button variant=\"default\"&gt;Default&lt;/Button&gt;\n      &lt;Button variant=\"secondary\"&gt;Secondary&lt;/Button&gt;\n      &lt;Button variant=\"destructive\"&gt;Destructive&lt;/Button&gt;\n      &lt;Button variant=\"outline\"&gt;Outline&lt;/Button&gt;\n      &lt;Button variant=\"ghost\"&gt;Ghost&lt;/Button&gt;\n      &lt;Button variant=\"link\"&gt;Link&lt;/Button&gt;\n    &lt;/div&gt;\n  ),\n};",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#package-configuration",
+    "href": "BuildingDesignSystems.html#package-configuration",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Package Configuration",
+    "text": "Package Configuration\n\npackage.json\n{\n  \"name\": \"@yourorg/ui\",\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"main\": \"./dist/index.cjs\",\n  \"module\": \"./dist/index.js\",\n  \"types\": \"./dist/index.d.ts\",\n  \"exports\": {\n    \".\": {\n      \"import\": \"./dist/index.js\",\n      \"require\": \"./dist/index.cjs\",\n      \"types\": \"./dist/index.d.ts\"\n    },\n    \"./styles.css\": \"./dist/styles.css\"\n  },\n  \"files\": [\"dist\"],\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --format cjs,esm --dts --clean\",\n    \"dev\": \"tsup src/index.ts --format cjs,esm --dts --watch\",\n    \"lint\": \"eslint src/\",\n    \"test\": \"vitest\"\n  },\n  \"peerDependencies\": {\n    \"react\": \"&gt;=18\",\n    \"react-dom\": \"&gt;=18\"\n  },\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.0.0\"\n  }\n}\n\n\ntsup.config.ts\nimport { defineConfig } from 'tsup';\n\nexport default defineConfig({\n  entry: ['src/index.ts'],\n  format: ['cjs', 'esm'],\n  dts: true,\n  splitting: true,\n  sourcemap: true,\n  clean: true,\n  external: ['react', 'react-dom'],\n});",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#versioning-with-changesets",
+    "href": "BuildingDesignSystems.html#versioning-with-changesets",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Versioning with Changesets",
+    "text": "Versioning with Changesets\nChangesets automates versioning and changelogs:\n# Install\nnpm install -D @changesets/cli\n\n# Initialize\nnpx changeset init\n\nWorkflow\n# 1. After making changes, create a changeset\nnpx changeset\n\n# This prompts:\n# - Which packages changed?\n# - Is this a major/minor/patch?\n# - Describe the change\n\n# 2. When ready to release\nnpx changeset version  # Updates versions and CHANGELOG.md\nnpx changeset publish  # Publishes to npm\n\n\nExample Changeset\n---\n\"@yourorg/ui\": minor\n---\n\nAdded `isLoading` prop to Button component with spinner animation.",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#publishing-to-npm",
+    "href": "BuildingDesignSystems.html#publishing-to-npm",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Publishing to npm",
+    "text": "Publishing to npm\n\nFirst-time Setup\n# Login to npm\nnpm login\n\n# For scoped packages, ensure public access\nnpm publish --access public\n\n\nGitHub Actions for Publishing\n# .github/workflows/release.yml\nname: Release\n\non:\n  push:\n    branches: [main]\n\nconcurrency: ${{ github.workflow }}-${{ github.ref }}\n\njobs:\n  release:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n          registry-url: 'https://registry.npmjs.org'\n          \n      - run: npm ci\n      - run: npm run build\n      \n      - name: Create Release Pull Request or Publish\n        uses: changesets/action@v1\n        with:\n          publish: npx changeset publish\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#consuming-your-library",
+    "href": "BuildingDesignSystems.html#consuming-your-library",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Consuming Your Library",
+    "text": "Consuming Your Library\n\nInstallation\nnpm install @yourorg/ui\n\n\nUsage\nimport { Button } from '@yourorg/ui';\nimport '@yourorg/ui/styles.css';\n\nfunction App() {\n  return (\n    &lt;Button variant=\"primary\" isLoading={saving}&gt;\n      Save Changes\n    &lt;/Button&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#design-tokens",
+    "href": "BuildingDesignSystems.html#design-tokens",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Design Tokens",
+    "text": "Design Tokens\nCentralize design decisions:\n// packages/ui/src/tokens/colors.ts\nexport const colors = {\n  primary: {\n    50: '#eff6ff',\n    100: '#dbeafe',\n    500: '#3b82f6',\n    600: '#2563eb',\n    700: '#1d4ed8',\n  },\n  semantic: {\n    success: '#10b981',\n    warning: '#f59e0b',\n    error: '#ef4444',\n  },\n} as const;\n\n// Generate CSS custom properties\nexport function generateCSSVariables() {\n  return Object.entries(colors.primary)\n    .map(([key, value]) =&gt; `--color-primary-${key}: ${value};`)\n    .join('\\n');\n}",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#testing-components",
+    "href": "BuildingDesignSystems.html#testing-components",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Testing Components",
+    "text": "Testing Components\n// Button.test.tsx\nimport { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { Button } from './Button';\n\ndescribe('Button', () =&gt; {\n  it('renders children', () =&gt; {\n    render(&lt;Button&gt;Click me&lt;/Button&gt;);\n    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();\n  });\n\n  it('shows loading spinner when isLoading', () =&gt; {\n    render(&lt;Button isLoading&gt;Save&lt;/Button&gt;);\n    expect(screen.getByRole('button')).toBeDisabled();\n  });\n\n  it('calls onClick when clicked', async () =&gt; {\n    const handleClick = vi.fn();\n    render(&lt;Button onClick={handleClick}&gt;Click&lt;/Button&gt;);\n    \n    await userEvent.click(screen.getByRole('button'));\n    \n    expect(handleClick).toHaveBeenCalledTimes(1);\n  });\n\n  it('does not call onClick when disabled', async () =&gt; {\n    const handleClick = vi.fn();\n    render(&lt;Button disabled onClick={handleClick}&gt;Click&lt;/Button&gt;);\n    \n    await userEvent.click(screen.getByRole('button'));\n    \n    expect(handleClick).not.toHaveBeenCalled();\n  });\n});",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "BuildingDesignSystems.html#library-checklist",
+    "href": "BuildingDesignSystems.html#library-checklist",
+    "title": "Building Design Systems: From Components to Libraries",
+    "section": "Library Checklist",
+    "text": "Library Checklist\nBefore publishing v1.0.0:\n\nDocumentation — Storybook with all component states\nTypeScript — Full type coverage with exported types\nAccessibility — Keyboard navigation, ARIA attributes\nTesting — Unit tests for all components\nTheming — CSS variables for customization\nTree-shaking — ESM exports for optimal bundling\nChangelog — Automated with Changesets\nLicense — MIT or appropriate license\n\nBuilding a design system is an investment. Start small, iterate based on real usage, and resist the urge to over-engineer before you have consumers.",
+    "crumbs": [
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
   }
 ]

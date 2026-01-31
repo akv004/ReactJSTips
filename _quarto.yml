@@ -37,6 +37,9 @@ book:
     - Internationalization.qmd
     - RealtimeFeatures.qmd
     - EnterprisePatterns.qmd
+    - DebuggingModernReact.qmd
+    - E2ETestingPlaywright.qmd
+    - BuildingDesignSystems.qmd
 
 
 website:
