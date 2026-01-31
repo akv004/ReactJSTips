@@ -29,11 +29,14 @@ React has fundamentally changed how we build user interfaces — not just in the
 **The React Blueprint** is my attempt to bring clarity, order, and real-world wisdom to that complexity. This book isn’t about memorizing hooks or learning JSX syntax — it's about understanding how to design maintainable components, manage state at scale, mock APIs cleanly, and ship production-grade React applications with confidence.
 
 You’ll learn how to:
-- Scaffold React apps quickly with the right tools
-- Use modern state management patterns effectively
-- Handle errors with resilience using error boundaries
+- Scaffold React apps quickly with Vite and TypeScript
+- Use modern state management patterns (Zustand, TanStack Query)
+- Handle errors gracefully with error boundaries
 - Mock APIs like a pro using MSW
-- Write clean, scalable code with TypeScript
+- Build cross-platform desktop apps with Tauri
+- Integrate AI sidecars with Python backends
+- Test end-to-end with Playwright
+- Design scalable component libraries with Storybook
 
 The ideas shared here come from years of leading frontend projects, debugging real production issues, and simplifying things that didn’t need to be hard. I hope this blueprint helps you navigate your React journey — and that you’ll share your blueprint with others, too.
 
@@ -55,7 +58,7 @@ You won’t find theory for the sake of theory here. Every pattern, snippet, and
 
 ### Tooling That Works
 
-The examples use tools like `create-react-app`, Vite, TypeScript, MSW, and GitHub. You’ll see working `package.json` snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.
+The examples use tools like Vite, TypeScript, MSW, Playwright, and GitHub. You’ll see working `package.json` snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.
 
 ### Code You Can Trust
 
