@@ -33,6 +33,8 @@ book:
     - AuthenticationPatterns.qmd
     - AnimationsAndMicrointeractions.qmd
     - DataFetchingStrategies.qmd
+    - RenderingStrategies.qmd
+    - DataTablesAndGrids.qmd
     - Accessibility.qmd
     - Internationalization.qmd
     - RealtimeFeatures.qmd
@@ -79,6 +81,10 @@ website:
             href: AnimationsAndMicrointeractions.qmd
           - text: "Data Fetching"
             href: DataFetchingStrategies.qmd
+          - text: "Rendering Strategies"
+            href: RenderingStrategies.qmd
+          - text: "Tables & Grids"
+            href: DataTablesAndGrids.qmd
           - text: "Accessibility"
             href: Accessibility.qmd
           - text: "i18n"

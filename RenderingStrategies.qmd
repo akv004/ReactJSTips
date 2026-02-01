@@ -1,0 +1,547 @@
+# Rendering Strategies: CSR, SSR, and the Server Components Revolution
+
+Every React app eventually faces the question: **where should this render?**
+
+Most developers use SSR or CSR without truly understanding the tradeoffs. This chapter explains each rendering strategy from first principles — so you can make informed architectural decisions.
+
+---
+
+## The Core Problem
+
+When a user visits your app, they experience two key moments:
+
+1. **First Paint** — Something appears on screen
+2. **Interactive** — They can click buttons, type, navigate
+
+The tension:
+- **Fast First Paint** → Render HTML on the server
+- **Rich Interactivity** → Run JavaScript on the client
+
+Every rendering strategy is a different answer to this tradeoff.
+
+```{mermaid}
+flowchart LR
+    subgraph Server["Server"]
+        S1["Build HTML"]
+    end
+    subgraph Client["Browser"]
+        C1["Show HTML"]
+        C2["Download JS"]
+        C3["Hydrate/Mount"]
+        C4["Interactive!"]
+    end
+    
+    S1 --> C1 --> C2 --> C3 --> C4
+    
+    style C1 fill:#22c55e
+    style C4 fill:#3b82f6
+```
+
+---
+
+## Client-Side Rendering (CSR)
+
+### How It Works
+
+The server sends a **minimal HTML shell**. JavaScript downloads, executes, and renders the entire UI.
+
+```{mermaid}
+sequenceDiagram
+    participant B as Browser
+    participant S as Server
+    participant A as API
+
+    B->>S: GET /app
+    S-->>B: HTML shell (empty div)
+    B->>S: GET /bundle.js (large)
+    Note over B: Parse & execute JS
+    B->>A: Fetch data
+    A-->>B: JSON response
+    Note over B: React renders UI
+    Note over B: ✅ Interactive
+```
+
+### The Code
+
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head><title>My App</title></head>
+  <body>
+    <div id="root"></div>  <!-- Empty! -->
+    <script src="/bundle.js"></script>
+  </body>
+</html>
+```
+
+```tsx
+// main.tsx
+import { createRoot } from 'react-dom/client';
+import App from './App';
+
+createRoot(document.getElementById('root')!).render(<App />);
+```
+
+### When to Use CSR
+
+| Good For | Why |
+|----------|-----|
+| **Admin dashboards** | Behind login, no SEO needed |
+| **Internal tools** | Users wait for login anyway |
+| **Highly interactive apps** | Canvas editors, real-time collaboration |
+| **PWAs** | Offline-first apps |
+
+### Pros and Cons
+
+| ✅ Pros | ❌ Cons |
+|---------|---------|
+| Simple deployment (static files) | Blank screen until JS loads |
+| Full client interactivity | Poor SEO (no HTML content) |
+| Cheap hosting (CDN) | Large JS bundle |
+| Easy caching | Slow on low-end devices |
+
+::: {.callout-warning}
+## The "White Screen of Death"
+CSR apps show nothing until JavaScript loads and executes. On slow connections or older devices, users stare at a blank page for seconds.
+:::
+
+---
+
+## Server-Side Rendering (SSR)
+
+### How It Works
+
+The server **renders the complete HTML** for each request. The browser shows content immediately, then JavaScript "hydrates" it to make it interactive.
+
+```{mermaid}
+sequenceDiagram
+    participant B as Browser
+    participant S as Server
+    participant D as Database
+
+    B->>S: GET /products/123
+    S->>D: Query product data
+    D-->>S: Product JSON
+    Note over S: React renders to HTML
+    S-->>B: Full HTML (with content!)
+    Note over B: 👀 User sees content
+    B->>S: GET /bundle.js
+    Note over B: Hydrate React
+    Note over B: ✅ Interactive
+```
+
+### What is Hydration?
+
+Hydration is the process of attaching JavaScript event handlers to server-rendered HTML.
+
+```tsx
+// Server renders this HTML:
+<button>Click me</button>
+
+// Hydration attaches the onClick handler:
+<button onClick={handleClick}>Click me</button>
+```
+
+::: {.callout-important}
+## Hydration Mismatch
+If the server HTML doesn't match what React expects on the client, you get a hydration error. Common causes:
+- Using `Date.now()` or `Math.random()` during render
+- Browser-only APIs like `window.innerWidth`
+- Different data on server vs client
+:::
+
+### The Code (Next.js App Router)
+
+```tsx
+// app/products/[id]/page.tsx
+async function ProductPage({ params }: { params: { id: string } }) {
+  // This runs on the SERVER
+  const product = await db.products.findUnique({ 
+    where: { id: params.id } 
+  });
+
+  return (
+    <div>
+      <h1>{product.name}</h1>
+      <p>{product.description}</p>
+      <AddToCartButton productId={product.id} /> {/* Client Component */}
+    </div>
+  );
+}
+```
+
+### When to Use SSR
+
+| Good For | Why |
+|----------|-----|
+| **E-commerce product pages** | SEO + dynamic pricing |
+| **News articles** | Fresh content, SEO critical |
+| **Social media feeds** | Personalized, needs indexing |
+| **Search results** | Dynamic, SEO important |
+
+### Pros and Cons
+
+| ✅ Pros | ❌ Cons |
+|---------|---------|
+| Fast First Paint | Server compute cost per request |
+| SEO-friendly HTML | Time-to-First-Byte depends on data |
+| Works without JS | Hydration can be slow |
+| Dynamic content | More complex infrastructure |
+
+---
+
+## Static Site Generation (SSG)
+
+### How It Works
+
+Pages are rendered **at build time**. The HTML is generated once and served from a CDN.
+
+```{mermaid}
+sequenceDiagram
+    participant D as Developer
+    participant B as Build Process
+    participant C as CDN
+    participant U as User
+
+    D->>B: npm run build
+    Note over B: Fetch all data
+    Note over B: Render all pages to HTML
+    B->>C: Deploy static files
+    
+    U->>C: GET /blog/post-1
+    C-->>U: Pre-built HTML (instant!)
+    Note over U: ✅ Content visible
+```
+
+### The Code (Next.js)
+
+```tsx
+// app/blog/[slug]/page.tsx
+export async function generateStaticParams() {
+  // Called at BUILD time
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
+async function BlogPost({ params }: { params: { slug: string } }) {
+  const post = await getPost(params.slug);
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </article>
+  );
+}
+```
+
+### Incremental Static Regeneration (ISR)
+
+Rebuild specific pages **after deployment** without rebuilding the entire site.
+
+```tsx
+// Revalidate every 60 seconds
+export const revalidate = 60;
+
+async function ProductPage({ params }) {
+  const product = await getProduct(params.id);
+  return <ProductDetails product={product} />;
+}
+```
+
+### When to Use SSG
+
+| Good For | Why |
+|----------|-----|
+| **Blogs** | Content changes rarely |
+| **Documentation** | Updated at deploy time |
+| **Marketing sites** | Maximum performance |
+| **Portfolio sites** | Static content |
+
+### Pros and Cons
+
+| ✅ Pros | ❌ Cons |
+|---------|---------|
+| Fastest possible TTFB | Content can become stale |
+| Cheapest hosting (CDN) | Long build times for large sites |
+| Perfect caching | Can't personalize per-user |
+| Great SEO | Rebuild required for updates |
+
+---
+
+## React Server Components (RSC)
+
+### The Paradigm Shift
+
+Server Components are a **new model** introduced in React 18. They run **only on the server** — no JavaScript is sent to the client for these components.
+
+::: {.callout-tip}
+## The Key Insight
+Server Components have **zero client-side JavaScript**. They can access databases, filesystems, and secrets directly — then send only the rendered HTML to the client.
+:::
+
+```{mermaid}
+flowchart TB
+    subgraph Server["Server (No JS sent to client)"]
+        SC1["ProductPage (Server)"]
+        SC2["ProductDetails (Server)"]
+        SC3["RecommendedProducts (Server)"]
+    end
+    
+    subgraph Client["Client (JS required)"]
+        CC1["AddToCartButton (Client)"]
+        CC2["ProductImageZoom (Client)"]
+    end
+    
+    SC1 --> SC2
+    SC1 --> SC3
+    SC2 --> CC1
+    SC2 --> CC2
+    
+    style SC1 fill:#22c55e
+    style SC2 fill:#22c55e
+    style SC3 fill:#22c55e
+    style CC1 fill:#3b82f6
+    style CC2 fill:#3b82f6
+```
+
+### Server vs Client Components
+
+```tsx
+// app/products/[id]/page.tsx
+// This is a SERVER Component (default in Next.js App Router)
+import { AddToCartButton } from './AddToCartButton';
+
+async function ProductPage({ params }) {
+  // ✅ Can use async/await directly
+  // ✅ Can access database
+  // ✅ Can read environment secrets
+  const product = await db.products.findUnique({ 
+    where: { id: params.id } 
+  });
+
+  return (
+    <div>
+      <h1>{product.name}</h1>
+      <p>{product.description}</p>
+      {/* Client Component for interactivity */}
+      <AddToCartButton productId={product.id} />
+    </div>
+  );
+}
+```
+
+```tsx
+// app/products/[id]/AddToCartButton.tsx
+'use client';  // ← This directive makes it a CLIENT Component
+
+import { useState } from 'react';
+
+export function AddToCartButton({ productId }: { productId: string }) {
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Can use useState, useEffect, onClick, etc.
+  const handleClick = async () => {
+    setLoading(true);
+    await addToCart(productId);
+    setLoading(false);
+  };
+
+  return (
+    <button onClick={handleClick} disabled={loading}>
+      {loading ? 'Adding...' : 'Add to Cart'}
+    </button>
+  );
+}
+```
+
+### Mental Model
+
+| Server Components | Client Components |
+|-------------------|-------------------|
+| Data fetching, database access | User interactions |
+| No hooks (useState, useEffect) | Full React hooks |
+| No event handlers | onClick, onChange, etc. |
+| Can be async | Cannot be async |
+| Zero client JS | JS bundle sent to client |
+
+### When to Use Each
+
+```tsx
+// ✅ Server Component (default)
+// - Displays data
+// - No user interaction
+// - Needs database/API access
+
+// ✅ Client Component ("use client")
+// - Has onClick, onChange
+// - Uses useState, useEffect
+// - Needs browser APIs (localStorage, window)
+```
+
+---
+
+## Decision Matrix
+
+| Scenario | Strategy | Why |
+|----------|----------|-----|
+| Marketing landing page | **SSG** | Maximum speed, rarely changes |
+| Blog with comments | **SSG** + CSR islands | Static content, interactive comments |
+| E-commerce product page | **SSR** or **RSC** | Dynamic pricing, SEO |
+| Admin dashboard | **CSR** | Behind auth, no SEO |
+| Documentation site | **SSG** | Build-time, great caching |
+| Social media feed | **SSR** or **RSC** | Personalized, needs SEO |
+| Real-time chat | **CSR** | WebSocket, high interactivity |
+| News article | **SSR** with ISR | Fresh content, SEO |
+
+---
+
+## TanStack Query + Server Rendering
+
+When using TanStack Query with SSR/RSC, you need to **dehydrate** the cache on the server and **hydrate** it on the client.
+
+### The Problem
+
+Without proper hydration, data fetched on the server is **re-fetched** on the client — wasting bandwidth and causing flicker.
+
+### The Solution: Hydration Boundary
+
+```tsx
+// app/providers.tsx
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,  // 1 minute
+      },
+    },
+  }));
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
+  );
+}
+```
+
+```tsx
+// app/products/[id]/page.tsx
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { ProductDetails } from './ProductDetails';
+
+export default async function ProductPage({ params }) {
+  const queryClient = new QueryClient();
+
+  // Prefetch on server
+  await queryClient.prefetchQuery({
+    queryKey: ['product', params.id],
+    queryFn: () => getProduct(params.id),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ProductDetails productId={params.id} />
+    </HydrationBoundary>
+  );
+}
+```
+
+```tsx
+// app/products/[id]/ProductDetails.tsx
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+
+export function ProductDetails({ productId }: { productId: string }) {
+  // This will use the PREFETCHED data — no re-fetch!
+  const { data: product } = useQuery({
+    queryKey: ['product', productId],
+    queryFn: () => getProduct(productId),
+  });
+
+  return (
+    <div>
+      <h1>{product.name}</h1>
+      <p>{product.description}</p>
+    </div>
+  );
+}
+```
+
+---
+
+## Common Pitfalls
+
+### 1. Hydration Mismatch
+
+```tsx
+// ❌ BAD: Different output on server vs client
+function Timestamp() {
+  return <span>{new Date().toLocaleTimeString()}</span>;
+}
+
+// ✅ GOOD: Use useEffect for client-only values
+function Timestamp() {
+  const [time, setTime] = useState<string | null>(null);
+  
+  useEffect(() => {
+    setTime(new Date().toLocaleTimeString());
+  }, []);
+  
+  return <span>{time ?? 'Loading...'}</span>;
+}
+```
+
+### 2. Using Browser APIs in Server Components
+
+```tsx
+// ❌ BAD: window doesn't exist on server
+function WindowSize() {
+  return <span>Width: {window.innerWidth}</span>;
+}
+
+// ✅ GOOD: Mark as client component
+'use client';
+function WindowSize() {
+  const [width, setWidth] = useState(0);
+  useEffect(() => setWidth(window.innerWidth), []);
+  return <span>Width: {width}</span>;
+}
+```
+
+### 3. Importing Client Code in Server Components
+
+```tsx
+// ❌ BAD: Server component importing client-only library
+import { motion } from 'framer-motion';  // Uses useEffect internally
+
+// ✅ GOOD: Create a client wrapper
+// AnimatedDiv.tsx
+'use client';
+import { motion } from 'framer-motion';
+export const AnimatedDiv = motion.div;
+
+// Then import the wrapper
+import { AnimatedDiv } from './AnimatedDiv';
+```
+
+---
+
+## Summary
+
+| Strategy | First Paint | Interactivity | SEO | Best For |
+|----------|-------------|---------------|-----|----------|
+| **CSR** | Slow (blank) | Fast | ❌ | Dashboards, SPAs |
+| **SSR** | Fast | After hydration | ✅ | Dynamic + SEO |
+| **SSG** | Instant | After hydration | ✅ | Static content |
+| **RSC** | Fast | Instant (for server parts) | ✅ | Modern apps |
+
+The modern approach is often **hybrid**: use Server Components for data, Client Components for interactivity, and SSG for static pages.
+
+Understanding these strategies is the difference between an app that *works* and an app that *performs*.

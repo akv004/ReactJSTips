@@ -108,6 +108,185 @@ sequenceDiagram
 
 ---
 
+## The Caching Blueprint: Stop Refetching Unchanged Data
+
+::: {.callout-important}
+## The Real Pain Point
+Without caching, every component mount triggers a network request. Navigate away and back? Refetch. Open a modal? Refetch. The same unchanged data, over and over.
+:::
+
+### Understanding Cache Timing
+
+TanStack Query uses two key timers:
+
+| Timer | Default | What It Controls |
+|-------|---------|-----------------|
+| **staleTime** | 0 | How long data is considered "fresh" (no background refetch) |
+| **gcTime** | 5 min | How long unused data stays in cache before garbage collection |
+
+```{mermaid}
+flowchart LR
+    F["Fresh"] -->|staleTime expires| S["Stale"]
+    S -->|Component unmounts| I["Inactive"]
+    I -->|gcTime expires| G["Garbage Collected"]
+    
+    S -->|"Window focus / Mount"| R["Background Refetch"]
+    R --> F
+    
+    style F fill:#22c55e
+    style S fill:#eab308
+    style G fill:#ef4444
+```
+
+### Configure Cache for Your Data Type
+
+```tsx
+// Global defaults - set once at app initialization
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,  // 5 minutes - data is fresh
+      gcTime: 1000 * 60 * 30,   // 30 minutes - keep in cache
+      refetchOnWindowFocus: false,  // Don't refetch on tab switch
+      retry: 2,
+    },
+  },
+});
+```
+
+### Per-Query Cache Control
+
+```tsx
+// Static data that rarely changes (e.g., country list, categories)
+const { data: countries } = useQuery({
+  queryKey: ['countries'],
+  queryFn: fetchCountries,
+  staleTime: Infinity,  // NEVER stale - cache forever
+  gcTime: Infinity,     // NEVER garbage collect
+});
+
+// User data - fresh for 1 minute
+const { data: user } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+  staleTime: 1000 * 60,  // Fresh for 1 minute
+});
+
+// Real-time data - always refetch
+const { data: stockPrice } = useQuery({
+  queryKey: ['stock', symbol],
+  queryFn: () => fetchStockPrice(symbol),
+  staleTime: 0,  // Always stale - always refetch
+  refetchInterval: 5000,  // Poll every 5 seconds
+});
+```
+
+### The Query Key is the Cache Key
+
+```tsx
+// These are DIFFERENT cache entries:
+useQuery({ queryKey: ['user', 1] });     // User 1
+useQuery({ queryKey: ['user', 2] });     // User 2
+useQuery({ queryKey: ['user', 1] });     // ✅ Uses cached User 1!
+
+// Structure keys for invalidation:
+queryKey: ['posts']                      // All posts
+queryKey: ['posts', 'list']              // Post list
+queryKey: ['posts', 'list', { page: 1 }] // Page 1
+queryKey: ['posts', 'detail', postId]    // Single post
+
+// Invalidate all posts (list + details):
+queryClient.invalidateQueries({ queryKey: ['posts'] });
+```
+
+### Prefetching: Load Before the User Clicks
+
+```tsx
+// In a list component - prefetch on hover
+function PostList({ posts }) {
+  const queryClient = useQueryClient();
+
+  const prefetchPost = (postId: number) => {
+    queryClient.prefetchQuery({
+      queryKey: ['posts', 'detail', postId],
+      queryFn: () => fetchPost(postId),
+      staleTime: 1000 * 60 * 5,  // Don't prefetch if already fresh
+    });
+  };
+
+  return (
+    <ul>
+      {posts.map(post => (
+        <li 
+          key={post.id}
+          onMouseEnter={() => prefetchPost(post.id)}  // Prefetch on hover!
+        >
+          <Link to={`/posts/${post.id}`}>{post.title}</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Cache Data That Never Changes
+
+For truly static data (app config, feature flags, dropdown options):
+
+```tsx
+// Fetch once, cache forever
+function useAppConfig() {
+  return useQuery({
+    queryKey: ['app-config'],
+    queryFn: fetchAppConfig,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+// Or create a reusable option preset
+const STATIC_QUERY_OPTIONS = {
+  staleTime: Infinity,
+  gcTime: Infinity,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+} as const;
+
+// Use it
+useQuery({
+  queryKey: ['categories'],
+  queryFn: fetchCategories,
+  ...STATIC_QUERY_OPTIONS,
+});
+```
+
+### Initial Data from Cache
+
+Provide initial data while fresh data loads:
+
+```tsx
+// Use cached list data as initial detail data
+function PostDetail({ postId }) {
+  const { data } = useQuery({
+    queryKey: ['posts', 'detail', postId],
+    queryFn: () => fetchPost(postId),
+    initialData: () => {
+      // Check if we have this post in the list cache
+      const posts = queryClient.getQueryData(['posts', 'list']);
+      return posts?.find(p => p.id === postId);
+    },
+    initialDataUpdatedAt: () => {
+      // Use the list's last update time
+      return queryClient.getQueryState(['posts', 'list'])?.dataUpdatedAt;
+    },
+  });
+}
+```
+
 ## Mutations: Updating Data
 
 ```tsx

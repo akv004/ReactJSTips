@@ -506,6 +506,219 @@ export function useStreamingInference() {
 
 ---
 
+## TanStack AI: The Modern Alternative
+
+If you're building web-based AI experiences (not desktop sidecars), [TanStack AI](https://tanstack.com/ai/latest) offers a streamlined, type-safe SDK for React. It's currently in Alpha but rapidly maturing.
+
+::: {.callout-tip}
+## Sidecar vs TanStack AI
+**Sidecar Pattern** → Local models (Ollama, PyTorch) in desktop apps  
+**TanStack AI** → Cloud providers (OpenAI, Anthropic, Gemini) in web apps
+:::
+
+### Architecture
+
+```{mermaid}
+sequenceDiagram
+    participant U as React UI
+    participant H as useChat Hook
+    participant A as /api/chat
+    participant P as AI Provider
+
+    U->>H: User types message
+    H->>A: POST messages[]
+    A->>P: chat({ adapter, messages, tools })
+    P-->>A: Stream tokens (SSE)
+    A-->>H: Stream forwarded
+    H-->>U: Update UI in real-time
+```
+
+### Installation
+
+```bash
+npm install @tanstack/ai @tanstack/ai-react @tanstack/ai-openai zod
+```
+
+### Server Setup (Next.js API Route)
+
+```tsx
+// app/api/chat/route.ts
+import { chat, toServerSentEventsResponse } from '@tanstack/ai';
+import { openaiText } from '@tanstack/ai-openai';
+
+export async function POST(request: Request) {
+  const { messages, conversationId } = await request.json();
+
+  // Create streaming chat response
+  const stream = chat({
+    adapter: openaiText('gpt-4'),  // Or 'gpt-3.5-turbo'
+    messages,
+    conversationId,
+  });
+
+  // Convert to HTTP SSE response
+  return toServerSentEventsResponse(stream);
+}
+```
+
+::: {.callout-note}
+## Environment Variables
+Set `OPENAI_API_KEY` in `.env.local`. For Anthropic use `ANTHROPIC_API_KEY`, for Gemini use `GEMINI_API_KEY`.
+:::
+
+### React Chat Component
+
+```tsx
+// components/Chat.tsx
+import { useState } from 'react';
+import { useChat, fetchServerSentEvents } from '@tanstack/ai-react';
+
+export function Chat() {
+  const [input, setInput] = useState('');
+
+  const { messages, sendMessage, isLoading } = useChat({
+    connection: fetchServerSentEvents('/api/chat'),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim() && !isLoading) {
+      sendMessage(input);
+      setInput('');
+    }
+  };
+
+  return (
+    <div className="chat-container">
+      <div className="messages">
+        {messages.map((message) => (
+          <div key={message.id} className={`message ${message.role}`}>
+            <strong>{message.role === 'assistant' ? 'AI' : 'You'}</strong>
+            <div>
+              {message.parts.map((part, idx) => {
+                if (part.type === 'thinking') {
+                  return <em key={idx}>💭 {part.content}</em>;
+                }
+                if (part.type === 'text') {
+                  return <p key={idx}>{part.content}</p>;
+                }
+                return null;
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask anything..."
+          disabled={isLoading}
+        />
+        <button disabled={!input.trim() || isLoading}>
+          {isLoading ? 'Thinking...' : 'Send'}
+        </button>
+      </form>
+    </div>
+  );
+}
+```
+
+### AI Tools (Function Calling)
+
+The killer feature: define tools that the AI can call during conversation.
+
+```tsx
+// lib/tools.ts
+import { toolDefinition } from '@tanstack/ai';
+import { z } from 'zod';
+
+// Define the tool schema
+const searchProductsDef = toolDefinition({
+  name: 'searchProducts',
+  description: 'Search for products in the catalog',
+  inputSchema: z.object({
+    query: z.string().describe('Search query'),
+    maxResults: z.number().optional().default(5),
+  }),
+  outputSchema: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    price: z.number(),
+  })),
+});
+
+// Server-side implementation
+export const searchProducts = searchProductsDef.server(async ({ query, maxResults }) => {
+  // This runs on your server
+  const results = await db.products.search(query, { limit: maxResults });
+  return results;
+});
+```
+
+```tsx
+// app/api/chat/route.ts
+import { chat, toServerSentEventsResponse } from '@tanstack/ai';
+import { openaiText } from '@tanstack/ai-openai';
+import { searchProducts } from '@/lib/tools';
+
+export async function POST(request: Request) {
+  const { messages } = await request.json();
+
+  const stream = chat({
+    adapter: openaiText('gpt-4'),
+    messages,
+    tools: [searchProducts],  // AI can now search products!
+  });
+
+  return toServerSentEventsResponse(stream);
+}
+```
+
+Now when a user asks "Find me wireless headphones under $100", the AI will:
+1. Recognize the intent
+2. Call `searchProducts({ query: 'wireless headphones', maxResults: 5 })`
+3. Receive results from your database
+4. Format a helpful response
+
+### Provider Adapters
+
+Swap providers without changing your code:
+
+```tsx
+import { openaiText } from '@tanstack/ai-openai';
+import { anthropicText } from '@tanstack/ai-anthropic';
+import { geminiText } from '@tanstack/ai-gemini';
+import { ollamaText } from '@tanstack/ai-ollama';
+
+// OpenAI
+chat({ adapter: openaiText('gpt-4'), messages });
+
+// Anthropic Claude
+chat({ adapter: anthropicText('claude-3-opus'), messages });
+
+// Google Gemini
+chat({ adapter: geminiText('gemini-pro'), messages });
+
+// Local Ollama (no API key needed!)
+chat({ adapter: ollamaText('llama2'), messages });
+```
+
+### When to Use What
+
+| Scenario | Recommendation |
+|----------|---------------|
+| Web app + Cloud AI (OpenAI, Claude) | **TanStack AI** |
+| Desktop app + Local models | **Sidecar Pattern** |
+| Web app + Local AI (Ollama) | **TanStack AI** with Ollama adapter |
+| Need GPU acceleration | **Sidecar Pattern** (Python + PyTorch) |
+| Rapid prototyping | **TanStack AI** (fewer moving parts) |
+
+For full documentation, see [tanstack.com/ai/latest](https://tanstack.com/ai/latest).
+
+---
+
 ## Error Handling & Recovery
 
 ### Automatic Restart

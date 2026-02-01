@@ -14,7 +14,7 @@
     "href": "index.html#welcome",
     "title": "The React Blueprint",
     "section": "Welcome!",
-    "text": "Welcome!\nWelcome to The React Blueprint — your hands-on, battle-tested guide to mastering React.js the modern way.\nWhether you’re crafting sleek frontends, scaling robust enterprise UI systems, or simply aiming for seamless integration with REST APIs, this book is your essential blueprint. We’ve distilled years of real-world experience into clear patterns, intelligent tools, and production-ready practices, empowering you to architect, code, and launch with confidence.\nAs a fellow software engineer, you already know that writing React code itself isn’t the hardest part. The true challenge lies in scaling, testing, and maintaining it efficiently in a fast-paced environment. That’s precisely where The React Blueprint steps in.\nInside, you’ll discover:\n\nCore Best Practices: Go beyond basic syntax to understand why and how to build resilient React applications.\nAdvanced Component Architecture: Learn to design highly reusable and maintainable component systems.\nEffective API Mocking with MSW: Accelerate your development and testing workflows by mastering API mocking techniques.\nRobust Error Handling & Resilience: Implement strategies to create applications that gracefully handle edge cases and unexpected issues.\nRapid Deployment Strategies: Leverage scripts and techniques to get your applications live in seconds.\nProduction-Ready Code Examples: Dive into real-world scenarios, complete with TypeScript, comprehensive tests, and adaptable patterns.\n\nThis book is designed to evolve with your journey—from setting up a pristine local development environment to building and maintaining sophisticated, production-grade React systems. We prioritize minimal boilerplate and maximum clarity, ensuring every concept is easy to grasp and apply.\nLet’s build smarter UIs together.",
+    "text": "Welcome!\nWelcome to The React Blueprint — your hands-on, battle-tested guide to mastering React.js the modern way.\nWhether you’re crafting sleek frontends, scaling robust enterprise UI systems, or simply aiming for seamless integration with REST APIs, this book is your essential blueprint. We’ve distilled years of real-world experience into clear patterns, intelligent tools, and production-ready practices, empowering you to architect, code, and launch with confidence.\nAs a fellow software engineer, you already know that writing React code itself isn’t the hardest part. The true challenge lies in scaling, testing, and maintaining it efficiently in a fast-paced environment. That’s precisely where The React Blueprint steps in.\nInside, you’ll discover:\n\nCore Best Practices: Go beyond basic syntax to understand why and how to build resilient React applications.\nAdvanced Component Architecture: Learn to design highly reusable and maintainable component systems.\nEffective API Mocking with MSW: Accelerate your development and testing workflows by mastering API mocking techniques.\nRobust Error Handling & Resilience: Implement strategies to create applications that gracefully handle edge cases and unexpected issues.\nRapid Deployment Strategies: Leverage scripts and techniques to get your applications live in seconds.\nProduction-Ready Code Examples: Dive into real-world scenarios, complete with TypeScript, comprehensive tests, and adaptable patterns.\n\nThis book is designed to evolve with your journey—from setting up a pristine local development environment to building and maintaining sophisticated, production-grade React systems. We prioritize minimal boilerplate and maximum clarity, ensuring every concept is easy to grasp and apply.\nLet’s build smarter UIs together.\n\n\n\n\n\n\n\nSupport This Book ☕\n\n\n\nIf you find this book helpful, consider buying me a coffee on Ko-fi! Your support helps me create more free educational content.\n\n\n\nSupport on Ko-fi",
     "crumbs": [
       "The React Blueprint"
     ]
@@ -24,7 +24,7 @@
     "href": "intro.html",
     "title": "Dedication",
     "section": "",
-    "text": "About the Author\nTo my family, friends, and mentors — thank you for your encouragement, patience, and belief. Your support made this journey possible and meaningful.\nAmit Kumar Verma is a Lead Software Engineer with over 15 years of professional experience in building large-scale, cloud-native applications. His expertise includes front-end development with frameworks like React and AngularJS, backend services with Java, Spring Boot, and Node.js, and DevOps practices leveraging Docker and Kubernetes.\nAmit is passionate about creating performant, maintainable user interfaces that scale. He has led successful frontend and full-stack teams in domains such as healthcare, fintech, retail, and insurance, and has worked extensively with tools like React, TypeScript, Redux, Recoil, Zustand, and Next.js.\nHe believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When he’s not writing code or leading architecture discussions, Amit enjoys exploring new frameworks, mentoring junior developers, and turning complex frontend problems into elegant patterns.",
+    "text": "About the Author\nTo my family, friends, and mentors — thank you for your encouragement, patience, and belief. Your support made this journey possible and meaningful.\nAmit Kumar Verma is a Lead Software Engineer with over 15 years of experience building large-scale, cloud-native applications. His expertise spans frontend development with React and Next.js, backend services with Java, Spring Boot, and Node.js, and DevOps practices leveraging Docker and Kubernetes.\nAmit is passionate about creating performant, maintainable user interfaces that scale. He has led frontend and full-stack teams in healthcare, fintech, retail, and insurance, working extensively with React, TypeScript, Zustand, and TanStack Query.\nHe believes great engineering is rooted in simplicity, consistency, and empathy for the end user. When not writing code or leading architecture discussions, Amit mentors developers, explores new frameworks, and turns complex frontend problems into elegant patterns.\nHe is also the author of The AI Jungle: Learn AI & ML with Nature’s Wisdom.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
     ]
@@ -44,7 +44,7 @@
     "href": "intro.html#preface",
     "title": "Dedication",
     "section": "Preface",
-    "text": "Preface\nReact has fundamentally changed how we build user interfaces — not just in the browser, but across platforms. But as the frontend landscape grows more powerful, it also grows more complex.\nThe React Blueprint is my attempt to bring clarity, order, and real-world wisdom to that complexity. This book isn’t about memorizing hooks or learning JSX syntax — it’s about understanding how to design maintainable components, manage state at scale, mock APIs cleanly, and ship production-grade React applications with confidence.\nYou’ll learn how to: - Scaffold React apps quickly with the right tools - Use modern state management patterns effectively - Handle errors with resilience using error boundaries - Mock APIs like a pro using MSW - Write clean, scalable code with TypeScript\nThe ideas shared here come from years of leading frontend projects, debugging real production issues, and simplifying things that didn’t need to be hard. I hope this blueprint helps you navigate your React journey — and that you’ll share your blueprint with others, too.\nAmit Verma Chaska, Minnesota July 2025",
+    "text": "Preface\nReact has fundamentally changed how we build user interfaces — not just in the browser, but across platforms. But as the frontend landscape grows more powerful, it also grows more complex.\nThe React Blueprint is my attempt to bring clarity, order, and real-world wisdom to that complexity. This book isn’t about memorizing hooks or learning JSX syntax — it’s about understanding how to design maintainable components, manage state at scale, mock APIs cleanly, and ship production-grade React applications with confidence.\nYou’ll learn how to: - Scaffold React apps quickly with Vite and TypeScript - Use modern state management patterns (Zustand, TanStack Query) - Handle errors gracefully with error boundaries - Mock APIs like a pro using MSW - Build cross-platform desktop apps with Tauri - Integrate AI sidecars with Python backends - Test end-to-end with Playwright - Design scalable component libraries with Storybook\nThe ideas shared here come from years of leading frontend projects, debugging real production issues, and simplifying things that didn’t need to be hard. I hope this blueprint helps you navigate your React journey — and that you’ll share your blueprint with others, too.\nAmit Verma Chaska, Minnesota July 2025",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
     ]
@@ -54,7 +54,7 @@
     "href": "intro.html#how-to-use-this-book",
     "title": "Dedication",
     "section": "How to Use This Book",
-    "text": "How to Use This Book\n\nRead It End-to-End or Jump Around\nEach chapter is written to be self-contained and hands-on. If you’re new to React, you can start from the beginning. If you’re already comfortable, feel free to jump to what interests you most — whether that’s API mocking, state management, or app structure.\n\n\nPractical First\nYou won’t find theory for the sake of theory here. Every pattern, snippet, and technique is something you can apply right away. The book includes working examples, CLI tips, and dev workflow boosters to help you build faster and cleaner.\n\n\nTooling That Works\nThe examples use tools like create-react-app, Vite, TypeScript, MSW, and GitHub. You’ll see working package.json snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.\n\n\nCode You Can Trust\nAll code samples are tested and compatible with current React (v18+). If there are updates in the ecosystem, you’ll find them referenced online through the companion repo.",
+    "text": "How to Use This Book\n\nRead It End-to-End or Jump Around\nEach chapter is written to be self-contained and hands-on. If you’re new to React, you can start from the beginning. If you’re already comfortable, feel free to jump to what interests you most — whether that’s API mocking, state management, or app structure.\n\n\nPractical First\nYou won’t find theory for the sake of theory here. Every pattern, snippet, and technique is something you can apply right away. The book includes working examples, CLI tips, and dev workflow boosters to help you build faster and cleaner.\n\n\nTooling That Works\nThe examples use tools like Vite, TypeScript, MSW, Playwright, and GitHub. You’ll see working package.json snippets, script commands, and shell one-liners that bring real-world speed to your dev experience.\n\n\nCode You Can Trust\nAll code samples are tested and compatible with current React (v18+). If there are updates in the ecosystem, you’ll find them referenced online through the companion repo.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Dedication</span>"
     ]
@@ -522,11 +522,11 @@
   {
     "objectID": "ErrorBoundary.html",
     "href": "ErrorBoundary.html",
-    "title": "Chapter: Error Boundary in React",
+    "title": "Error Boundaries: Graceful Failure in React",
     "section": "",
-    "text": "What is an Error Boundary?\nAs your application grows, more components are added and it becomes harder to track all possible exceptions that might occur during rendering. React offers a powerful feature to catch such errors: Error Boundaries.\nAn Error Boundary is a special kind of React component that catches JavaScript errors anywhere in its child component tree, logs those errors, and displays a fallback UI instead of the component tree that crashed.",
+    "text": "What Does an Error Boundary Catch?\nAs your application grows, more components are added and it becomes harder to track all possible exceptions during rendering. React offers Error Boundaries — special components that catch errors and display fallback UI instead of crashing your entire app.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
     ]
   },
   {
@@ -562,11 +562,11 @@
   {
     "objectID": "ErrorBoundary.html#best-practices",
     "href": "ErrorBoundary.html#best-practices",
-    "title": "Chapter: Error Boundary in React",
+    "title": "Error Boundaries: Graceful Failure in React",
     "section": "Best Practices",
-    "text": "Best Practices\n\nUse error boundaries strategically (e.g., around routes, widgets, or external integrations).\nCombine with logging tools (like Sentry or LogRocket) to track and report issues.\nKeep fallback UI helpful and minimal.\nAvoid putting an error boundary around your entire app unless you have a good reason (like a global crash screen).",
+    "text": "Best Practices\n\n\n\n\n\n\nError Boundary Strategy\n\n\n\n\nDon’t wrap everything — Be strategic, not paranoid\nIsolate untrusted code — Third-party libraries get their own boundary\nReset on navigation — Use resetKeys with route changes\nLog to a service — Sentry, LogRocket, or your own backend\nKeep fallbacks helpful — Show actionable UI, not just “Error”\nTest your boundaries — Intentionally throw errors in development\n\n\n\n\n\n\nDo ✅\nDon’t ❌\n\n\n\n\nWrap routes independently\nWrap entire app in one boundary\n\n\nIsolate widgets\nLet one widget crash the page\n\n\nLog errors to a service\nSilently swallow errors\n\n\nProvide retry buttons\nShow only “Something went wrong”\n\n\nReset on navigation\nKeep error state forever",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Chapter: Error Boundary in React</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
     ]
   },
   {
@@ -2156,7 +2156,7 @@
     "section": "",
     "text": "What is a Design System?\nEvery mature React team eventually faces the same challenge: how do we share components across projects? This chapter covers building, documenting, and publishing professional component libraries.\nflowchart TD\n    A[\"Design Tokens\"] --&gt; B[\"Primitives\"]\n    B --&gt; C[\"Components\"]\n    C --&gt; D[\"Patterns\"]\n    D --&gt; E[\"Templates\"]\n    \n    A --&gt; |\"colors, spacing, fonts\"| B\n    B --&gt; |\"Button, Input, Card\"| C\n    C --&gt; |\"LoginForm, DataTable\"| D\n    D --&gt; |\"DashboardLayout\"| E",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2166,7 +2166,7 @@
     "section": "",
     "text": "Layer\nExample\nChanges\n\n\n\n\nDesign Tokens\n--color-primary: #3b82f6\nRarely\n\n\nPrimitives\n&lt;Button&gt;, &lt;Input&gt;\nSometimes\n\n\nComponents\n&lt;SearchBar&gt;, &lt;UserCard&gt;\nOften\n\n\nPatterns\n&lt;Pagination&gt;, &lt;DataGrid&gt;\nFrequently",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2176,7 +2176,7 @@
     "section": "Project Structure",
     "text": "Project Structure\npackages/\n├── ui/                     # Component library\n│   ├── src/\n│   │   ├── components/\n│   │   │   ├── Button/\n│   │   │   │   ├── Button.tsx\n│   │   │   │   ├── Button.stories.tsx\n│   │   │   │   ├── Button.test.tsx\n│   │   │   │   └── index.ts\n│   │   │   └── index.ts\n│   │   ├── tokens/\n│   │   │   └── colors.ts\n│   │   └── index.ts\n│   ├── package.json\n│   └── tsconfig.json\n└── docs/                   # Storybook site",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2186,7 +2186,7 @@
     "section": "Building Components",
     "text": "Building Components\n\nA Professional Button Component\n// packages/ui/src/components/Button/Button.tsx\nimport { forwardRef, type ButtonHTMLAttributes } from 'react';\nimport { cva, type VariantProps } from 'class-variance-authority';\nimport { cn } from '../../utils/cn';\n\nconst buttonVariants = cva(\n  // Base styles\n  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',\n  {\n    variants: {\n      variant: {\n        default: 'bg-primary text-primary-foreground hover:bg-primary/90',\n        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',\n        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',\n        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',\n        ghost: 'hover:bg-accent hover:text-accent-foreground',\n        link: 'text-primary underline-offset-4 hover:underline',\n      },\n      size: {\n        default: 'h-10 px-4 py-2',\n        sm: 'h-9 rounded-md px-3',\n        lg: 'h-11 rounded-md px-8',\n        icon: 'h-10 w-10',\n      },\n    },\n    defaultVariants: {\n      variant: 'default',\n      size: 'default',\n    },\n  }\n);\n\nexport interface ButtonProps\n  extends ButtonHTMLAttributes&lt;HTMLButtonElement&gt;,\n    VariantProps&lt;typeof buttonVariants&gt; {\n  isLoading?: boolean;\n}\n\nexport const Button = forwardRef&lt;HTMLButtonElement, ButtonProps&gt;(\n  ({ className, variant, size, isLoading, children, disabled, ...props }, ref) =&gt; {\n    return (\n      &lt;button\n        className={cn(buttonVariants({ variant, size, className }))}\n        ref={ref}\n        disabled={disabled || isLoading}\n        {...props}\n      &gt;\n        {isLoading && (\n          &lt;svg\n            className=\"mr-2 h-4 w-4 animate-spin\"\n            fill=\"none\"\n            viewBox=\"0 0 24 24\"\n          &gt;\n            &lt;circle\n              className=\"opacity-25\"\n              cx=\"12\"\n              cy=\"12\"\n              r=\"10\"\n              stroke=\"currentColor\"\n              strokeWidth=\"4\"\n            /&gt;\n            &lt;path\n              className=\"opacity-75\"\n              fill=\"currentColor\"\n              d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z\"\n            /&gt;\n          &lt;/svg&gt;\n        )}\n        {children}\n      &lt;/button&gt;\n    );\n  }\n);\n\nButton.displayName = 'Button';",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2196,7 +2196,7 @@
     "section": "Documenting with Storybook 8",
     "text": "Documenting with Storybook 8\n# Initialize Storybook\nnpx storybook@latest init\n\nWriting Stories\n// Button.stories.tsx\nimport type { Meta, StoryObj } from '@storybook/react';\nimport { Button } from './Button';\n\nconst meta: Meta&lt;typeof Button&gt; = {\n  title: 'Components/Button',\n  component: Button,\n  parameters: {\n    layout: 'centered',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],\n    },\n    size: {\n      control: 'select',\n      options: ['default', 'sm', 'lg', 'icon'],\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj&lt;typeof meta&gt;;\n\nexport const Default: Story = {\n  args: {\n    children: 'Button',\n  },\n};\n\nexport const Destructive: Story = {\n  args: {\n    variant: 'destructive',\n    children: 'Delete',\n  },\n};\n\nexport const Loading: Story = {\n  args: {\n    isLoading: true,\n    children: 'Saving...',\n  },\n};\n\nexport const AllVariants: Story = {\n  render: () =&gt; (\n    &lt;div className=\"flex flex-wrap gap-4\"&gt;\n      &lt;Button variant=\"default\"&gt;Default&lt;/Button&gt;\n      &lt;Button variant=\"secondary\"&gt;Secondary&lt;/Button&gt;\n      &lt;Button variant=\"destructive\"&gt;Destructive&lt;/Button&gt;\n      &lt;Button variant=\"outline\"&gt;Outline&lt;/Button&gt;\n      &lt;Button variant=\"ghost\"&gt;Ghost&lt;/Button&gt;\n      &lt;Button variant=\"link\"&gt;Link&lt;/Button&gt;\n    &lt;/div&gt;\n  ),\n};",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2206,7 +2206,7 @@
     "section": "Package Configuration",
     "text": "Package Configuration\n\npackage.json\n{\n  \"name\": \"@yourorg/ui\",\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"main\": \"./dist/index.cjs\",\n  \"module\": \"./dist/index.js\",\n  \"types\": \"./dist/index.d.ts\",\n  \"exports\": {\n    \".\": {\n      \"import\": \"./dist/index.js\",\n      \"require\": \"./dist/index.cjs\",\n      \"types\": \"./dist/index.d.ts\"\n    },\n    \"./styles.css\": \"./dist/styles.css\"\n  },\n  \"files\": [\"dist\"],\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --format cjs,esm --dts --clean\",\n    \"dev\": \"tsup src/index.ts --format cjs,esm --dts --watch\",\n    \"lint\": \"eslint src/\",\n    \"test\": \"vitest\"\n  },\n  \"peerDependencies\": {\n    \"react\": \"&gt;=18\",\n    \"react-dom\": \"&gt;=18\"\n  },\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.0.0\"\n  }\n}\n\n\ntsup.config.ts\nimport { defineConfig } from 'tsup';\n\nexport default defineConfig({\n  entry: ['src/index.ts'],\n  format: ['cjs', 'esm'],\n  dts: true,\n  splitting: true,\n  sourcemap: true,\n  clean: true,\n  external: ['react', 'react-dom'],\n});",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2216,7 +2216,7 @@
     "section": "Versioning with Changesets",
     "text": "Versioning with Changesets\nChangesets automates versioning and changelogs:\n# Install\nnpm install -D @changesets/cli\n\n# Initialize\nnpx changeset init\n\nWorkflow\n# 1. After making changes, create a changeset\nnpx changeset\n\n# This prompts:\n# - Which packages changed?\n# - Is this a major/minor/patch?\n# - Describe the change\n\n# 2. When ready to release\nnpx changeset version  # Updates versions and CHANGELOG.md\nnpx changeset publish  # Publishes to npm\n\n\nExample Changeset\n---\n\"@yourorg/ui\": minor\n---\n\nAdded `isLoading` prop to Button component with spinner animation.",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2226,7 +2226,7 @@
     "section": "Publishing to npm",
     "text": "Publishing to npm\n\nFirst-time Setup\n# Login to npm\nnpm login\n\n# For scoped packages, ensure public access\nnpm publish --access public\n\n\nGitHub Actions for Publishing\n# .github/workflows/release.yml\nname: Release\n\non:\n  push:\n    branches: [main]\n\nconcurrency: ${{ github.workflow }}-${{ github.ref }}\n\njobs:\n  release:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n          registry-url: 'https://registry.npmjs.org'\n          \n      - run: npm ci\n      - run: npm run build\n      \n      - name: Create Release Pull Request or Publish\n        uses: changesets/action@v1\n        with:\n          publish: npx changeset publish\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2236,7 +2236,7 @@
     "section": "Consuming Your Library",
     "text": "Consuming Your Library\n\nInstallation\nnpm install @yourorg/ui\n\n\nUsage\nimport { Button } from '@yourorg/ui';\nimport '@yourorg/ui/styles.css';\n\nfunction App() {\n  return (\n    &lt;Button variant=\"primary\" isLoading={saving}&gt;\n      Save Changes\n    &lt;/Button&gt;\n  );\n}",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2246,7 +2246,7 @@
     "section": "Design Tokens",
     "text": "Design Tokens\nCentralize design decisions:\n// packages/ui/src/tokens/colors.ts\nexport const colors = {\n  primary: {\n    50: '#eff6ff',\n    100: '#dbeafe',\n    500: '#3b82f6',\n    600: '#2563eb',\n    700: '#1d4ed8',\n  },\n  semantic: {\n    success: '#10b981',\n    warning: '#f59e0b',\n    error: '#ef4444',\n  },\n} as const;\n\n// Generate CSS custom properties\nexport function generateCSSVariables() {\n  return Object.entries(colors.primary)\n    .map(([key, value]) =&gt; `--color-primary-${key}: ${value};`)\n    .join('\\n');\n}",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2256,7 +2256,7 @@
     "section": "Testing Components",
     "text": "Testing Components\n// Button.test.tsx\nimport { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { Button } from './Button';\n\ndescribe('Button', () =&gt; {\n  it('renders children', () =&gt; {\n    render(&lt;Button&gt;Click me&lt;/Button&gt;);\n    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();\n  });\n\n  it('shows loading spinner when isLoading', () =&gt; {\n    render(&lt;Button isLoading&gt;Save&lt;/Button&gt;);\n    expect(screen.getByRole('button')).toBeDisabled();\n  });\n\n  it('calls onClick when clicked', async () =&gt; {\n    const handleClick = vi.fn();\n    render(&lt;Button onClick={handleClick}&gt;Click&lt;/Button&gt;);\n    \n    await userEvent.click(screen.getByRole('button'));\n    \n    expect(handleClick).toHaveBeenCalledTimes(1);\n  });\n\n  it('does not call onClick when disabled', async () =&gt; {\n    const handleClick = vi.fn();\n    render(&lt;Button disabled onClick={handleClick}&gt;Click&lt;/Button&gt;);\n    \n    await userEvent.click(screen.getByRole('button'));\n    \n    expect(handleClick).not.toHaveBeenCalled();\n  });\n});",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
     ]
   },
   {
@@ -2266,7 +2266,327 @@
     "section": "Library Checklist",
     "text": "Library Checklist\nBefore publishing v1.0.0:\n\nDocumentation — Storybook with all component states\nTypeScript — Full type coverage with exported types\nAccessibility — Keyboard navigation, ARIA attributes\nTesting — Unit tests for all components\nTheming — CSS variables for customization\nTree-shaking — ESM exports for optimal bundling\nChangelog — Automated with Changesets\nLicense — MIT or appropriate license\n\nBuilding a design system is an investment. Start small, iterate based on real usage, and resist the urge to over-engineer before you have consumers.",
     "crumbs": [
-      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Building Design Systems: From Components to Libraries</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#what-does-an-error-boundary-catch",
+    "href": "ErrorBoundary.html#what-does-an-error-boundary-catch",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "",
+    "text": "Caught ✅\nNot Caught ❌\n\n\n\n\nErrors during rendering\nEvent handlers\n\n\nLifecycle method errors\nAsync code (setTimeout, fetch)\n\n\nConstructor errors\nServer-side rendering\n\n\nErrors in child components\nErrors in the boundary itself\n\n\n\n\n\n\n\n\n\nEvent Handlers Need Try-Catch\n\n\n\nError boundaries only catch errors during the render phase. For event handlers, you still need traditional try-catch blocks.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#where-to-place-error-boundaries",
+    "href": "ErrorBoundary.html#where-to-place-error-boundaries",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "Where to Place Error Boundaries",
+    "text": "Where to Place Error Boundaries\nThis is the most common question. Here’s the strategic placement pattern:\n\n\n\n\n\nflowchart TD\n    App[\"🏠 App\"]\n    \n    App --&gt; Layout[\"Layout\"]\n    \n    Layout --&gt; Sidebar[\"📁 Sidebar\"]\n    Layout --&gt; Main[\"📄 Main Content\"]\n    \n    Main --&gt; Route1[\"Route: Dashboard\"]\n    Main --&gt; Route2[\"Route: Settings\"]\n    \n    Route1 --&gt; Widget1[\"📊 Chart Widget\"]\n    Route1 --&gt; Widget2[\"📈 Analytics Widget\"]\n    Route1 --&gt; Widget3[\"🔔 Notifications\"]\n    \n    subgraph Boundaries[\"Error Boundary Placement\"]\n        B1[\"🛡️ Route-Level&lt;br/&gt;(catches page crashes)\"]\n        B2[\"🛡️ Widget-Level&lt;br/&gt;(isolates failures)\"]\n        B3[\"🛡️ Third-Party&lt;br/&gt;(untrusted code)\"]\n    end\n    \n    style App fill:#3b82f6\n    style B1 fill:#fbbf24\n    style B2 fill:#fbbf24\n    style B3 fill:#fbbf24\n\n\n\n\n\n\n\nPlacement Strategy\n\n\n\n\n\n\n\n\nLevel\nWhen to Use\nExample\n\n\n\n\nApp Root\nLast resort fallback\n“Something went wrong. Reload?”\n\n\nRoute/Page\nEach route gets its own boundary\nDashboard, Settings, Profile\n\n\nFeature/Widget\nIndependent features that can fail\nCharts, Comments, Chat\n\n\nThird-Party\nExternal libraries you don’t control\nEmbeds, Plugins, SDKs",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#the-modern-way-react-error-boundary",
+    "href": "ErrorBoundary.html#the-modern-way-react-error-boundary",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "The Modern Way: react-error-boundary",
+    "text": "The Modern Way: react-error-boundary\nThe react-error-boundary library provides a clean, hook-friendly API:\nnpm install react-error-boundary\n\nBasic Usage\nimport { ErrorBoundary } from 'react-error-boundary';\n\nfunction ErrorFallback({ error, resetErrorBoundary }) {\n  return (\n    &lt;div role=\"alert\" className=\"error-fallback\"&gt;\n      &lt;h2&gt;Something went wrong&lt;/h2&gt;\n      &lt;pre&gt;{error.message}&lt;/pre&gt;\n      &lt;button onClick={resetErrorBoundary}&gt;Try again&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\n\nfunction App() {\n  return (\n    &lt;ErrorBoundary\n      FallbackComponent={ErrorFallback}\n      onError={(error, info) =&gt; {\n        // Log to Sentry, LogRocket, etc.\n        console.error('Error caught:', error, info);\n      }}\n      onReset={() =&gt; {\n        // Reset app state if needed\n        window.location.reload();\n      }}\n    &gt;\n      &lt;Dashboard /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n}\n\n\nReset on Navigation\nimport { useLocation } from 'react-router-dom';\n\nfunction App() {\n  const location = useLocation();\n\n  return (\n    &lt;ErrorBoundary\n      FallbackComponent={ErrorFallback}\n      resetKeys={[location.pathname]}  // Reset when route changes\n    &gt;\n      &lt;Routes /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n}\n\n\nuseErrorBoundary Hook\nFor programmatic error throwing:\nimport { useErrorBoundary } from 'react-error-boundary';\n\nfunction DataFetcher() {\n  const { showBoundary } = useErrorBoundary();\n\n  const fetchData = async () =&gt; {\n    try {\n      const res = await fetch('/api/data');\n      if (!res.ok) throw new Error('Failed to fetch');\n      return res.json();\n    } catch (error) {\n      showBoundary(error);  // Trigger the error boundary\n    }\n  };\n\n  // ...\n}",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#component-hierarchy-example",
+    "href": "ErrorBoundary.html#component-hierarchy-example",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "Component Hierarchy Example",
+    "text": "Component Hierarchy Example\nHere’s a real-world component tree with strategic error boundary placement:\n// App.tsx\nimport { ErrorBoundary } from 'react-error-boundary';\nimport { BrowserRouter, Routes, Route } from 'react-router-dom';\n\nfunction App() {\n  return (\n    &lt;BrowserRouter&gt;\n      {/* 🛡️ Level 1: App-wide crash protection */}\n      &lt;ErrorBoundary FallbackComponent={AppCrashFallback}&gt;\n        &lt;Layout&gt;\n          &lt;Sidebar /&gt;\n          \n          &lt;main&gt;\n            {/* 🛡️ Level 2: Route-level isolation */}\n            &lt;ErrorBoundary FallbackComponent={PageErrorFallback}&gt;\n              &lt;Routes&gt;\n                &lt;Route path=\"/\" element={&lt;Dashboard /&gt;} /&gt;\n                &lt;Route path=\"/settings\" element={&lt;Settings /&gt;} /&gt;\n              &lt;/Routes&gt;\n            &lt;/ErrorBoundary&gt;\n          &lt;/main&gt;\n        &lt;/Layout&gt;\n      &lt;/ErrorBoundary&gt;\n    &lt;/BrowserRouter&gt;\n  );\n}\n\n// Dashboard.tsx\nfunction Dashboard() {\n  return (\n    &lt;div className=\"dashboard\"&gt;\n      &lt;h1&gt;Dashboard&lt;/h1&gt;\n      \n      &lt;div className=\"widgets\"&gt;\n        {/* 🛡️ Level 3: Widget-level isolation */}\n        &lt;ErrorBoundary FallbackComponent={WidgetErrorFallback}&gt;\n          &lt;AnalyticsChart /&gt;\n        &lt;/ErrorBoundary&gt;\n        \n        &lt;ErrorBoundary FallbackComponent={WidgetErrorFallback}&gt;\n          &lt;RecentActivity /&gt;\n        &lt;/ErrorBoundary&gt;\n        \n        {/* 🛡️ Level 4: Third-party isolation */}\n        &lt;ErrorBoundary FallbackComponent={WidgetErrorFallback}&gt;\n          &lt;ThirdPartyEmbed /&gt;\n        &lt;/ErrorBoundary&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#fallback-ui-patterns",
+    "href": "ErrorBoundary.html#fallback-ui-patterns",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "Fallback UI Patterns",
+    "text": "Fallback UI Patterns\n\nMinimal Widget Fallback\nfunction WidgetErrorFallback({ error, resetErrorBoundary }) {\n  return (\n    &lt;div className=\"widget-error\"&gt;\n      &lt;span&gt;⚠️ Failed to load&lt;/span&gt;\n      &lt;button onClick={resetErrorBoundary}&gt;Retry&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\n\n\nInformative Page Fallback\nfunction PageErrorFallback({ error, resetErrorBoundary }) {\n  return (\n    &lt;div className=\"page-error\"&gt;\n      &lt;h2&gt;This page encountered an error&lt;/h2&gt;\n      &lt;p&gt;We've been notified and are working on a fix.&lt;/p&gt;\n      \n      &lt;details&gt;\n        &lt;summary&gt;Error details&lt;/summary&gt;\n        &lt;pre&gt;{error.message}&lt;/pre&gt;\n        &lt;pre&gt;{error.stack}&lt;/pre&gt;\n      &lt;/details&gt;\n      \n      &lt;div className=\"actions\"&gt;\n        &lt;button onClick={resetErrorBoundary}&gt;Try again&lt;/button&gt;\n        &lt;button onClick={() =&gt; window.location.href = '/'}&gt;\n          Go to homepage\n        &lt;/button&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  );\n}\n\n\nFull App Crash Fallback\nfunction AppCrashFallback({ error }) {\n  return (\n    &lt;div className=\"app-crash\"&gt;\n      &lt;h1&gt;😵 Something went wrong&lt;/h1&gt;\n      &lt;p&gt;The application has crashed. Please reload the page.&lt;/p&gt;\n      &lt;button onClick={() =&gt; window.location.reload()}&gt;\n        Reload Application\n      &lt;/button&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#production-error-logging",
+    "href": "ErrorBoundary.html#production-error-logging",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "Production Error Logging",
+    "text": "Production Error Logging\nIntegrate with error tracking services:\nimport * as Sentry from '@sentry/react';\nimport { ErrorBoundary } from 'react-error-boundary';\n\nfunction logError(error: Error, info: { componentStack: string }) {\n  Sentry.captureException(error, {\n    extra: {\n      componentStack: info.componentStack,\n    },\n  });\n}\n\nfunction App() {\n  return (\n    &lt;ErrorBoundary\n      FallbackComponent={ErrorFallback}\n      onError={logError}\n    &gt;\n      &lt;Routes /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#the-manual-way-class-component",
+    "href": "ErrorBoundary.html#the-manual-way-class-component",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "The Manual Way: Class Component",
+    "text": "The Manual Way: Class Component\nIf you need zero dependencies or want to understand how it works:\nimport React, { Component, ReactNode } from 'react';\n\ninterface Props {\n  children: ReactNode;\n  fallback?: ReactNode;\n  onError?: (error: Error, errorInfo: React.ErrorInfo) =&gt; void;\n}\n\ninterface State {\n  hasError: boolean;\n  error: Error | null;\n}\n\nclass ErrorBoundary extends Component&lt;Props, State&gt; {\n  constructor(props: Props) {\n    super(props);\n    this.state = { hasError: false, error: null };\n  }\n\n  static getDerivedStateFromError(error: Error): State {\n    return { hasError: true, error };\n  }\n\n  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {\n    console.error('Error caught by boundary:', error, errorInfo);\n    this.props.onError?.(error, errorInfo);\n  }\n\n  render() {\n    if (this.state.hasError) {\n      return this.props.fallback ?? (\n        &lt;div&gt;Something went wrong.&lt;/div&gt;\n      );\n    }\n\n    return this.props.children;\n  }\n}\n\nexport default ErrorBoundary;",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "ErrorBoundary.html#testing-error-boundaries",
+    "href": "ErrorBoundary.html#testing-error-boundaries",
+    "title": "Error Boundaries: Graceful Failure in React",
+    "section": "Testing Error Boundaries",
+    "text": "Testing Error Boundaries\n// ErrorBoundary.test.tsx\nimport { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { ErrorBoundary } from 'react-error-boundary';\n\nfunction ThrowError() {\n  throw new Error('Test error');\n}\n\ntest('renders fallback when child throws', () =&gt; {\n  render(\n    &lt;ErrorBoundary fallback={&lt;div&gt;Error occurred&lt;/div&gt;}&gt;\n      &lt;ThrowError /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n\n  expect(screen.getByText('Error occurred')).toBeInTheDocument();\n});\n\ntest('resets when resetErrorBoundary is called', async () =&gt; {\n  const user = userEvent.setup();\n  let shouldThrow = true;\n\n  function MaybeThrow() {\n    if (shouldThrow) throw new Error('Test error');\n    return &lt;div&gt;Success&lt;/div&gt;;\n  }\n\n  render(\n    &lt;ErrorBoundary\n      FallbackComponent={({ resetErrorBoundary }) =&gt; (\n        &lt;button onClick={resetErrorBoundary}&gt;Reset&lt;/button&gt;\n      )}\n      onReset={() =&gt; { shouldThrow = false; }}\n    &gt;\n      &lt;MaybeThrow /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n\n  await user.click(screen.getByText('Reset'));\n  expect(screen.getByText('Success')).toBeInTheDocument();\n});\n\nError boundaries transform your app from “one crash kills everything” to “graceful degradation with user feedback.” Place them strategically, log errors properly, and always give users a way to recover.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Error Boundaries: Graceful Failure in React</span>"
+    ]
+  },
+  {
+    "objectID": "SetupReactAppLocallyInSeconds.html#code-quality-tools-eslint-prettier",
+    "href": "SetupReactAppLocallyInSeconds.html#code-quality-tools-eslint-prettier",
+    "title": "Setup React App Locally in Seconds",
+    "section": "Code Quality Tools: ESLint & Prettier",
+    "text": "Code Quality Tools: ESLint & Prettier\nBefore diving into dependencies, let’s understand why these tools are non-negotiable in modern React development.\n\nWhat They Do\n\n\n\n\n\n\n\n\nTool\nPurpose\nCatches\n\n\n\n\nESLint\nStatic analysis — finds bugs before runtime\nUnused variables, missing dependencies in hooks, unreachable code\n\n\nPrettier\nAuto-formatting — enforces consistent style\nInconsistent indentation, quote styles, line lengths\n\n\n\n\n\nWhy You Need Both\n\n\n\n\n\n\nESLint catches bugs. Prettier fixes style.\n\n\n\nThey solve different problems and work together seamlessly.\n\n\nESLint is your first line of defense. It analyzes your code without running it, catching issues like:\n\nForgotten dependencies in useEffect (a common source of bugs)\nUnused imports cluttering your bundle\nAccessibility violations in JSX\nReact-specific anti-patterns like conditional hooks\n\nPrettier ends all formatting debates. It rewrites your code to a consistent style, so teams never argue about tabs vs. spaces or trailing commas again.\n\n\nHow They Work Together\n\n\n\n\n\nflowchart LR\n    C[\"Your Code\"] --&gt; E[\"ESLint\"]\n    E --&gt; |\"Bug? Error!\"| F[\"Fix Issues\"]\n    E --&gt; |\"Clean\"| P[\"Prettier\"]\n    P --&gt; |\"Formatted\"| S[\"Save\"]\n    \n    style E fill:#4b32c3\n    style P fill:#f7b93e\n\n\n\n\n\n\neslint-config-prettier disables ESLint’s formatting rules so the two tools don’t conflict.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Setup React App Locally in Seconds</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html",
+    "href": "DataTablesAndGrids.html",
+    "title": "Data Tables and Grids",
+    "section": "",
+    "text": "The Table Landscape\nTables and grids are the heart of enterprise UIs. Whether you’re building admin dashboards, CRMs, or analytics tools, you’ll need robust solutions for displaying, sorting, filtering, and paginating large datasets.\nThis chapter covers the modern React table ecosystem — from headless libraries to full-featured grids — with practical patterns for both client-side and server-side operations.",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#the-table-landscape",
+    "href": "DataTablesAndGrids.html#the-table-landscape",
+    "title": "Data Tables and Grids",
+    "section": "",
+    "text": "Library\nType\nLicense\nBest For\n\n\n\n\nTanStack Table\nHeadless\nMIT (Free)\nCustom UI, full control\n\n\nAG Grid\nFull-featured\nCommunity (Free) or Enterprise (Paid)\nEnterprise dashboards\n\n\nMUI DataGrid\nFull-featured\nMIT (Free) or Pro/Premium (Paid)\nMaterial Design apps\n\n\n\n\n\n\n\n\n\nHeadless vs Full-Featured\n\n\n\nHeadless = Logic only, you build the UI (TanStack Table)\nFull-Featured = Complete UI included (AG Grid, MUI DataGrid)",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#tanstack-table-the-flexible-choice",
+    "href": "DataTablesAndGrids.html#tanstack-table-the-flexible-choice",
+    "title": "Data Tables and Grids",
+    "section": "TanStack Table: The Flexible Choice",
+    "text": "TanStack Table: The Flexible Choice\nTanStack Table (formerly React Table) is the most popular headless table library. It provides all the logic — sorting, filtering, pagination, virtualization — while you own the markup.\n\nInstallation\nnpm install @tanstack/react-table\n\n\nBasic Table Setup\n// src/components/BasicTable.tsx\nimport {\n  useReactTable,\n  getCoreRowModel,\n  flexRender,\n  createColumnHelper,\n} from '@tanstack/react-table';\n\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n  status: 'active' | 'inactive';\n}\n\nconst columnHelper = createColumnHelper&lt;User&gt;();\n\nconst columns = [\n  columnHelper.accessor('id', {\n    header: 'ID',\n    cell: (info) =&gt; info.getValue(),\n  }),\n  columnHelper.accessor('name', {\n    header: 'Name',\n    cell: (info) =&gt; &lt;strong&gt;{info.getValue()}&lt;/strong&gt;,\n  }),\n  columnHelper.accessor('email', {\n    header: 'Email',\n  }),\n  columnHelper.accessor('status', {\n    header: 'Status',\n    cell: (info) =&gt; (\n      &lt;span className={`badge badge-${info.getValue()}`}&gt;\n        {info.getValue()}\n      &lt;/span&gt;\n    ),\n  }),\n];\n\nexport function BasicTable({ data }: { data: User[] }) {\n  const table = useReactTable({\n    data,\n    columns,\n    getCoreRowModel: getCoreRowModel(),\n  });\n\n  return (\n    &lt;table&gt;\n      &lt;thead&gt;\n        {table.getHeaderGroups().map((headerGroup) =&gt; (\n          &lt;tr key={headerGroup.id}&gt;\n            {headerGroup.headers.map((header) =&gt; (\n              &lt;th key={header.id}&gt;\n                {flexRender(\n                  header.column.columnDef.header,\n                  header.getContext()\n                )}\n              &lt;/th&gt;\n            ))}\n          &lt;/tr&gt;\n        ))}\n      &lt;/thead&gt;\n      &lt;tbody&gt;\n        {table.getRowModel().rows.map((row) =&gt; (\n          &lt;tr key={row.id}&gt;\n            {row.getVisibleCells().map((cell) =&gt; (\n              &lt;td key={cell.id}&gt;\n                {flexRender(cell.column.columnDef.cell, cell.getContext())}\n              &lt;/td&gt;\n            ))}\n          &lt;/tr&gt;\n        ))}\n      &lt;/tbody&gt;\n    &lt;/table&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#client-side-operations",
+    "href": "DataTablesAndGrids.html#client-side-operations",
+    "title": "Data Tables and Grids",
+    "section": "Client-Side Operations",
+    "text": "Client-Side Operations\nWhen your dataset is small (&lt; 1000 rows), handle sorting, filtering, and pagination entirely in the browser.\n\nSorting\nimport {\n  useReactTable,\n  getCoreRowModel,\n  getSortedRowModel,\n  SortingState,\n} from '@tanstack/react-table';\n\nfunction SortableTable({ data }: { data: User[] }) {\n  const [sorting, setSorting] = useState&lt;SortingState&gt;([]);\n\n  const table = useReactTable({\n    data,\n    columns,\n    state: { sorting },\n    onSortingChange: setSorting,\n    getCoreRowModel: getCoreRowModel(),\n    getSortedRowModel: getSortedRowModel(),\n  });\n\n  return (\n    &lt;table&gt;\n      &lt;thead&gt;\n        {table.getHeaderGroups().map((headerGroup) =&gt; (\n          &lt;tr key={headerGroup.id}&gt;\n            {headerGroup.headers.map((header) =&gt; (\n              &lt;th\n                key={header.id}\n                onClick={header.column.getToggleSortingHandler()}\n                style={{ cursor: 'pointer' }}\n              &gt;\n                {flexRender(header.column.columnDef.header, header.getContext())}\n                {{\n                  asc: ' 🔼',\n                  desc: ' 🔽',\n                }[header.column.getIsSorted() as string] ?? null}\n              &lt;/th&gt;\n            ))}\n          &lt;/tr&gt;\n        ))}\n      &lt;/thead&gt;\n      {/* ... tbody */}\n    &lt;/table&gt;\n  );\n}\n\n\nFiltering\nimport {\n  getFilteredRowModel,\n  ColumnFiltersState,\n} from '@tanstack/react-table';\n\nfunction FilterableTable({ data }: { data: User[] }) {\n  const [columnFilters, setColumnFilters] = useState&lt;ColumnFiltersState&gt;([]);\n  const [globalFilter, setGlobalFilter] = useState('');\n\n  const table = useReactTable({\n    data,\n    columns,\n    state: { columnFilters, globalFilter },\n    onColumnFiltersChange: setColumnFilters,\n    onGlobalFilterChange: setGlobalFilter,\n    getCoreRowModel: getCoreRowModel(),\n    getFilteredRowModel: getFilteredRowModel(),\n  });\n\n  return (\n    &lt;div&gt;\n      {/* Global search */}\n      &lt;input\n        placeholder=\"Search all columns...\"\n        value={globalFilter}\n        onChange={(e) =&gt; setGlobalFilter(e.target.value)}\n      /&gt;\n\n      {/* Column-specific filter */}\n      &lt;input\n        placeholder=\"Filter by name...\"\n        value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}\n        onChange={(e) =&gt;\n          table.getColumn('name')?.setFilterValue(e.target.value)\n        }\n      /&gt;\n\n      {/* Table */}\n    &lt;/div&gt;\n  );\n}\n\n\nPagination\nimport { getPaginationRowModel } from '@tanstack/react-table';\n\nfunction PaginatedTable({ data }: { data: User[] }) {\n  const table = useReactTable({\n    data,\n    columns,\n    getCoreRowModel: getCoreRowModel(),\n    getPaginationRowModel: getPaginationRowModel(),\n    initialState: {\n      pagination: { pageSize: 10 },\n    },\n  });\n\n  return (\n    &lt;div&gt;\n      &lt;table&gt;{/* ... */}&lt;/table&gt;\n\n      &lt;div className=\"pagination\"&gt;\n        &lt;button\n          onClick={() =&gt; table.previousPage()}\n          disabled={!table.getCanPreviousPage()}\n        &gt;\n          Previous\n        &lt;/button&gt;\n\n        &lt;span&gt;\n          Page {table.getState().pagination.pageIndex + 1} of{' '}\n          {table.getPageCount()}\n        &lt;/span&gt;\n\n        &lt;button\n          onClick={() =&gt; table.nextPage()}\n          disabled={!table.getCanNextPage()}\n        &gt;\n          Next\n        &lt;/button&gt;\n\n        &lt;select\n          value={table.getState().pagination.pageSize}\n          onChange={(e) =&gt; table.setPageSize(Number(e.target.value))}\n        &gt;\n          {[10, 20, 50, 100].map((pageSize) =&gt; (\n            &lt;option key={pageSize} value={pageSize}&gt;\n              Show {pageSize}\n            &lt;/option&gt;\n          ))}\n        &lt;/select&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#server-side-operations",
+    "href": "DataTablesAndGrids.html#server-side-operations",
+    "title": "Data Tables and Grids",
+    "section": "Server-Side Operations",
+    "text": "Server-Side Operations\nFor large datasets (&gt; 1000 rows), move sorting, filtering, and pagination to the server.\n\n\n\n\n\nsequenceDiagram\n    participant U as User\n    participant T as TanStack Table\n    participant Q as TanStack Query\n    participant S as Server\n\n    U-&gt;&gt;T: Click \"Sort by Name\"\n    T-&gt;&gt;Q: Update query params\n    Q-&gt;&gt;S: GET /users?sort=name&order=asc&page=1\n    S--&gt;&gt;Q: { data: [...], total: 5000 }\n    Q--&gt;&gt;T: Update table data\n    T--&gt;&gt;U: Re-render sorted table\n\n\n\n\n\n\n\nServer-Side Table with TanStack Query\n// src/hooks/useServerTable.ts\nimport { useQuery } from '@tanstack/react-query';\nimport { useState } from 'react';\nimport {\n  PaginationState,\n  SortingState,\n  ColumnFiltersState,\n} from '@tanstack/react-table';\n\ninterface ServerTableParams {\n  endpoint: string;\n}\n\ninterface ServerResponse&lt;T&gt; {\n  data: T[];\n  total: number;\n  page: number;\n  pageSize: number;\n}\n\nexport function useServerTable&lt;T&gt;({ endpoint }: ServerTableParams) {\n  const [pagination, setPagination] = useState&lt;PaginationState&gt;({\n    pageIndex: 0,\n    pageSize: 10,\n  });\n  const [sorting, setSorting] = useState&lt;SortingState&gt;([]);\n  const [columnFilters, setColumnFilters] = useState&lt;ColumnFiltersState&gt;([]);\n\n  const query = useQuery({\n    queryKey: [endpoint, pagination, sorting, columnFilters],\n    queryFn: async () =&gt; {\n      const params = new URLSearchParams({\n        page: String(pagination.pageIndex + 1),\n        pageSize: String(pagination.pageSize),\n      });\n\n      // Add sorting\n      if (sorting.length &gt; 0) {\n        params.set('sortBy', sorting[0].id);\n        params.set('sortOrder', sorting[0].desc ? 'desc' : 'asc');\n      }\n\n      // Add filters\n      columnFilters.forEach((filter) =&gt; {\n        params.set(`filter[${filter.id}]`, String(filter.value));\n      });\n\n      const res = await fetch(`${endpoint}?${params}`);\n      return res.json() as Promise&lt;ServerResponse&lt;T&gt;&gt;;\n    },\n    placeholderData: (prev) =&gt; prev, // Keep previous data while fetching\n  });\n\n  return {\n    data: query.data?.data ?? [],\n    total: query.data?.total ?? 0,\n    isLoading: query.isLoading,\n    isFetching: query.isFetching,\n    pagination,\n    setPagination,\n    sorting,\n    setSorting,\n    columnFilters,\n    setColumnFilters,\n  };\n}\n\n\nServer-Side Table Component\n// src/components/ServerTable.tsx\nimport { useReactTable, getCoreRowModel } from '@tanstack/react-table';\nimport { useServerTable } from '../hooks/useServerTable';\n\nexport function ServerTable() {\n  const {\n    data,\n    total,\n    isLoading,\n    isFetching,\n    pagination,\n    setPagination,\n    sorting,\n    setSorting,\n    columnFilters,\n    setColumnFilters,\n  } = useServerTable&lt;User&gt;({ endpoint: '/api/users' });\n\n  const table = useReactTable({\n    data,\n    columns,\n    pageCount: Math.ceil(total / pagination.pageSize),\n    state: { pagination, sorting, columnFilters },\n    onPaginationChange: setPagination,\n    onSortingChange: setSorting,\n    onColumnFiltersChange: setColumnFilters,\n    getCoreRowModel: getCoreRowModel(),\n    manualPagination: true,  // Server handles pagination\n    manualSorting: true,     // Server handles sorting\n    manualFiltering: true,   // Server handles filtering\n  });\n\n  if (isLoading) return &lt;TableSkeleton /&gt;;\n\n  return (\n    &lt;div className={isFetching ? 'opacity-50' : ''}&gt;\n      {/* Render table */}\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#ag-grid-enterprise-power",
+    "href": "DataTablesAndGrids.html#ag-grid-enterprise-power",
+    "title": "Data Tables and Grids",
+    "section": "AG Grid: Enterprise Power",
+    "text": "AG Grid: Enterprise Power\nAG Grid is the most feature-rich grid library. It’s used by major enterprises for complex data applications.\n\nLicensing\n\n\n\n\n\n\n\n\nEdition\nPrice\nKey Features\n\n\n\n\nCommunity\nFree (MIT)\nSorting, filtering, pagination, cell editing\n\n\nEnterprise\n$999+/dev/year\nRow grouping, pivoting, Excel export, charts, tree data\n\n\n\n\n\n\n\n\n\nEnterprise License Required\n\n\n\nFeatures like row grouping, pivoting, Excel export, and charts require the Enterprise license. Using them without a license violates the terms.\n\n\n\n\nBasic AG Grid Setup\nnpm install ag-grid-react ag-grid-community\n// src/components/AgGridTable.tsx\nimport { AgGridReact } from 'ag-grid-react';\nimport { ColDef } from 'ag-grid-community';\nimport 'ag-grid-community/styles/ag-grid.css';\nimport 'ag-grid-community/styles/ag-theme-alpine.css';\n\nconst columnDefs: ColDef&lt;User&gt;[] = [\n  { field: 'id', sortable: true, filter: true },\n  { field: 'name', sortable: true, filter: true },\n  { field: 'email', sortable: true, filter: true },\n  { \n    field: 'status', \n    cellRenderer: (params) =&gt; (\n      &lt;span className={`badge badge-${params.value}`}&gt;{params.value}&lt;/span&gt;\n    ),\n  },\n];\n\nexport function AgGridTable({ data }: { data: User[] }) {\n  return (\n    &lt;div className=\"ag-theme-alpine\" style={{ height: 500, width: '100%' }}&gt;\n      &lt;AgGridReact\n        rowData={data}\n        columnDefs={columnDefs}\n        pagination={true}\n        paginationPageSize={20}\n        defaultColDef={{\n          flex: 1,\n          minWidth: 100,\n          resizable: true,\n        }}\n      /&gt;\n    &lt;/div&gt;\n  );\n}\n\n\nServer-Side with AG Grid\nimport { IServerSideDatasource } from 'ag-grid-enterprise';\n\nconst serverSideDatasource: IServerSideDatasource = {\n  getRows: async (params) =&gt; {\n    const { startRow, endRow, sortModel, filterModel } = params.request;\n\n    try {\n      const response = await fetch('/api/users', {\n        method: 'POST',\n        body: JSON.stringify({\n          startRow,\n          endRow,\n          sortModel,\n          filterModel,\n        }),\n      });\n\n      const { data, total } = await response.json();\n      params.success({ rowData: data, rowCount: total });\n    } catch (error) {\n      params.fail();\n    }\n  },\n};\n\n// In component:\n&lt;AgGridReact\n  rowModelType=\"serverSide\"\n  serverSideDatasource={serverSideDatasource}\n  cacheBlockSize={100}\n/&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#mui-datagrid-material-design",
+    "href": "DataTablesAndGrids.html#mui-datagrid-material-design",
+    "title": "Data Tables and Grids",
+    "section": "MUI DataGrid: Material Design",
+    "text": "MUI DataGrid: Material Design\nMUI DataGrid integrates seamlessly with Material UI applications.\n\nLicensing\n\n\n\n\n\n\n\n\nEdition\nPrice\nKey Features\n\n\n\n\nCommunity\nFree (MIT)\nSorting, filtering, pagination, column resize\n\n\nPro\n$15/dev/month\nColumn pinning, tree data, Excel export, advanced filtering\n\n\nPremium\n$49/dev/month\nRow grouping, aggregation, charts\n\n\n\n\n\nBasic MUI DataGrid\nnpm install @mui/x-data-grid @mui/material @emotion/react @emotion/styled\n// src/components/MuiDataGrid.tsx\nimport { DataGrid, GridColDef } from '@mui/x-data-grid';\n\nconst columns: GridColDef&lt;User&gt;[] = [\n  { field: 'id', headerName: 'ID', width: 70 },\n  { field: 'name', headerName: 'Name', width: 150 },\n  { field: 'email', headerName: 'Email', width: 200, flex: 1 },\n  {\n    field: 'status',\n    headerName: 'Status',\n    width: 120,\n    renderCell: (params) =&gt; (\n      &lt;Chip label={params.value} color={params.value === 'active' ? 'success' : 'default'} /&gt;\n    ),\n  },\n];\n\nexport function MuiDataGridTable({ data }: { data: User[] }) {\n  return (\n    &lt;div style={{ height: 500, width: '100%' }}&gt;\n      &lt;DataGrid\n        rows={data}\n        columns={columns}\n        pageSizeOptions={[10, 25, 50]}\n        initialState={{\n          pagination: { paginationModel: { pageSize: 10 } },\n        }}\n        checkboxSelection\n        disableRowSelectionOnClick\n      /&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#decision-matrix-which-to-choose",
+    "href": "DataTablesAndGrids.html#decision-matrix-which-to-choose",
+    "title": "Data Tables and Grids",
+    "section": "Decision Matrix: Which to Choose?",
+    "text": "Decision Matrix: Which to Choose?\n\n\n\n\n\nflowchart TD\n    Start[\"Need a Data Table?\"] --&gt; Q1{\"Custom UI required?\"}\n    \n    Q1 --&gt;|Yes| TS[\"TanStack Table\"]\n    Q1 --&gt;|No| Q2{\"Using Material UI?\"}\n    \n    Q2 --&gt;|Yes| MUI[\"MUI DataGrid\"]\n    Q2 --&gt;|No| Q3{\"Need advanced features?\"}\n    \n    Q3 --&gt;|\"Grouping, Pivots, Charts\"| AG[\"AG Grid Enterprise\"]\n    Q3 --&gt;|\"Basic features\"| Q4{\"Budget?\"}\n    \n    Q4 --&gt;|\"$0\"| AGC[\"AG Grid Community\"]\n    Q4 --&gt;|\"$15-50/mo\"| MUI\n    \n    style TS fill:#f97316\n    style MUI fill:#1976d2\n    style AG fill:#0ea5e9\n    style AGC fill:#0ea5e9\n\n\n\n\n\n\n\nSummary Table\n\n\n\n\n\n\n\n\nScenario\nRecommendation\nWhy\n\n\n\n\nCustom design system\nTanStack Table\nFull UI control, headless\n\n\nMaterial UI app\nMUI DataGrid\nNative integration\n\n\nComplex enterprise needs\nAG Grid Enterprise\nRow grouping, pivots, charts\n\n\nBudget-conscious\nTanStack Table or AG Grid Community\nFree, powerful\n\n\nQuick prototyping\nMUI DataGrid or AG Grid\nPre-built UI\n\n\nLarge datasets (100k+ rows)\nAG Grid\nVirtual scrolling, performance",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#best-practices",
+    "href": "DataTablesAndGrids.html#best-practices",
+    "title": "Data Tables and Grids",
+    "section": "Best Practices",
+    "text": "Best Practices\n\n1. Always Consider Server-Side First\n// Don't load 10,000 rows client-side\nconst { data } = useQuery(['users'], () =&gt; fetch('/api/users').then(r =&gt; r.json()));\n// This is BAD for large datasets\n\n// Do pagination server-side\nconst { data } = useQuery(\n  ['users', page, pageSize, sortBy],\n  () =&gt; fetch(`/api/users?page=${page}&limit=${pageSize}&sort=${sortBy}`)\n);\n\n\n2. Debounce Filters\nimport { useDebouncedValue } from '@mantine/hooks'; // or custom hook\n\nfunction SearchableTable() {\n  const [search, setSearch] = useState('');\n  const [debouncedSearch] = useDebouncedValue(search, 300);\n\n  // Use debouncedSearch in query, not search\n  const { data } = useQuery(['users', debouncedSearch], fetchUsers);\n}\n\n\n3. Show Loading States\n&lt;div className={isFetching ? 'table-loading' : ''}&gt;\n  {isFetching && &lt;LoadingOverlay /&gt;}\n  &lt;table&gt;{/* ... */}&lt;/table&gt;\n&lt;/div&gt;\n\n\n4. Handle Empty States\n{data.length === 0 && !isLoading && (\n  &lt;div className=\"empty-state\"&gt;\n    &lt;p&gt;No results found&lt;/p&gt;\n    &lt;button onClick={clearFilters}&gt;Clear filters&lt;/button&gt;\n  &lt;/div&gt;\n)}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#api-response-format",
+    "href": "DataTablesAndGrids.html#api-response-format",
+    "title": "Data Tables and Grids",
+    "section": "API Response Format",
+    "text": "API Response Format\nStandardize your server responses for tables:\n// Shared type for paginated responses\ninterface PaginatedResponse&lt;T&gt; {\n  data: T[];\n  pagination: {\n    page: number;\n    pageSize: number;\n    total: number;\n    totalPages: number;\n  };\n  meta?: {\n    sortBy?: string;\n    sortOrder?: 'asc' | 'desc';\n    filters?: Record&lt;string, unknown&gt;;\n  };\n}\nExample endpoint:\nGET /api/users?page=2&pageSize=20&sortBy=name&sortOrder=asc&filter[status]=active\n\nResponse:\n{\n  \"data\": [...],\n  \"pagination\": {\n    \"page\": 2,\n    \"pageSize\": 20,\n    \"total\": 156,\n    \"totalPages\": 8\n  },\n  \"meta\": {\n    \"sortBy\": \"name\",\n    \"sortOrder\": \"asc\",\n    \"filters\": { \"status\": \"active\" }\n  }\n}",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "DataTablesAndGrids.html#whats-next",
+    "href": "DataTablesAndGrids.html#whats-next",
+    "title": "Data Tables and Grids",
+    "section": "What’s Next?",
+    "text": "What’s Next?\nYou now have the foundation for building production-grade data tables. Key takeaways:\n\nTanStack Table for maximum flexibility and custom UIs\nAG Grid for enterprise-grade features (with appropriate licensing)\nMUI DataGrid for Material Design applications\nServer-side operations for datasets over 1000 rows\nAlways debounce filters and show loading states\n\nTables are where users spend most of their time in data-heavy applications. Invest in getting them right.",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Data Tables and Grids</span>"
+    ]
+  },
+  {
+    "objectID": "TheAISidecarPattern.html#tanstack-ai-the-modern-alternative",
+    "href": "TheAISidecarPattern.html#tanstack-ai-the-modern-alternative",
+    "title": "The AI Sidecar Pattern: Python for Intelligence, React for Beauty",
+    "section": "TanStack AI: The Modern Alternative",
+    "text": "TanStack AI: The Modern Alternative\nIf you’re building web-based AI experiences (not desktop sidecars), TanStack AI offers a streamlined, type-safe SDK for React. It’s currently in Alpha but rapidly maturing.\n\n\n\n\n\n\nSidecar vs TanStack AI\n\n\n\nSidecar Pattern → Local models (Ollama, PyTorch) in desktop apps\nTanStack AI → Cloud providers (OpenAI, Anthropic, Gemini) in web apps\n\n\n\nArchitecture\n\n\n\n\n\nsequenceDiagram\n    participant U as React UI\n    participant H as useChat Hook\n    participant A as /api/chat\n    participant P as AI Provider\n\n    U-&gt;&gt;H: User types message\n    H-&gt;&gt;A: POST messages[]\n    A-&gt;&gt;P: chat({ adapter, messages, tools })\n    P--&gt;&gt;A: Stream tokens (SSE)\n    A--&gt;&gt;H: Stream forwarded\n    H--&gt;&gt;U: Update UI in real-time\n\n\n\n\n\n\n\n\nInstallation\nnpm install @tanstack/ai @tanstack/ai-react @tanstack/ai-openai zod\n\n\nServer Setup (Next.js API Route)\n// app/api/chat/route.ts\nimport { chat, toServerSentEventsResponse } from '@tanstack/ai';\nimport { openaiText } from '@tanstack/ai-openai';\n\nexport async function POST(request: Request) {\n  const { messages, conversationId } = await request.json();\n\n  // Create streaming chat response\n  const stream = chat({\n    adapter: openaiText('gpt-4'),  // Or 'gpt-3.5-turbo'\n    messages,\n    conversationId,\n  });\n\n  // Convert to HTTP SSE response\n  return toServerSentEventsResponse(stream);\n}\n\n\n\n\n\n\nEnvironment Variables\n\n\n\nSet OPENAI_API_KEY in .env.local. For Anthropic use ANTHROPIC_API_KEY, for Gemini use GEMINI_API_KEY.\n\n\n\n\nReact Chat Component\n// components/Chat.tsx\nimport { useState } from 'react';\nimport { useChat, fetchServerSentEvents } from '@tanstack/ai-react';\n\nexport function Chat() {\n  const [input, setInput] = useState('');\n\n  const { messages, sendMessage, isLoading } = useChat({\n    connection: fetchServerSentEvents('/api/chat'),\n  });\n\n  const handleSubmit = (e: React.FormEvent) =&gt; {\n    e.preventDefault();\n    if (input.trim() && !isLoading) {\n      sendMessage(input);\n      setInput('');\n    }\n  };\n\n  return (\n    &lt;div className=\"chat-container\"&gt;\n      &lt;div className=\"messages\"&gt;\n        {messages.map((message) =&gt; (\n          &lt;div key={message.id} className={`message ${message.role}`}&gt;\n            &lt;strong&gt;{message.role === 'assistant' ? 'AI' : 'You'}&lt;/strong&gt;\n            &lt;div&gt;\n              {message.parts.map((part, idx) =&gt; {\n                if (part.type === 'thinking') {\n                  return &lt;em key={idx}&gt;💭 {part.content}&lt;/em&gt;;\n                }\n                if (part.type === 'text') {\n                  return &lt;p key={idx}&gt;{part.content}&lt;/p&gt;;\n                }\n                return null;\n              })}\n            &lt;/div&gt;\n          &lt;/div&gt;\n        ))}\n      &lt;/div&gt;\n\n      &lt;form onSubmit={handleSubmit}&gt;\n        &lt;input\n          value={input}\n          onChange={(e) =&gt; setInput(e.target.value)}\n          placeholder=\"Ask anything...\"\n          disabled={isLoading}\n        /&gt;\n        &lt;button disabled={!input.trim() || isLoading}&gt;\n          {isLoading ? 'Thinking...' : 'Send'}\n        &lt;/button&gt;\n      &lt;/form&gt;\n    &lt;/div&gt;\n  );\n}\n\n\nAI Tools (Function Calling)\nThe killer feature: define tools that the AI can call during conversation.\n// lib/tools.ts\nimport { toolDefinition } from '@tanstack/ai';\nimport { z } from 'zod';\n\n// Define the tool schema\nconst searchProductsDef = toolDefinition({\n  name: 'searchProducts',\n  description: 'Search for products in the catalog',\n  inputSchema: z.object({\n    query: z.string().describe('Search query'),\n    maxResults: z.number().optional().default(5),\n  }),\n  outputSchema: z.array(z.object({\n    id: z.string(),\n    name: z.string(),\n    price: z.number(),\n  })),\n});\n\n// Server-side implementation\nexport const searchProducts = searchProductsDef.server(async ({ query, maxResults }) =&gt; {\n  // This runs on your server\n  const results = await db.products.search(query, { limit: maxResults });\n  return results;\n});\n// app/api/chat/route.ts\nimport { chat, toServerSentEventsResponse } from '@tanstack/ai';\nimport { openaiText } from '@tanstack/ai-openai';\nimport { searchProducts } from '@/lib/tools';\n\nexport async function POST(request: Request) {\n  const { messages } = await request.json();\n\n  const stream = chat({\n    adapter: openaiText('gpt-4'),\n    messages,\n    tools: [searchProducts],  // AI can now search products!\n  });\n\n  return toServerSentEventsResponse(stream);\n}\nNow when a user asks “Find me wireless headphones under $100”, the AI will: 1. Recognize the intent 2. Call searchProducts({ query: 'wireless headphones', maxResults: 5 }) 3. Receive results from your database 4. Format a helpful response\n\n\nProvider Adapters\nSwap providers without changing your code:\nimport { openaiText } from '@tanstack/ai-openai';\nimport { anthropicText } from '@tanstack/ai-anthropic';\nimport { geminiText } from '@tanstack/ai-gemini';\nimport { ollamaText } from '@tanstack/ai-ollama';\n\n// OpenAI\nchat({ adapter: openaiText('gpt-4'), messages });\n\n// Anthropic Claude\nchat({ adapter: anthropicText('claude-3-opus'), messages });\n\n// Google Gemini\nchat({ adapter: geminiText('gemini-pro'), messages });\n\n// Local Ollama (no API key needed!)\nchat({ adapter: ollamaText('llama2'), messages });\n\n\nWhen to Use What\n\n\n\nScenario\nRecommendation\n\n\n\n\nWeb app + Cloud AI (OpenAI, Claude)\nTanStack AI\n\n\nDesktop app + Local models\nSidecar Pattern\n\n\nWeb app + Local AI (Ollama)\nTanStack AI with Ollama adapter\n\n\nNeed GPU acceleration\nSidecar Pattern (Python + PyTorch)\n\n\nRapid prototyping\nTanStack AI (fewer moving parts)\n\n\n\nFor full documentation, see tanstack.com/ai/latest.",
+    "crumbs": [
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>The AI Sidecar Pattern: Python for Intelligence, React for Beauty</span>"
+    ]
+  },
+  {
+    "objectID": "DataFetchingStrategies.html#the-caching-blueprint-stop-refetching-unchanged-data",
+    "href": "DataFetchingStrategies.html#the-caching-blueprint-stop-refetching-unchanged-data",
+    "title": "Data Fetching Strategies: Beyond Basic Fetch",
+    "section": "The Caching Blueprint: Stop Refetching Unchanged Data",
+    "text": "The Caching Blueprint: Stop Refetching Unchanged Data\n\n\n\n\n\n\nThe Real Pain Point\n\n\n\nWithout caching, every component mount triggers a network request. Navigate away and back? Refetch. Open a modal? Refetch. The same unchanged data, over and over.\n\n\n\nUnderstanding Cache Timing\nTanStack Query uses two key timers:\n\n\n\n\n\n\n\n\nTimer\nDefault\nWhat It Controls\n\n\n\n\nstaleTime\n0\nHow long data is considered “fresh” (no background refetch)\n\n\ngcTime\n5 min\nHow long unused data stays in cache before garbage collection\n\n\n\n\n\n\n\n\nflowchart LR\n    F[\"Fresh\"] --&gt;|staleTime expires| S[\"Stale\"]\n    S --&gt;|Component unmounts| I[\"Inactive\"]\n    I --&gt;|gcTime expires| G[\"Garbage Collected\"]\n    \n    S --&gt;|\"Window focus / Mount\"| R[\"Background Refetch\"]\n    R --&gt; F\n    \n    style F fill:#22c55e\n    style S fill:#eab308\n    style G fill:#ef4444\n\n\n\n\n\n\n\n\nConfigure Cache for Your Data Type\n// Global defaults - set once at app initialization\nconst queryClient = new QueryClient({\n  defaultOptions: {\n    queries: {\n      staleTime: 1000 * 60 * 5,  // 5 minutes - data is fresh\n      gcTime: 1000 * 60 * 30,   // 30 minutes - keep in cache\n      refetchOnWindowFocus: false,  // Don't refetch on tab switch\n      retry: 2,\n    },\n  },\n});\n\n\nPer-Query Cache Control\n// Static data that rarely changes (e.g., country list, categories)\nconst { data: countries } = useQuery({\n  queryKey: ['countries'],\n  queryFn: fetchCountries,\n  staleTime: Infinity,  // NEVER stale - cache forever\n  gcTime: Infinity,     // NEVER garbage collect\n});\n\n// User data - fresh for 1 minute\nconst { data: user } = useQuery({\n  queryKey: ['user', userId],\n  queryFn: () =&gt; fetchUser(userId),\n  staleTime: 1000 * 60,  // Fresh for 1 minute\n});\n\n// Real-time data - always refetch\nconst { data: stockPrice } = useQuery({\n  queryKey: ['stock', symbol],\n  queryFn: () =&gt; fetchStockPrice(symbol),\n  staleTime: 0,  // Always stale - always refetch\n  refetchInterval: 5000,  // Poll every 5 seconds\n});\n\n\nThe Query Key is the Cache Key\n// These are DIFFERENT cache entries:\nuseQuery({ queryKey: ['user', 1] });     // User 1\nuseQuery({ queryKey: ['user', 2] });     // User 2\nuseQuery({ queryKey: ['user', 1] });     // ✅ Uses cached User 1!\n\n// Structure keys for invalidation:\nqueryKey: ['posts']                      // All posts\nqueryKey: ['posts', 'list']              // Post list\nqueryKey: ['posts', 'list', { page: 1 }] // Page 1\nqueryKey: ['posts', 'detail', postId]    // Single post\n\n// Invalidate all posts (list + details):\nqueryClient.invalidateQueries({ queryKey: ['posts'] });\n\n\nPrefetching: Load Before the User Clicks\n// In a list component - prefetch on hover\nfunction PostList({ posts }) {\n  const queryClient = useQueryClient();\n\n  const prefetchPost = (postId: number) =&gt; {\n    queryClient.prefetchQuery({\n      queryKey: ['posts', 'detail', postId],\n      queryFn: () =&gt; fetchPost(postId),\n      staleTime: 1000 * 60 * 5,  // Don't prefetch if already fresh\n    });\n  };\n\n  return (\n    &lt;ul&gt;\n      {posts.map(post =&gt; (\n        &lt;li \n          key={post.id}\n          onMouseEnter={() =&gt; prefetchPost(post.id)}  // Prefetch on hover!\n        &gt;\n          &lt;Link to={`/posts/${post.id}`}&gt;{post.title}&lt;/Link&gt;\n        &lt;/li&gt;\n      ))}\n    &lt;/ul&gt;\n  );\n}\n\n\nCache Data That Never Changes\nFor truly static data (app config, feature flags, dropdown options):\n// Fetch once, cache forever\nfunction useAppConfig() {\n  return useQuery({\n    queryKey: ['app-config'],\n    queryFn: fetchAppConfig,\n    staleTime: Infinity,\n    gcTime: Infinity,\n    refetchOnMount: false,\n    refetchOnWindowFocus: false,\n    refetchOnReconnect: false,\n  });\n}\n\n// Or create a reusable option preset\nconst STATIC_QUERY_OPTIONS = {\n  staleTime: Infinity,\n  gcTime: Infinity,\n  refetchOnMount: false,\n  refetchOnWindowFocus: false,\n  refetchOnReconnect: false,\n} as const;\n\n// Use it\nuseQuery({\n  queryKey: ['categories'],\n  queryFn: fetchCategories,\n  ...STATIC_QUERY_OPTIONS,\n});\n\n\nInitial Data from Cache\nProvide initial data while fresh data loads:\n// Use cached list data as initial detail data\nfunction PostDetail({ postId }) {\n  const { data } = useQuery({\n    queryKey: ['posts', 'detail', postId],\n    queryFn: () =&gt; fetchPost(postId),\n    initialData: () =&gt; {\n      // Check if we have this post in the list cache\n      const posts = queryClient.getQueryData(['posts', 'list']);\n      return posts?.find(p =&gt; p.id === postId);\n    },\n    initialDataUpdatedAt: () =&gt; {\n      // Use the list's last update time\n      return queryClient.getQueryState(['posts', 'list'])?.dataUpdatedAt;\n    },\n  });\n}",
+    "crumbs": [
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Data Fetching Strategies: Beyond Basic Fetch</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html",
+    "href": "RenderingStrategies.html",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "",
+    "text": "The Core Problem\nEvery React app eventually faces the question: where should this render?\nMost developers use SSR or CSR without truly understanding the tradeoffs. This chapter explains each rendering strategy from first principles — so you can make informed architectural decisions.\nWhen a user visits your app, they experience two key moments:\nThe tension: - Fast First Paint → Render HTML on the server - Rich Interactivity → Run JavaScript on the client\nEvery rendering strategy is a different answer to this tradeoff.\nflowchart LR\n    subgraph Server[\"Server\"]\n        S1[\"Build HTML\"]\n    end\n    subgraph Client[\"Browser\"]\n        C1[\"Show HTML\"]\n        C2[\"Download JS\"]\n        C3[\"Hydrate/Mount\"]\n        C4[\"Interactive!\"]\n    end\n    \n    S1 --&gt; C1 --&gt; C2 --&gt; C3 --&gt; C4\n    \n    style C1 fill:#22c55e\n    style C4 fill:#3b82f6",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#the-core-problem",
+    "href": "RenderingStrategies.html#the-core-problem",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "",
+    "text": "First Paint — Something appears on screen\nInteractive — They can click buttons, type, navigate",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#client-side-rendering-csr",
+    "href": "RenderingStrategies.html#client-side-rendering-csr",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "Client-Side Rendering (CSR)",
+    "text": "Client-Side Rendering (CSR)\n\nHow It Works\nThe server sends a minimal HTML shell. JavaScript downloads, executes, and renders the entire UI.\n\n\n\n\n\nsequenceDiagram\n    participant B as Browser\n    participant S as Server\n    participant A as API\n\n    B-&gt;&gt;S: GET /app\n    S--&gt;&gt;B: HTML shell (empty div)\n    B-&gt;&gt;S: GET /bundle.js (large)\n    Note over B: Parse & execute JS\n    B-&gt;&gt;A: Fetch data\n    A--&gt;&gt;B: JSON response\n    Note over B: React renders UI\n    Note over B: ✅ Interactive\n\n\n\n\n\n\n\n\nThe Code\n&lt;!-- index.html --&gt;\n&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n  &lt;head&gt;&lt;title&gt;My App&lt;/title&gt;&lt;/head&gt;\n  &lt;body&gt;\n    &lt;div id=\"root\"&gt;&lt;/div&gt;  &lt;!-- Empty! --&gt;\n    &lt;script src=\"/bundle.js\"&gt;&lt;/script&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n// main.tsx\nimport { createRoot } from 'react-dom/client';\nimport App from './App';\n\ncreateRoot(document.getElementById('root')!).render(&lt;App /&gt;);\n\n\nWhen to Use CSR\n\n\n\n\n\n\n\nGood For\nWhy\n\n\n\n\nAdmin dashboards\nBehind login, no SEO needed\n\n\nInternal tools\nUsers wait for login anyway\n\n\nHighly interactive apps\nCanvas editors, real-time collaboration\n\n\nPWAs\nOffline-first apps\n\n\n\n\n\nPros and Cons\n\n\n\n✅ Pros\n❌ Cons\n\n\n\n\nSimple deployment (static files)\nBlank screen until JS loads\n\n\nFull client interactivity\nPoor SEO (no HTML content)\n\n\nCheap hosting (CDN)\nLarge JS bundle\n\n\nEasy caching\nSlow on low-end devices\n\n\n\n\n\n\n\n\n\nThe “White Screen of Death”\n\n\n\nCSR apps show nothing until JavaScript loads and executes. On slow connections or older devices, users stare at a blank page for seconds.",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#server-side-rendering-ssr",
+    "href": "RenderingStrategies.html#server-side-rendering-ssr",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "Server-Side Rendering (SSR)",
+    "text": "Server-Side Rendering (SSR)\n\nHow It Works\nThe server renders the complete HTML for each request. The browser shows content immediately, then JavaScript “hydrates” it to make it interactive.\n\n\n\n\n\nsequenceDiagram\n    participant B as Browser\n    participant S as Server\n    participant D as Database\n\n    B-&gt;&gt;S: GET /products/123\n    S-&gt;&gt;D: Query product data\n    D--&gt;&gt;S: Product JSON\n    Note over S: React renders to HTML\n    S--&gt;&gt;B: Full HTML (with content!)\n    Note over B: 👀 User sees content\n    B-&gt;&gt;S: GET /bundle.js\n    Note over B: Hydrate React\n    Note over B: ✅ Interactive\n\n\n\n\n\n\n\n\nWhat is Hydration?\nHydration is the process of attaching JavaScript event handlers to server-rendered HTML.\n// Server renders this HTML:\n&lt;button&gt;Click me&lt;/button&gt;\n\n// Hydration attaches the onClick handler:\n&lt;button onClick={handleClick}&gt;Click me&lt;/button&gt;\n\n\n\n\n\n\nHydration Mismatch\n\n\n\nIf the server HTML doesn’t match what React expects on the client, you get a hydration error. Common causes: - Using Date.now() or Math.random() during render - Browser-only APIs like window.innerWidth - Different data on server vs client\n\n\n\n\nThe Code (Next.js App Router)\n// app/products/[id]/page.tsx\nasync function ProductPage({ params }: { params: { id: string } }) {\n  // This runs on the SERVER\n  const product = await db.products.findUnique({ \n    where: { id: params.id } \n  });\n\n  return (\n    &lt;div&gt;\n      &lt;h1&gt;{product.name}&lt;/h1&gt;\n      &lt;p&gt;{product.description}&lt;/p&gt;\n      &lt;AddToCartButton productId={product.id} /&gt; {/* Client Component */}\n    &lt;/div&gt;\n  );\n}\n\n\nWhen to Use SSR\n\n\n\nGood For\nWhy\n\n\n\n\nE-commerce product pages\nSEO + dynamic pricing\n\n\nNews articles\nFresh content, SEO critical\n\n\nSocial media feeds\nPersonalized, needs indexing\n\n\nSearch results\nDynamic, SEO important\n\n\n\n\n\nPros and Cons\n\n\n\n✅ Pros\n❌ Cons\n\n\n\n\nFast First Paint\nServer compute cost per request\n\n\nSEO-friendly HTML\nTime-to-First-Byte depends on data\n\n\nWorks without JS\nHydration can be slow\n\n\nDynamic content\nMore complex infrastructure",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#static-site-generation-ssg",
+    "href": "RenderingStrategies.html#static-site-generation-ssg",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "Static Site Generation (SSG)",
+    "text": "Static Site Generation (SSG)\n\nHow It Works\nPages are rendered at build time. The HTML is generated once and served from a CDN.\n\n\n\n\n\nsequenceDiagram\n    participant D as Developer\n    participant B as Build Process\n    participant C as CDN\n    participant U as User\n\n    D-&gt;&gt;B: npm run build\n    Note over B: Fetch all data\n    Note over B: Render all pages to HTML\n    B-&gt;&gt;C: Deploy static files\n    \n    U-&gt;&gt;C: GET /blog/post-1\n    C--&gt;&gt;U: Pre-built HTML (instant!)\n    Note over U: ✅ Content visible\n\n\n\n\n\n\n\n\nThe Code (Next.js)\n// app/blog/[slug]/page.tsx\nexport async function generateStaticParams() {\n  // Called at BUILD time\n  const posts = await getAllPosts();\n  return posts.map((post) =&gt; ({ slug: post.slug }));\n}\n\nasync function BlogPost({ params }: { params: { slug: string } }) {\n  const post = await getPost(params.slug);\n  return (\n    &lt;article&gt;\n      &lt;h1&gt;{post.title}&lt;/h1&gt;\n      &lt;div dangerouslySetInnerHTML={{ __html: post.content }} /&gt;\n    &lt;/article&gt;\n  );\n}\n\n\nIncremental Static Regeneration (ISR)\nRebuild specific pages after deployment without rebuilding the entire site.\n// Revalidate every 60 seconds\nexport const revalidate = 60;\n\nasync function ProductPage({ params }) {\n  const product = await getProduct(params.id);\n  return &lt;ProductDetails product={product} /&gt;;\n}\n\n\nWhen to Use SSG\n\n\n\nGood For\nWhy\n\n\n\n\nBlogs\nContent changes rarely\n\n\nDocumentation\nUpdated at deploy time\n\n\nMarketing sites\nMaximum performance\n\n\nPortfolio sites\nStatic content\n\n\n\n\n\nPros and Cons\n\n\n\n✅ Pros\n❌ Cons\n\n\n\n\nFastest possible TTFB\nContent can become stale\n\n\nCheapest hosting (CDN)\nLong build times for large sites\n\n\nPerfect caching\nCan’t personalize per-user\n\n\nGreat SEO\nRebuild required for updates",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#react-server-components-rsc",
+    "href": "RenderingStrategies.html#react-server-components-rsc",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "React Server Components (RSC)",
+    "text": "React Server Components (RSC)\n\nThe Paradigm Shift\nServer Components are a new model introduced in React 18. They run only on the server — no JavaScript is sent to the client for these components.\n\n\n\n\n\n\nThe Key Insight\n\n\n\nServer Components have zero client-side JavaScript. They can access databases, filesystems, and secrets directly — then send only the rendered HTML to the client.\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Server[\"Server (No JS sent to client)\"]\n        SC1[\"ProductPage (Server)\"]\n        SC2[\"ProductDetails (Server)\"]\n        SC3[\"RecommendedProducts (Server)\"]\n    end\n    \n    subgraph Client[\"Client (JS required)\"]\n        CC1[\"AddToCartButton (Client)\"]\n        CC2[\"ProductImageZoom (Client)\"]\n    end\n    \n    SC1 --&gt; SC2\n    SC1 --&gt; SC3\n    SC2 --&gt; CC1\n    SC2 --&gt; CC2\n    \n    style SC1 fill:#22c55e\n    style SC2 fill:#22c55e\n    style SC3 fill:#22c55e\n    style CC1 fill:#3b82f6\n    style CC2 fill:#3b82f6\n\n\n\n\n\n\n\n\nServer vs Client Components\n// app/products/[id]/page.tsx\n// This is a SERVER Component (default in Next.js App Router)\nimport { AddToCartButton } from './AddToCartButton';\n\nasync function ProductPage({ params }) {\n  // ✅ Can use async/await directly\n  // ✅ Can access database\n  // ✅ Can read environment secrets\n  const product = await db.products.findUnique({ \n    where: { id: params.id } \n  });\n\n  return (\n    &lt;div&gt;\n      &lt;h1&gt;{product.name}&lt;/h1&gt;\n      &lt;p&gt;{product.description}&lt;/p&gt;\n      {/* Client Component for interactivity */}\n      &lt;AddToCartButton productId={product.id} /&gt;\n    &lt;/div&gt;\n  );\n}\n// app/products/[id]/AddToCartButton.tsx\n'use client';  // ← This directive makes it a CLIENT Component\n\nimport { useState } from 'react';\n\nexport function AddToCartButton({ productId }: { productId: string }) {\n  const [loading, setLoading] = useState(false);\n\n  // ✅ Can use useState, useEffect, onClick, etc.\n  const handleClick = async () =&gt; {\n    setLoading(true);\n    await addToCart(productId);\n    setLoading(false);\n  };\n\n  return (\n    &lt;button onClick={handleClick} disabled={loading}&gt;\n      {loading ? 'Adding...' : 'Add to Cart'}\n    &lt;/button&gt;\n  );\n}\n\n\nMental Model\n\n\n\nServer Components\nClient Components\n\n\n\n\nData fetching, database access\nUser interactions\n\n\nNo hooks (useState, useEffect)\nFull React hooks\n\n\nNo event handlers\nonClick, onChange, etc.\n\n\nCan be async\nCannot be async\n\n\nZero client JS\nJS bundle sent to client\n\n\n\n\n\nWhen to Use Each\n// ✅ Server Component (default)\n// - Displays data\n// - No user interaction\n// - Needs database/API access\n\n// ✅ Client Component (\"use client\")\n// - Has onClick, onChange\n// - Uses useState, useEffect\n// - Needs browser APIs (localStorage, window)",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#decision-matrix",
+    "href": "RenderingStrategies.html#decision-matrix",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "Decision Matrix",
+    "text": "Decision Matrix\n\n\n\n\n\n\n\n\nScenario\nStrategy\nWhy\n\n\n\n\nMarketing landing page\nSSG\nMaximum speed, rarely changes\n\n\nBlog with comments\nSSG + CSR islands\nStatic content, interactive comments\n\n\nE-commerce product page\nSSR or RSC\nDynamic pricing, SEO\n\n\nAdmin dashboard\nCSR\nBehind auth, no SEO\n\n\nDocumentation site\nSSG\nBuild-time, great caching\n\n\nSocial media feed\nSSR or RSC\nPersonalized, needs SEO\n\n\nReal-time chat\nCSR\nWebSocket, high interactivity\n\n\nNews article\nSSR with ISR\nFresh content, SEO",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#tanstack-query-server-rendering",
+    "href": "RenderingStrategies.html#tanstack-query-server-rendering",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "TanStack Query + Server Rendering",
+    "text": "TanStack Query + Server Rendering\nWhen using TanStack Query with SSR/RSC, you need to dehydrate the cache on the server and hydrate it on the client.\n\nThe Problem\nWithout proper hydration, data fetched on the server is re-fetched on the client — wasting bandwidth and causing flicker.\n\n\nThe Solution: Hydration Boundary\n// app/providers.tsx\n'use client';\n\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\nimport { useState } from 'react';\n\nexport function Providers({ children }: { children: React.ReactNode }) {\n  const [queryClient] = useState(() =&gt; new QueryClient({\n    defaultOptions: {\n      queries: {\n        staleTime: 60 * 1000,  // 1 minute\n      },\n    },\n  }));\n\n  return (\n    &lt;QueryClientProvider client={queryClient}&gt;\n      {children}\n    &lt;/QueryClientProvider&gt;\n  );\n}\n// app/products/[id]/page.tsx\nimport { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';\nimport { ProductDetails } from './ProductDetails';\n\nexport default async function ProductPage({ params }) {\n  const queryClient = new QueryClient();\n\n  // Prefetch on server\n  await queryClient.prefetchQuery({\n    queryKey: ['product', params.id],\n    queryFn: () =&gt; getProduct(params.id),\n  });\n\n  return (\n    &lt;HydrationBoundary state={dehydrate(queryClient)}&gt;\n      &lt;ProductDetails productId={params.id} /&gt;\n    &lt;/HydrationBoundary&gt;\n  );\n}\n// app/products/[id]/ProductDetails.tsx\n'use client';\n\nimport { useQuery } from '@tanstack/react-query';\n\nexport function ProductDetails({ productId }: { productId: string }) {\n  // This will use the PREFETCHED data — no re-fetch!\n  const { data: product } = useQuery({\n    queryKey: ['product', productId],\n    queryFn: () =&gt; getProduct(productId),\n  });\n\n  return (\n    &lt;div&gt;\n      &lt;h1&gt;{product.name}&lt;/h1&gt;\n      &lt;p&gt;{product.description}&lt;/p&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#common-pitfalls",
+    "href": "RenderingStrategies.html#common-pitfalls",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "Common Pitfalls",
+    "text": "Common Pitfalls\n\n1. Hydration Mismatch\n// ❌ BAD: Different output on server vs client\nfunction Timestamp() {\n  return &lt;span&gt;{new Date().toLocaleTimeString()}&lt;/span&gt;;\n}\n\n// ✅ GOOD: Use useEffect for client-only values\nfunction Timestamp() {\n  const [time, setTime] = useState&lt;string | null&gt;(null);\n  \n  useEffect(() =&gt; {\n    setTime(new Date().toLocaleTimeString());\n  }, []);\n  \n  return &lt;span&gt;{time ?? 'Loading...'}&lt;/span&gt;;\n}\n\n\n2. Using Browser APIs in Server Components\n// ❌ BAD: window doesn't exist on server\nfunction WindowSize() {\n  return &lt;span&gt;Width: {window.innerWidth}&lt;/span&gt;;\n}\n\n// ✅ GOOD: Mark as client component\n'use client';\nfunction WindowSize() {\n  const [width, setWidth] = useState(0);\n  useEffect(() =&gt; setWidth(window.innerWidth), []);\n  return &lt;span&gt;Width: {width}&lt;/span&gt;;\n}\n\n\n3. Importing Client Code in Server Components\n// ❌ BAD: Server component importing client-only library\nimport { motion } from 'framer-motion';  // Uses useEffect internally\n\n// ✅ GOOD: Create a client wrapper\n// AnimatedDiv.tsx\n'use client';\nimport { motion } from 'framer-motion';\nexport const AnimatedDiv = motion.div;\n\n// Then import the wrapper\nimport { AnimatedDiv } from './AnimatedDiv';",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "RenderingStrategies.html#summary",
+    "href": "RenderingStrategies.html#summary",
+    "title": "Rendering Strategies: CSR, SSR, and the Server Components Revolution",
+    "section": "Summary",
+    "text": "Summary\n\n\n\nStrategy\nFirst Paint\nInteractivity\nSEO\nBest For\n\n\n\n\nCSR\nSlow (blank)\nFast\n❌\nDashboards, SPAs\n\n\nSSR\nFast\nAfter hydration\n✅\nDynamic + SEO\n\n\nSSG\nInstant\nAfter hydration\n✅\nStatic content\n\n\nRSC\nFast\nInstant (for server parts)\n✅\nModern apps\n\n\n\nThe modern approach is often hybrid: use Server Components for data, Client Components for interactivity, and SSG for static pages.\nUnderstanding these strategies is the difference between an app that works and an app that performs.",
+    "crumbs": [
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
     ]
   }
 ]

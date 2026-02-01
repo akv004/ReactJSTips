@@ -1,0 +1,724 @@
+# Data Tables and Grids
+
+Tables and grids are the **heart of enterprise UIs**. Whether you're building admin dashboards, CRMs, or analytics tools, you'll need robust solutions for displaying, sorting, filtering, and paginating large datasets.
+
+This chapter covers the modern React table ecosystem — from headless libraries to full-featured grids — with practical patterns for both client-side and server-side operations.
+
+```{mermaid}
+flowchart LR
+    D["Dataset"] --> C["Client-Side"]
+    D --> S["Server-Side"]
+    
+    C --> |"< 1000 rows"| T["TanStack Table"]
+    S --> |"> 1000 rows"| T
+    S --> |"Enterprise needs"| A["AG Grid"]
+    
+    style T fill:#f97316
+    style A fill:#0ea5e9
+```
+
+---
+
+## The Table Landscape
+
+| Library | Type | License | Best For |
+|---------|------|---------|----------|
+| **TanStack Table** | Headless | MIT (Free) | Custom UI, full control |
+| **AG Grid** | Full-featured | Community (Free) or Enterprise (Paid) | Enterprise dashboards |
+| **MUI DataGrid** | Full-featured | MIT (Free) or Pro/Premium (Paid) | Material Design apps |
+
+::: {.callout-tip}
+## Headless vs Full-Featured
+**Headless** = Logic only, you build the UI (TanStack Table)  
+**Full-Featured** = Complete UI included (AG Grid, MUI DataGrid)
+:::
+
+---
+
+## TanStack Table: The Flexible Choice
+
+[TanStack Table](https://tanstack.com/table/latest) (formerly React Table) is the most popular headless table library. It provides all the logic — sorting, filtering, pagination, virtualization — while you own the markup.
+
+### Installation
+
+```bash
+npm install @tanstack/react-table
+```
+
+### Basic Table Setup
+
+```tsx
+// src/components/BasicTable.tsx
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  createColumnHelper,
+} from '@tanstack/react-table';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  status: 'active' | 'inactive';
+}
+
+const columnHelper = createColumnHelper<User>();
+
+const columns = [
+  columnHelper.accessor('id', {
+    header: 'ID',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('name', {
+    header: 'Name',
+    cell: (info) => <strong>{info.getValue()}</strong>,
+  }),
+  columnHelper.accessor('email', {
+    header: 'Email',
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    cell: (info) => (
+      <span className={`badge badge-${info.getValue()}`}>
+        {info.getValue()}
+      </span>
+    ),
+  }),
+];
+
+export function BasicTable({ data }: { data: User[] }) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <table>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id}>
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext()
+                )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            {row.getVisibleCells().map((cell) => (
+              <td key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+---
+
+## Client-Side Operations
+
+When your dataset is small (< 1000 rows), handle sorting, filtering, and pagination entirely in the browser.
+
+### Sorting
+
+```tsx
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+} from '@tanstack/react-table';
+
+function SortableTable({ data }: { data: User[] }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+
+  return (
+    <table>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th
+                key={header.id}
+                onClick={header.column.getToggleSortingHandler()}
+                style={{ cursor: 'pointer' }}
+              >
+                {flexRender(header.column.columnDef.header, header.getContext())}
+                {{
+                  asc: ' 🔼',
+                  desc: ' 🔽',
+                }[header.column.getIsSorted() as string] ?? null}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      {/* ... tbody */}
+    </table>
+  );
+}
+```
+
+### Filtering
+
+```tsx
+import {
+  getFilteredRowModel,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
+
+function FilterableTable({ data }: { data: User[] }) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState('');
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: { columnFilters, globalFilter },
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  return (
+    <div>
+      {/* Global search */}
+      <input
+        placeholder="Search all columns..."
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+      />
+
+      {/* Column-specific filter */}
+      <input
+        placeholder="Filter by name..."
+        value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+        onChange={(e) =>
+          table.getColumn('name')?.setFilterValue(e.target.value)
+        }
+      />
+
+      {/* Table */}
+    </div>
+  );
+}
+```
+
+### Pagination
+
+```tsx
+import { getPaginationRowModel } from '@tanstack/react-table';
+
+function PaginatedTable({ data }: { data: User[] }) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: { pageSize: 10 },
+    },
+  });
+
+  return (
+    <div>
+      <table>{/* ... */}</table>
+
+      <div className="pagination">
+        <button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </button>
+
+        <span>
+          Page {table.getState().pagination.pageIndex + 1} of{' '}
+          {table.getPageCount()}
+        </span>
+
+        <button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </button>
+
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) => table.setPageSize(Number(e.target.value))}
+        >
+          {[10, 20, 50, 100].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Server-Side Operations
+
+For large datasets (> 1000 rows), move sorting, filtering, and pagination to the server.
+
+```{mermaid}
+sequenceDiagram
+    participant U as User
+    participant T as TanStack Table
+    participant Q as TanStack Query
+    participant S as Server
+
+    U->>T: Click "Sort by Name"
+    T->>Q: Update query params
+    Q->>S: GET /users?sort=name&order=asc&page=1
+    S-->>Q: { data: [...], total: 5000 }
+    Q-->>T: Update table data
+    T-->>U: Re-render sorted table
+```
+
+### Server-Side Table with TanStack Query
+
+```tsx
+// src/hooks/useServerTable.ts
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
+
+interface ServerTableParams {
+  endpoint: string;
+}
+
+interface ServerResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export function useServerTable<T>({ endpoint }: ServerTableParams) {
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const query = useQuery({
+    queryKey: [endpoint, pagination, sorting, columnFilters],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: String(pagination.pageIndex + 1),
+        pageSize: String(pagination.pageSize),
+      });
+
+      // Add sorting
+      if (sorting.length > 0) {
+        params.set('sortBy', sorting[0].id);
+        params.set('sortOrder', sorting[0].desc ? 'desc' : 'asc');
+      }
+
+      // Add filters
+      columnFilters.forEach((filter) => {
+        params.set(`filter[${filter.id}]`, String(filter.value));
+      });
+
+      const res = await fetch(`${endpoint}?${params}`);
+      return res.json() as Promise<ServerResponse<T>>;
+    },
+    placeholderData: (prev) => prev, // Keep previous data while fetching
+  });
+
+  return {
+    data: query.data?.data ?? [],
+    total: query.data?.total ?? 0,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    pagination,
+    setPagination,
+    sorting,
+    setSorting,
+    columnFilters,
+    setColumnFilters,
+  };
+}
+```
+
+### Server-Side Table Component
+
+```tsx
+// src/components/ServerTable.tsx
+import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
+import { useServerTable } from '../hooks/useServerTable';
+
+export function ServerTable() {
+  const {
+    data,
+    total,
+    isLoading,
+    isFetching,
+    pagination,
+    setPagination,
+    sorting,
+    setSorting,
+    columnFilters,
+    setColumnFilters,
+  } = useServerTable<User>({ endpoint: '/api/users' });
+
+  const table = useReactTable({
+    data,
+    columns,
+    pageCount: Math.ceil(total / pagination.pageSize),
+    state: { pagination, sorting, columnFilters },
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,  // Server handles pagination
+    manualSorting: true,     // Server handles sorting
+    manualFiltering: true,   // Server handles filtering
+  });
+
+  if (isLoading) return <TableSkeleton />;
+
+  return (
+    <div className={isFetching ? 'opacity-50' : ''}>
+      {/* Render table */}
+    </div>
+  );
+}
+```
+
+---
+
+## AG Grid: Enterprise Power
+
+[AG Grid](https://www.ag-grid.com/) is the most feature-rich grid library. It's used by major enterprises for complex data applications.
+
+### Licensing
+
+| Edition | Price | Key Features |
+|---------|-------|--------------|
+| **Community** | Free (MIT) | Sorting, filtering, pagination, cell editing |
+| **Enterprise** | $999+/dev/year | Row grouping, pivoting, Excel export, charts, tree data |
+
+::: {.callout-warning}
+## Enterprise License Required
+Features like **row grouping**, **pivoting**, **Excel export**, and **charts** require the Enterprise license. Using them without a license violates the terms.
+:::
+
+### Basic AG Grid Setup
+
+```bash
+npm install ag-grid-react ag-grid-community
+```
+
+```tsx
+// src/components/AgGridTable.tsx
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+const columnDefs: ColDef<User>[] = [
+  { field: 'id', sortable: true, filter: true },
+  { field: 'name', sortable: true, filter: true },
+  { field: 'email', sortable: true, filter: true },
+  { 
+    field: 'status', 
+    cellRenderer: (params) => (
+      <span className={`badge badge-${params.value}`}>{params.value}</span>
+    ),
+  },
+];
+
+export function AgGridTable({ data }: { data: User[] }) {
+  return (
+    <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
+      <AgGridReact
+        rowData={data}
+        columnDefs={columnDefs}
+        pagination={true}
+        paginationPageSize={20}
+        defaultColDef={{
+          flex: 1,
+          minWidth: 100,
+          resizable: true,
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Server-Side with AG Grid
+
+```tsx
+import { IServerSideDatasource } from 'ag-grid-enterprise';
+
+const serverSideDatasource: IServerSideDatasource = {
+  getRows: async (params) => {
+    const { startRow, endRow, sortModel, filterModel } = params.request;
+
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        body: JSON.stringify({
+          startRow,
+          endRow,
+          sortModel,
+          filterModel,
+        }),
+      });
+
+      const { data, total } = await response.json();
+      params.success({ rowData: data, rowCount: total });
+    } catch (error) {
+      params.fail();
+    }
+  },
+};
+
+// In component:
+<AgGridReact
+  rowModelType="serverSide"
+  serverSideDatasource={serverSideDatasource}
+  cacheBlockSize={100}
+/>
+```
+
+---
+
+## MUI DataGrid: Material Design
+
+[MUI DataGrid](https://mui.com/x/react-data-grid/) integrates seamlessly with Material UI applications.
+
+### Licensing
+
+| Edition | Price | Key Features |
+|---------|-------|--------------|
+| **Community** | Free (MIT) | Sorting, filtering, pagination, column resize |
+| **Pro** | $15/dev/month | Column pinning, tree data, Excel export, advanced filtering |
+| **Premium** | $49/dev/month | Row grouping, aggregation, charts |
+
+### Basic MUI DataGrid
+
+```bash
+npm install @mui/x-data-grid @mui/material @emotion/react @emotion/styled
+```
+
+```tsx
+// src/components/MuiDataGrid.tsx
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+
+const columns: GridColDef<User>[] = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'email', headerName: 'Email', width: 200, flex: 1 },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 120,
+    renderCell: (params) => (
+      <Chip label={params.value} color={params.value === 'active' ? 'success' : 'default'} />
+    ),
+  },
+];
+
+export function MuiDataGridTable({ data }: { data: User[] }) {
+  return (
+    <div style={{ height: 500, width: '100%' }}>
+      <DataGrid
+        rows={data}
+        columns={columns}
+        pageSizeOptions={[10, 25, 50]}
+        initialState={{
+          pagination: { paginationModel: { pageSize: 10 } },
+        }}
+        checkboxSelection
+        disableRowSelectionOnClick
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## Decision Matrix: Which to Choose?
+
+```{mermaid}
+flowchart TD
+    Start["Need a Data Table?"] --> Q1{"Custom UI required?"}
+    
+    Q1 -->|Yes| TS["TanStack Table"]
+    Q1 -->|No| Q2{"Using Material UI?"}
+    
+    Q2 -->|Yes| MUI["MUI DataGrid"]
+    Q2 -->|No| Q3{"Need advanced features?"}
+    
+    Q3 -->|"Grouping, Pivots, Charts"| AG["AG Grid Enterprise"]
+    Q3 -->|"Basic features"| Q4{"Budget?"}
+    
+    Q4 -->|"$0"| AGC["AG Grid Community"]
+    Q4 -->|"$15-50/mo"| MUI
+    
+    style TS fill:#f97316
+    style MUI fill:#1976d2
+    style AG fill:#0ea5e9
+    style AGC fill:#0ea5e9
+```
+
+### Summary Table
+
+| Scenario | Recommendation | Why |
+|----------|---------------|-----|
+| **Custom design system** | TanStack Table | Full UI control, headless |
+| **Material UI app** | MUI DataGrid | Native integration |
+| **Complex enterprise needs** | AG Grid Enterprise | Row grouping, pivots, charts |
+| **Budget-conscious** | TanStack Table or AG Grid Community | Free, powerful |
+| **Quick prototyping** | MUI DataGrid or AG Grid | Pre-built UI |
+| **Large datasets (100k+ rows)** | AG Grid | Virtual scrolling, performance |
+
+---
+
+## Best Practices
+
+### 1. Always Consider Server-Side First
+
+```tsx
+// Don't load 10,000 rows client-side
+const { data } = useQuery(['users'], () => fetch('/api/users').then(r => r.json()));
+// This is BAD for large datasets
+
+// Do pagination server-side
+const { data } = useQuery(
+  ['users', page, pageSize, sortBy],
+  () => fetch(`/api/users?page=${page}&limit=${pageSize}&sort=${sortBy}`)
+);
+```
+
+### 2. Debounce Filters
+
+```tsx
+import { useDebouncedValue } from '@mantine/hooks'; // or custom hook
+
+function SearchableTable() {
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebouncedValue(search, 300);
+
+  // Use debouncedSearch in query, not search
+  const { data } = useQuery(['users', debouncedSearch], fetchUsers);
+}
+```
+
+### 3. Show Loading States
+
+```tsx
+<div className={isFetching ? 'table-loading' : ''}>
+  {isFetching && <LoadingOverlay />}
+  <table>{/* ... */}</table>
+</div>
+```
+
+### 4. Handle Empty States
+
+```tsx
+{data.length === 0 && !isLoading && (
+  <div className="empty-state">
+    <p>No results found</p>
+    <button onClick={clearFilters}>Clear filters</button>
+  </div>
+)}
+```
+
+---
+
+## API Response Format
+
+Standardize your server responses for tables:
+
+```typescript
+// Shared type for paginated responses
+interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+  };
+  meta?: {
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+    filters?: Record<string, unknown>;
+  };
+}
+```
+
+Example endpoint:
+
+```
+GET /api/users?page=2&pageSize=20&sortBy=name&sortOrder=asc&filter[status]=active
+
+Response:
+{
+  "data": [...],
+  "pagination": {
+    "page": 2,
+    "pageSize": 20,
+    "total": 156,
+    "totalPages": 8
+  },
+  "meta": {
+    "sortBy": "name",
+    "sortOrder": "asc",
+    "filters": { "status": "active" }
+  }
+}
+```
+
+---
+
+## What's Next?
+
+You now have the foundation for building production-grade data tables. Key takeaways:
+
+1. **TanStack Table** for maximum flexibility and custom UIs
+2. **AG Grid** for enterprise-grade features (with appropriate licensing)
+3. **MUI DataGrid** for Material Design applications
+4. **Server-side operations** for datasets over 1000 rows
+5. **Always debounce filters** and show loading states
+
+Tables are where users spend most of their time in data-heavy applications. Invest in getting them right.

@@ -165,6 +165,50 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 ---
 
+## Code Quality Tools: ESLint & Prettier
+
+Before diving into dependencies, let's understand **why** these tools are non-negotiable in modern React development.
+
+### What They Do
+
+| Tool | Purpose | Catches |
+|------|---------|---------|
+| **ESLint** | Static analysis — finds bugs *before* runtime | Unused variables, missing dependencies in hooks, unreachable code |
+| **Prettier** | Auto-formatting — enforces consistent style | Inconsistent indentation, quote styles, line lengths |
+
+### Why You Need Both
+
+::: {.callout-tip}
+## ESLint catches bugs. Prettier fixes style.
+They solve different problems and work together seamlessly.
+:::
+
+**ESLint** is your first line of defense. It analyzes your code without running it, catching issues like:
+
+- **Forgotten dependencies** in `useEffect` (a common source of bugs)
+- **Unused imports** cluttering your bundle
+- **Accessibility violations** in JSX
+- **React-specific anti-patterns** like conditional hooks
+
+**Prettier** ends all formatting debates. It rewrites your code to a consistent style, so teams never argue about tabs vs. spaces or trailing commas again.
+
+### How They Work Together
+
+```{mermaid}
+flowchart LR
+    C["Your Code"] --> E["ESLint"]
+    E --> |"Bug? Error!"| F["Fix Issues"]
+    E --> |"Clean"| P["Prettier"]
+    P --> |"Formatted"| S["Save"]
+    
+    style E fill:#4b32c3
+    style P fill:#f7b93e
+```
+
+`eslint-config-prettier` disables ESLint's formatting rules so the two tools don't conflict.
+
+---
+
 ## Recommended Dev Dependencies
 
 ```bash
