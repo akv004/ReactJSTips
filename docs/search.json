@@ -1846,7 +1846,7 @@
     "section": "",
     "text": "The Challenges of Scale\nBuilding a side project is different from building a product that 50 engineers work on. Enterprise patterns help teams move fast without breaking things.\nThis chapter covers feature flags, microfrontends, module federation, and conventions for large codebases.",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1856,7 +1856,7 @@
     "section": "",
     "text": "Team coordination: How do 10 teams ship to the same codebase?\nBuild times: CI takes 45 minutes. Developers are blocked.\nFeature rollout: How to test in production without breaking users?\nCode ownership: Who owns what? How to prevent regressions?",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1866,7 +1866,7 @@
     "section": "Feature Flags: Deploy != Release",
     "text": "Feature Flags: Deploy != Release\nFeature flags decouple deployment (code goes to production) from release (users see it).\n\nSimple Implementation\n// featureFlags.ts\ntype FeatureFlags = {\n  newCheckout: boolean;\n  darkMode: boolean;\n  aiAssistant: boolean;\n};\n\nconst flags: FeatureFlags = {\n  newCheckout: process.env.ENABLE_NEW_CHECKOUT === 'true',\n  darkMode: true,\n  aiAssistant: false,\n};\n\nexport function useFeatureFlag&lt;K extends keyof FeatureFlags&gt;(key: K): boolean {\n  return flags[key];\n}\n\n\nUsage\nfunction CheckoutPage() {\n  const useNewCheckout = useFeatureFlag('newCheckout');\n\n  return useNewCheckout ? &lt;NewCheckout /&gt; : &lt;LegacyCheckout /&gt;;\n}\n\n\nProduction-Grade Solutions\nFor real-world apps, use a flag service:\n\nLaunchDarkly: Industry leader, supports targeting\nUnleash: Open-source alternative\nFlagsmith: Full-featured OSS option\nPostHog: Flags + Analytics\n\n// With LaunchDarkly\nimport { useFlags } from 'launchdarkly-react-client-sdk';\n\nfunction Dashboard() {\n  const { newDashboard } = useFlags();\n  \n  return newDashboard ? &lt;NewDashboard /&gt; : &lt;OldDashboard /&gt;;\n}",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1876,7 +1876,7 @@
     "section": "Microfrontends: Independent Deployments",
     "text": "Microfrontends: Independent Deployments\nWhen your monolith becomes too big, split it into independently deployable frontends.\n\n\n\n\n\ngraph TD\n    Shell[App Shell] --&gt; Header[Header MFE]\n    Shell --&gt; Sidebar[Sidebar MFE]\n    Shell --&gt; Main[Main Content]\n    Main --&gt; ProductTeam[Product Pages MFE]\n    Main --&gt; CartTeam[Cart MFE]\n    Main --&gt; CheckoutTeam[Checkout MFE]\n\n\n\n\n\n\n\nModule Federation (Webpack 5)\nShare code between builds at runtime:\n// shell/webpack.config.js\nconst ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');\n\nmodule.exports = {\n  plugins: [\n    new ModuleFederationPlugin({\n      name: 'shell',\n      remotes: {\n        cart: 'cart@https://cart.example.com/remoteEntry.js',\n        checkout: 'checkout@https://checkout.example.com/remoteEntry.js',\n      },\n      shared: ['react', 'react-dom'],\n    }),\n  ],\n};\n// shell/src/App.tsx\nconst Cart = React.lazy(() =&gt; import('cart/CartWidget'));\nconst Checkout = React.lazy(() =&gt; import('checkout/CheckoutFlow'));\n\nfunction App() {\n  return (\n    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;\n      &lt;Cart /&gt;\n      &lt;Checkout /&gt;\n    &lt;/Suspense&gt;\n  );\n}",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1886,7 +1886,7 @@
     "section": "Code Ownership & CODEOWNERS",
     "text": "Code Ownership & CODEOWNERS\nDefine who owns what in your repository:\n# .github/CODEOWNERS\n/src/features/checkout/   @checkout-team\n/src/features/products/   @catalog-team\n/src/shared/              @platform-team\n/src/design-system/       @design-team\nNow PRs require approval from the owning team.",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1896,7 +1896,7 @@
     "section": "Monorepo Structure",
     "text": "Monorepo Structure\nFor large orgs, a monorepo with clear boundaries works well:\nmy-company/\n├── apps/\n│   ├── web-app/           # Main React app\n│   ├── admin-portal/      # Internal tools\n│   └── mobile-app/        # React Native\n├── packages/\n│   ├── design-system/     # Shared components\n│   ├── api-client/        # API abstraction\n│   ├── analytics/         # Tracking utils\n│   └── feature-flags/     # Flag utilities\n├── tools/\n│   ├── eslint-config/     # Shared ESLint rules\n│   └── tsconfig/          # Shared TypeScript config\n└── package.json\nUse Turborepo or Nx to manage builds and caching.",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1906,7 +1906,7 @@
     "section": "Architectural Decision Records (ADRs)",
     "text": "Architectural Decision Records (ADRs)\nDocument important decisions so future developers understand why:\n# ADR-007: Use Zustand over Redux for new features\n\n## Status\nAccepted\n\n## Context\nRedux requires significant boilerplate. New team members struggle.\n\n## Decision\nUse Zustand for all new feature state. Existing Redux remains.\n\n## Consequences\n- Easier onboarding\n- Two state libraries in codebase (temporary)\nStore in /docs/adr/ and link from your README.",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1916,7 +1916,7 @@
     "section": "CI/CD Best Practices",
     "text": "CI/CD Best Practices\n\nParallelize tests: Run unit, integration, and e2e in parallel\nCache dependencies: Save minutes on every build\nPreview deployments: Every PR gets a preview URL\nCanary releases: Roll out to 1% of users first\nAutomated rollback: Detect errors, revert automatically\n\n# Example: Preview deployment\n- name: Deploy Preview\n  if: github.event_name == 'pull_request'\n  run: |\n    vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1926,7 +1926,7 @@
     "section": "Team Conventions",
     "text": "Team Conventions\n\n\n\n\n\n\n\nArea\nConvention\n\n\n\n\nFile naming\nPascalCase.tsx for components, camelCase.ts for utils\n\n\nFolder structure\nFeature-based (/features/checkout/) not type-based (/components/)\n\n\nImports\nAbsolute imports with path aliases (@/features/checkout)\n\n\nState\nZustand for global, React state for local\n\n\nTesting\nCo-locate tests with source (Button.test.tsx next to Button.tsx)\n\n\n\nDocument conventions and enforce with ESLint.",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1936,7 +1936,7 @@
     "section": "Scaling Checklist",
     "text": "Scaling Checklist\n\nFeature flags for safe rollouts\nCODEOWNERS for accountability\nADRs for decision history\nMonorepo tooling (Nx/Turborepo)\nPreview deployments on every PR\nShared design system package\nConsistent coding conventions (enforced)\n\nEnterprise React isn’t about complexity—it’s about sustainable velocity.",
     "crumbs": [
-      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Enterprise React Patterns: Scaling to Large Teams</span>"
     ]
   },
   {
@@ -1946,7 +1946,7 @@
     "section": "",
     "text": "React DevTools: Your Primary Weapon\nBugs are inevitable. What separates senior engineers from juniors isn’t avoiding bugs—it’s finding them fast. This chapter covers the modern debugging toolkit for React applications.\nInstall the React DevTools browser extension. It adds two tabs to your browser’s developer tools:",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -1956,7 +1956,7 @@
     "section": "",
     "text": "Components Tab\nInspect the component tree, view props and state, and trace where data comes from.\n\n\n\n\n\nflowchart LR\n    A[\"Select Component\"] --&gt; B[\"View Props\"]\n    A --&gt; C[\"View State\"]\n    A --&gt; D[\"View Hooks\"]\n    B --&gt; E[\"Trace to Source\"]\n    C --&gt; F[\"Edit Live\"]\n    D --&gt; G[\"See Dependencies\"]\n\n\n\n\n\n\nPro Tips:\n\nClick any component → See its props, state, and hooks in the right panel\nSearch by name → Type component name to find it instantly\n“Rendered by” → Trace the parent chain to understand data flow\nEdit state live → Double-click state values to modify and test",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -1966,7 +1966,7 @@
     "section": "The Profiler: Finding Performance Bottlenecks",
     "text": "The Profiler: Finding Performance Bottlenecks\nThe Profiler tab records renders and shows you exactly why components re-rendered.\n\nRecording a Session\n\nOpen Profiler tab\nClick “Record” button\nInteract with your app\nClick “Stop”\nAnalyze the flame graph\n\n\n\nReading the Flame Graph\n\n\n\nColor\nMeaning\n\n\n\n\nGray\nDid not render\n\n\nBlue-Green\nFast render (&lt; 1ms)\n\n\nYellow\nMedium render (1-16ms)\n\n\nRed\nSlow render (&gt; 16ms) — Optimize this!\n\n\n\n\n\nWhy Did This Render?\nEnable “Record why each component rendered” in Profiler settings. Common causes:\n\nProps changed — Parent passed new reference\nState changed — Component’s own state updated\nContext changed — Provider value changed\nParent rendered — No memoization",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -1976,7 +1976,7 @@
     "section": "Console Debugging Patterns",
     "text": "Console Debugging Patterns\n\nStrategic Logging\n// ❌ Bad: Noise\nconsole.log(data);\n\n// ✅ Good: Context\nconsole.log('[UserProfile] Fetched user:', { userId, data });\n\n// ✅ Better: Grouped\nconsole.group('Auth Flow');\nconsole.log('Token:', token);\nconsole.log('User:', user);\nconsole.groupEnd();\n\n// ✅ Best: Conditional in dev only\nif (import.meta.env.DEV) {\n  console.log('[Debug] State update:', state);\n}\n\n\nuseDebugValue for Custom Hooks\nMake your custom hooks show meaningful info in DevTools:\nfunction useAuth() {\n  const [user, setUser] = useState&lt;User | null&gt;(null);\n  \n  // Shows \"Authenticated: john@example.com\" or \"Not authenticated\" in DevTools\n  useDebugValue(user ? `Authenticated: ${user.email}` : 'Not authenticated');\n  \n  return { user, login, logout };\n}",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -1986,7 +1986,7 @@
     "section": "Debugging State Issues",
     "text": "Debugging State Issues\n\nThe “Why Did My State Disappear?” Pattern\n// ❌ Common mistake: Setting state during render\nfunction BadComponent({ items }) {\n  const [filtered, setFiltered] = useState([]);\n  \n  // 🔥 This causes infinite loops!\n  setFiltered(items.filter(i =&gt; i.active));\n  \n  return &lt;List items={filtered} /&gt;;\n}\n\n// ✅ Fix: Use useMemo for derived state\nfunction GoodComponent({ items }) {\n  const filtered = useMemo(\n    () =&gt; items.filter(i =&gt; i.active),\n    [items]\n  );\n  \n  return &lt;List items={filtered} /&gt;;\n}\n\n\nStale Closure Debugging\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  \n  useEffect(() =&gt; {\n    const interval = setInterval(() =&gt; {\n      // ❌ Bug: count is always 0 (stale closure)\n      console.log('Count is:', count);\n      setCount(count + 1); // Always sets to 1\n    }, 1000);\n    \n    return () =&gt; clearInterval(interval);\n  }, []); // Empty deps = stale closure\n  \n  // ✅ Fix: Use functional update\n  useEffect(() =&gt; {\n    const interval = setInterval(() =&gt; {\n      setCount(prev =&gt; prev + 1); // Always uses latest\n    }, 1000);\n    \n    return () =&gt; clearInterval(interval);\n  }, []);\n}",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -1996,7 +1996,7 @@
     "section": "Network Debugging",
     "text": "Network Debugging\n\nInspecting API Calls\n\nOpen Network tab in DevTools\nFilter by Fetch/XHR\nClick any request to see:\n\nHeaders — Auth tokens, content types\nPayload — What you sent\nResponse — What came back\nTiming — Where time was spent\n\n\n\n\nDebugging with TanStack Query DevTools\nimport { ReactQueryDevtools } from '@tanstack/react-query-devtools';\n\nfunction App() {\n  return (\n    &lt;QueryClientProvider client={queryClient}&gt;\n      &lt;YourApp /&gt;\n      {/* Floating button in dev mode */}\n      &lt;ReactQueryDevtools initialIsOpen={false} /&gt;\n    &lt;/QueryClientProvider&gt;\n  );\n}\nThe Query DevTools show: - All cached queries - Query status (fresh, stale, fetching) - Cache timing - Manual refetch/invalidate buttons",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -2006,7 +2006,7 @@
     "section": "Source Maps & Error Boundaries",
     "text": "Source Maps & Error Boundaries\n\nProduction Debugging with Source Maps\n// vite.config.ts\nexport default defineConfig({\n  build: {\n    sourcemap: true, // Generate source maps\n  },\n});\n\n\n\n\n\n\nSecurity Note\n\n\n\nSource maps expose your original code. Options: - Hidden source maps — Upload to error tracking only - Separate hosting — Serve maps from authenticated endpoint\n\n\n\n\nError Boundary with Reporting\nimport { ErrorBoundary } from 'react-error-boundary';\n\nfunction ErrorFallback({ error, resetErrorBoundary }) {\n  // Report to your error tracking service\n  useEffect(() =&gt; {\n    reportError(error);\n  }, [error]);\n\n  return (\n    &lt;div role=\"alert\"&gt;\n      &lt;h2&gt;Something went wrong&lt;/h2&gt;\n      &lt;pre&gt;{error.message}&lt;/pre&gt;\n      &lt;button onClick={resetErrorBoundary}&gt;Try again&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}\n\nfunction App() {\n  return (\n    &lt;ErrorBoundary FallbackComponent={ErrorFallback}&gt;\n      &lt;YourApp /&gt;\n    &lt;/ErrorBoundary&gt;\n  );\n}",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -2016,7 +2016,7 @@
     "section": "AI-Assisted Debugging",
     "text": "AI-Assisted Debugging\nModern workflows include AI as a debugging partner:\n## Prompt Template for Debugging\n\nI have a React component that [describe behavior].\n\nExpected: [what should happen]\nActual: [what happens instead]\n\nHere's the relevant code:\n```tsx\n[paste component]\nI’ve tried: [what you’ve checked]\nWhat could cause this? ```\nWhen to use AI: - Unfamiliar error messages - Complex state interactions - Performance issues you can’t pinpoint\nWhen NOT to use AI: - Before reading the actual error message - Without reproducing the bug yourself first - For trivial console.log placement",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -2026,7 +2026,7 @@
     "section": "Debugging Checklist",
     "text": "Debugging Checklist\n\nRead the error — The message often tells you exactly what’s wrong\nReproduce reliably — Can you trigger it consistently?\nIsolate the cause — Comment out code until it works, then add back\nCheck the network — Is the API returning what you expect?\nInspect state — Use React DevTools to see current values\nCheck dependencies — Are effect deps complete and correct?\nProfile renders — Is something re-rendering too often?\nSearch the error — Someone else has probably seen it\n\nThe best debuggers aren’t those who never encounter bugs—they’re the ones who find them in minutes, not hours.",
     "crumbs": [
-      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Debugging Modern React: From Console to Profiler</span>"
     ]
   },
   {
@@ -2587,6 +2587,66 @@
     "text": "Summary\n\n\n\nStrategy\nFirst Paint\nInteractivity\nSEO\nBest For\n\n\n\n\nCSR\nSlow (blank)\nFast\n❌\nDashboards, SPAs\n\n\nSSR\nFast\nAfter hydration\n✅\nDynamic + SEO\n\n\nSSG\nInstant\nAfter hydration\n✅\nStatic content\n\n\nRSC\nFast\nInstant (for server parts)\n✅\nModern apps\n\n\n\nThe modern approach is often hybrid: use Server Components for data, Client Components for interactivity, and SSG for static pages.\nUnderstanding these strategies is the difference between an app that works and an app that performs.",
     "crumbs": [
       "<span class='chapter-number'>22</span>  <span class='chapter-title'>Rendering Strategies: CSR, SSR, and the Server Components Revolution</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#zustand-the-modern-default",
+    "href": "StateManagementPatterns.html#zustand-the-modern-default",
+    "title": "State Management Patterns",
+    "section": "3. Zustand: The Modern Default",
+    "text": "3. Zustand: The Modern Default\nFor global state that changes often or needs to be accessed anywhere (outside components), Zustand is the modern favorite. It’s tiny (~1KB), fast, and hook-based.\nnpm install zustand\n\nCreating the Store\nimport { create } from 'zustand'\n\ninterface CartState {\n  items: CartItem[]\n  addItem: (item: CartItem) =&gt; void\n  removeItem: (id: string) =&gt; void\n  clearCart: () =&gt; void\n}\n\nconst useCartStore = create&lt;CartState&gt;((set) =&gt; ({\n  items: [],\n  addItem: (item) =&gt; set((state) =&gt; ({ \n    items: [...state.items, item] \n  })),\n  removeItem: (id) =&gt; set((state) =&gt; ({ \n    items: state.items.filter(item =&gt; item.id !== id) \n  })),\n  clearCart: () =&gt; set({ items: [] }),\n}))\n\n\nUsing the Store\nfunction CartCounter() {\n  // Select only what you need! Components re-render ONLY if 'items.length' changes.\n  const itemCount = useCartStore((state) =&gt; state.items.length)\n  return &lt;span className=\"badge\"&gt;{itemCount}&lt;/span&gt;\n}\n\nfunction AddToCartButton({ product }) {\n  const addItem = useCartStore((state) =&gt; state.addItem)\n  return &lt;button onClick={() =&gt; addItem(product)}&gt;Add to Cart&lt;/button&gt;\n}\n\n\nZustand + Immer for Immutable Updates\nFor complex nested state, use immer middleware to write “mutative” code that produces immutable updates.\nnpm install immer\nimport { create } from 'zustand'\nimport { immer } from 'zustand/middleware/immer'\n\ninterface SettingsState {\n  user: {\n    profile: {\n      name: string\n      preferences: {\n        theme: 'light' | 'dark'\n        notifications: boolean\n      }\n    }\n  }\n  updateTheme: (theme: 'light' | 'dark') =&gt; void\n}\n\nconst useSettingsStore = create&lt;SettingsState&gt;()(\n  immer((set) =&gt; ({\n    user: {\n      profile: {\n        name: 'John',\n        preferences: {\n          theme: 'light',\n          notifications: true,\n        },\n      },\n    },\n    // ✅ Mutate directly - immer handles immutability\n    updateTheme: (theme) =&gt; set((state) =&gt; {\n      state.user.profile.preferences.theme = theme\n    }),\n  }))\n)\n\n\nZustand Persist: Sync with localStorage\nPersist state across page reloads automatically.\nimport { create } from 'zustand'\nimport { persist } from 'zustand/middleware'\n\nconst useAuthStore = create&lt;AuthState&gt;()(\n  persist(\n    (set) =&gt; ({\n      token: null,\n      user: null,\n      login: (token, user) =&gt; set({ token, user }),\n      logout: () =&gt; set({ token: null, user: null }),\n    }),\n    {\n      name: 'auth-storage', // localStorage key\n      partialize: (state) =&gt; ({ token: state.token }), // Only persist token\n    }\n  )\n)\n\n\n\n\n\n\nCombine Middlewares\n\n\n\nYou can combine persist + immer + devtools:\ncreate()(devtools(persist(immer((set) =&gt; ({ ... })))))",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#jotai-atomic-state",
+    "href": "StateManagementPatterns.html#jotai-atomic-state",
+    "title": "State Management Patterns",
+    "section": "4. Jotai: Atomic State",
+    "text": "4. Jotai: Atomic State\nJotai takes a different approach: state is broken into atoms (tiny pieces) that can be composed together. It’s particularly well-suited for React Server Components.\nnpm install jotai\n\nCreating Atoms\nimport { atom } from 'jotai'\n\n// Primitive atom\nconst countAtom = atom(0)\n\n// Derived atom (computed value)\nconst doubledAtom = atom((get) =&gt; get(countAtom) * 2)\n\n// Async atom\nconst userAtom = atom(async () =&gt; {\n  const response = await fetch('/api/user')\n  return response.json()\n})\n\n\nUsing Atoms\nimport { useAtom, useAtomValue, useSetAtom } from 'jotai'\n\nfunction Counter() {\n  const [count, setCount] = useAtom(countAtom)\n  return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;\n}\n\nfunction Display() {\n  const doubled = useAtomValue(doubledAtom) // Read-only\n  return &lt;span&gt;Doubled: {doubled}&lt;/span&gt;\n}\n\nfunction ResetButton() {\n  const setCount = useSetAtom(countAtom) // Write-only\n  return &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;\n}\n\n\nWhen to Choose Jotai vs Zustand\n\n\n\nZustand\nJotai\n\n\n\n\nSingle store with slices\nMany small atoms\n\n\nEasier to understand\nMore flexible composition\n\n\nBetter for complex logic\nBetter for derived state\n\n\nWorks outside React\nReact-first design",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#server-state-tanstack-query",
+    "href": "StateManagementPatterns.html#server-state-tanstack-query",
+    "title": "State Management Patterns",
+    "section": "5. Server State: TanStack Query",
+    "text": "5. Server State: TanStack Query\nStop putting server data in Redux!\nServer state (API responses) is different from Client state. It needs caching, deduplication, background updates, and stale-while-revalidate logic.\nTanStack Query handles all of this automatically. See the Data Fetching Strategies chapter for comprehensive coverage.\nfunction Todos() {\n  const { isPending, error, data } = useQuery({\n    queryKey: ['todos'],\n    queryFn: fetchTodoList,\n  })\n\n  if (isPending) return 'Loading...'\n  if (error) return 'An error has occurred: ' + error.message\n\n  return (\n    &lt;ul&gt;\n      {data.map((todo) =&gt; (\n        &lt;li key={todo.id}&gt;{todo.title}&lt;/li&gt;\n      ))}\n    &lt;/ul&gt;\n  )\n}",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#url-state-the-underrated-pattern",
+    "href": "StateManagementPatterns.html#url-state-the-underrated-pattern",
+    "title": "State Management Patterns",
+    "section": "6. URL State: The Underrated Pattern",
+    "text": "6. URL State: The Underrated Pattern\nState that belongs in the URL (filters, sorting, pagination, active tabs) is often mismanaged. URL state enables:\n\nShareable links — Users can share their exact view\nBack/forward navigation — Browser history just works\nBookmarking — Save specific states\nSEO — Search engines can index filtered views\n\n\nnuqs: Type-Safe URL State\nnpm install nuqs\nimport { useQueryState } from 'nuqs'\n\nfunction ProductFilters() {\n  const [category, setCategory] = useQueryState('category')\n  const [sort, setSort] = useQueryState('sort', { defaultValue: 'price' })\n  const [page, setPage] = useQueryState('page', { \n    parse: parseInt,\n    defaultValue: 1 \n  })\n\n  // URL: /products?category=electronics&sort=price&page=2\n  \n  return (\n    &lt;div&gt;\n      &lt;select \n        value={category ?? ''} \n        onChange={(e) =&gt; setCategory(e.target.value || null)}\n      &gt;\n        &lt;option value=\"\"&gt;All Categories&lt;/option&gt;\n        &lt;option value=\"electronics\"&gt;Electronics&lt;/option&gt;\n        &lt;option value=\"clothing\"&gt;Clothing&lt;/option&gt;\n      &lt;/select&gt;\n      \n      &lt;button onClick={() =&gt; setPage(page + 1)}&gt;Next Page&lt;/button&gt;\n    &lt;/div&gt;\n  )\n}\n\n\nWhen to Use URL State\n\n\n\n✅ Use URL State\n❌ Don’t Use URL State\n\n\n\n\nFilters, sorting\nForm input values\n\n\nPagination\nModal open/close\n\n\nActive tab\nHover states\n\n\nSearch query\nAnimation states\n\n\nSelected items (IDs)\nTemporary UI state",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#the-future-whats-coming",
+    "href": "StateManagementPatterns.html#the-future-whats-coming",
+    "title": "State Management Patterns",
+    "section": "7. The Future: What’s Coming",
+    "text": "7. The Future: What’s Coming\n\nReact Server Components Change Everything\nWith RSC, many state patterns become unnecessary:\n// OLD: Fetch in useEffect, store in state\nconst [products, setProducts] = useState([])\nuseEffect(() =&gt; {\n  fetch('/api/products').then(r =&gt; r.json()).then(setProducts)\n}, [])\n\n// NEW: Just fetch in a Server Component\nasync function ProductList() {\n  const products = await db.products.findMany()\n  return &lt;ul&gt;{products.map(p =&gt; &lt;li&gt;{p.name}&lt;/li&gt;)}&lt;/ul&gt;\n}\n\n\nSignals (Potential Future)\nSignals are a reactive primitive that React may adopt. They allow fine-grained reactivity without re-rendering entire components.\n// Hypothetical future React with signals\nimport { signal, computed } from 'react'\n\nconst count = signal(0)\nconst doubled = computed(() =&gt; count.value * 2)\n\nfunction Counter() {\n  // Only the &lt;span&gt; re-renders when count changes\n  return (\n    &lt;div&gt;\n      &lt;span&gt;{count.value}&lt;/span&gt;\n      &lt;button onClick={() =&gt; count.value++}&gt;+&lt;/button&gt;\n    &lt;/div&gt;\n  )\n}\n\n\n\n\n\n\nSignals Status\n\n\n\nAs of 2026, React hasn’t officially adopted signals, but frameworks like Solid.js, Preact, and Angular use them. Watch the React RFC discussions for updates.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
+    ]
+  },
+  {
+    "objectID": "StateManagementPatterns.html#summary-the-modern-state-stack",
+    "href": "StateManagementPatterns.html#summary-the-modern-state-stack",
+    "title": "State Management Patterns",
+    "section": "Summary: The Modern State Stack",
+    "text": "Summary: The Modern State Stack\n\n\n\nState Type\n2024-2026 Recommendation\n\n\n\n\nLocal UI\nuseState / useReducer\n\n\nShared UI\nZustand (or Jotai)\n\n\nServer Data\nTanStack Query\n\n\nURL State\nnuqs / TanStack Router\n\n\nForms\nReact Hook Form + Zod\n\n\nComplex/Legacy\nRedux Toolkit\n\n\n\n\n\n\n\n\npie title State Management Adoption (2026)\n    \"Zustand\" : 35\n    \"TanStack Query\" : 30\n    \"useState/Context\" : 20\n    \"Redux Toolkit\" : 10\n    \"Jotai/Other\" : 5\n\n\n\n\n\n\nBy separating Server State (TanStack Query) from Client State (Zustand/Context) and putting URL State in the URL, you drastically simplify your application logic.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>State Management Patterns</span>"
     ]
   }
 ]

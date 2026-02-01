@@ -15,11 +15,14 @@ flowchart TD
     E -->|Yes| G["Zustand / Jotai"]
     A --> H{"Server data?<br/>(API responses)"}
     H -->|Yes| I["TanStack Query"]
+    A --> J{"In the URL?<br/>(filters, tabs)"}
+    J -->|Yes| K["URL State (nuqs)"]
     
     style C fill:#10b981
     style F fill:#3b82f6
     style G fill:#8b5cf6
     style I fill:#f59e0b
+    style K fill:#ec4899
 ```
 
 ---
@@ -50,9 +53,9 @@ Context is **not** optimized for high-frequency updates (like mouse coordinates 
 
 ---
 
-## 3. Atomic State: Zustand
+## 3. Zustand: The Modern Default
 
-For global state that changes often or needs to be accessed anywhere (outside components), **Zustand** is the modern favorite. It's tiny, fast, and hook-based.
+For global state that changes often or needs to be accessed anywhere (outside components), **Zustand** is the modern favorite. It's tiny (~1KB), fast, and hook-based.
 
 ```bash
 npm install zustand
@@ -63,40 +66,183 @@ npm install zustand
 ```ts
 import { create } from 'zustand'
 
-interface BearState {
-  bears: number
-  increase: () => void
+interface CartState {
+  items: CartItem[]
+  addItem: (item: CartItem) => void
+  removeItem: (id: string) => void
+  clearCart: () => void
 }
 
-const useStore = create<BearState>((set) => ({
-  bears: 0,
-  increase: () => set((state) => ({ bears: state.bears + 1 })),
+const useCartStore = create<CartState>((set) => ({
+  items: [],
+  addItem: (item) => set((state) => ({ 
+    items: [...state.items, item] 
+  })),
+  removeItem: (id) => set((state) => ({ 
+    items: state.items.filter(item => item.id !== id) 
+  })),
+  clearCart: () => set({ items: [] }),
 }))
 ```
 
 ### Using the Store
 
 ```tsx
-function BearCounter() {
-  // Select only what you need! Components re-render ONLY if 'bears' changes.
-  const bears = useStore((state) => state.bears)
-  return <h1>{bears} around here ...</h1>
+function CartCounter() {
+  // Select only what you need! Components re-render ONLY if 'items.length' changes.
+  const itemCount = useCartStore((state) => state.items.length)
+  return <span className="badge">{itemCount}</span>
+}
+
+function AddToCartButton({ product }) {
+  const addItem = useCartStore((state) => state.addItem)
+  return <button onClick={() => addItem(product)}>Add to Cart</button>
 }
 ```
 
+### Zustand + Immer for Immutable Updates
+
+For complex nested state, use **immer** middleware to write "mutative" code that produces immutable updates.
+
+```bash
+npm install immer
+```
+
+```ts
+import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
+
+interface SettingsState {
+  user: {
+    profile: {
+      name: string
+      preferences: {
+        theme: 'light' | 'dark'
+        notifications: boolean
+      }
+    }
+  }
+  updateTheme: (theme: 'light' | 'dark') => void
+}
+
+const useSettingsStore = create<SettingsState>()(
+  immer((set) => ({
+    user: {
+      profile: {
+        name: 'John',
+        preferences: {
+          theme: 'light',
+          notifications: true,
+        },
+      },
+    },
+    // ✅ Mutate directly - immer handles immutability
+    updateTheme: (theme) => set((state) => {
+      state.user.profile.preferences.theme = theme
+    }),
+  }))
+)
+```
+
+### Zustand Persist: Sync with localStorage
+
+Persist state across page reloads automatically.
+
+```ts
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      token: null,
+      user: null,
+      login: (token, user) => set({ token, user }),
+      logout: () => set({ token: null, user: null }),
+    }),
+    {
+      name: 'auth-storage', // localStorage key
+      partialize: (state) => ({ token: state.token }), // Only persist token
+    }
+  )
+)
+```
+
+::: {.callout-tip}
+## Combine Middlewares
+You can combine `persist` + `immer` + `devtools`:
+```ts
+create()(devtools(persist(immer((set) => ({ ... })))))
+```
+:::
+
 ---
 
-## 4. Server State: TanStack Query (React Query)
+## 4. Jotai: Atomic State
+
+**Jotai** takes a different approach: state is broken into **atoms** (tiny pieces) that can be composed together. It's particularly well-suited for React Server Components.
+
+```bash
+npm install jotai
+```
+
+### Creating Atoms
+
+```ts
+import { atom } from 'jotai'
+
+// Primitive atom
+const countAtom = atom(0)
+
+// Derived atom (computed value)
+const doubledAtom = atom((get) => get(countAtom) * 2)
+
+// Async atom
+const userAtom = atom(async () => {
+  const response = await fetch('/api/user')
+  return response.json()
+})
+```
+
+### Using Atoms
+
+```tsx
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+
+function Counter() {
+  const [count, setCount] = useAtom(countAtom)
+  return <button onClick={() => setCount(c => c + 1)}>{count}</button>
+}
+
+function Display() {
+  const doubled = useAtomValue(doubledAtom) // Read-only
+  return <span>Doubled: {doubled}</span>
+}
+
+function ResetButton() {
+  const setCount = useSetAtom(countAtom) // Write-only
+  return <button onClick={() => setCount(0)}>Reset</button>
+}
+```
+
+### When to Choose Jotai vs Zustand
+
+| Zustand | Jotai |
+|---------|-------|
+| Single store with slices | Many small atoms |
+| Easier to understand | More flexible composition |
+| Better for complex logic | Better for derived state |
+| Works outside React | React-first design |
+
+---
+
+## 5. Server State: TanStack Query
 
 **Stop putting server data in Redux!**
 
 Server state (API responses) is different from Client state. It needs caching, deduplication, background updates, and stale-while-revalidate logic.
 
-**TanStack Query** handles all of this automatically.
-
-```bash
-npm install @tanstack/react-query
-```
+**TanStack Query** handles all of this automatically. See the **Data Fetching Strategies** chapter for comprehensive coverage.
 
 ```tsx
 function Todos() {
@@ -120,14 +266,131 @@ function Todos() {
 
 ---
 
-## Summary: Which One to Choose?
+## 6. URL State: The Underrated Pattern
 
-| Scenario | Recommended Tool |
-| :--- | :--- |
-| **Form Inputs, Toggles** | `useState` / `useReducer` |
-| **Theming, Auth, Config** | React Context |
-| **Complex App State (shopping cart, sidebar)** | Zustand (or Redux Toolkit) |
-| **API Data Caching** | TanStack Query |
-| **Form Management** | React Hook Form |
+State that belongs in the URL (filters, sorting, pagination, active tabs) is often mismanaged. **URL state** enables:
 
-By separating **Server State** (Query) from **Client State** (Zustand/Context), you drastically simplify your application logic.
+- **Shareable links** — Users can share their exact view
+- **Back/forward navigation** — Browser history just works
+- **Bookmarking** — Save specific states
+- **SEO** — Search engines can index filtered views
+
+### nuqs: Type-Safe URL State
+
+```bash
+npm install nuqs
+```
+
+```tsx
+import { useQueryState } from 'nuqs'
+
+function ProductFilters() {
+  const [category, setCategory] = useQueryState('category')
+  const [sort, setSort] = useQueryState('sort', { defaultValue: 'price' })
+  const [page, setPage] = useQueryState('page', { 
+    parse: parseInt,
+    defaultValue: 1 
+  })
+
+  // URL: /products?category=electronics&sort=price&page=2
+  
+  return (
+    <div>
+      <select 
+        value={category ?? ''} 
+        onChange={(e) => setCategory(e.target.value || null)}
+      >
+        <option value="">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+      </select>
+      
+      <button onClick={() => setPage(page + 1)}>Next Page</button>
+    </div>
+  )
+}
+```
+
+### When to Use URL State
+
+| ✅ Use URL State | ❌ Don't Use URL State |
+|-----------------|----------------------|
+| Filters, sorting | Form input values |
+| Pagination | Modal open/close |
+| Active tab | Hover states |
+| Search query | Animation states |
+| Selected items (IDs) | Temporary UI state |
+
+---
+
+## 7. The Future: What's Coming
+
+### React Server Components Change Everything
+
+With RSC, many state patterns become unnecessary:
+
+```tsx
+// OLD: Fetch in useEffect, store in state
+const [products, setProducts] = useState([])
+useEffect(() => {
+  fetch('/api/products').then(r => r.json()).then(setProducts)
+}, [])
+
+// NEW: Just fetch in a Server Component
+async function ProductList() {
+  const products = await db.products.findMany()
+  return <ul>{products.map(p => <li>{p.name}</li>)}</ul>
+}
+```
+
+### Signals (Potential Future)
+
+Signals are a reactive primitive that React may adopt. They allow fine-grained reactivity without re-rendering entire components.
+
+```tsx
+// Hypothetical future React with signals
+import { signal, computed } from 'react'
+
+const count = signal(0)
+const doubled = computed(() => count.value * 2)
+
+function Counter() {
+  // Only the <span> re-renders when count changes
+  return (
+    <div>
+      <span>{count.value}</span>
+      <button onClick={() => count.value++}>+</button>
+    </div>
+  )
+}
+```
+
+::: {.callout-note}
+## Signals Status
+As of 2026, React hasn't officially adopted signals, but frameworks like Solid.js, Preact, and Angular use them. Watch the React RFC discussions for updates.
+:::
+
+---
+
+## Summary: The Modern State Stack
+
+| State Type | 2024-2026 Recommendation |
+|------------|-------------------------|
+| **Local UI** | `useState` / `useReducer` |
+| **Shared UI** | Zustand (or Jotai) |
+| **Server Data** | TanStack Query |
+| **URL State** | nuqs / TanStack Router |
+| **Forms** | React Hook Form + Zod |
+| **Complex/Legacy** | Redux Toolkit |
+
+```{mermaid}
+pie title State Management Adoption (2026)
+    "Zustand" : 35
+    "TanStack Query" : 30
+    "useState/Context" : 20
+    "Redux Toolkit" : 10
+    "Jotai/Other" : 5
+```
+
+By separating **Server State** (TanStack Query) from **Client State** (Zustand/Context) and putting **URL State** in the URL, you drastically simplify your application logic.
+
